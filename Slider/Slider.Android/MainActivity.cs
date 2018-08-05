@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Android;
 
 namespace CamSlider.Droid
 {
@@ -19,9 +20,13 @@ namespace CamSlider.Droid
 
             base.OnCreate(bundle);
 
-            global::Xamarin.Forms.Forms.Init(this, bundle);
+			if (this.CheckSelfPermission(Manifest.Permission.AccessCoarseLocation) != Permission.Granted)
+			{
+				RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation }, 0);
+			}
+
+			global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }
     }
 }
-

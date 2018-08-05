@@ -12,6 +12,10 @@ using Windows.UI.Core;
 [assembly: Xamarin.Forms.Dependency(typeof(CamSlider.UWP.BlueWin))]
 namespace CamSlider.UWP
 {
+	/*
+		Need to check 'Bluetooth' in the Package.appxmanifest for UWP.
+	 */
+
 	public class BlueWin : IBlueDevice
 	{
 		public BlueState _State = BlueState.Disconnected;

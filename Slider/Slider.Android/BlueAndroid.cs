@@ -17,6 +17,19 @@ using System.Diagnostics;
 [assembly: Xamarin.Forms.Dependency(typeof(CamSlider.Droid.BlueAndroid))]
 namespace CamSlider.Droid
 {
+	/*
+		Need to add the following permissions to the .Android\Properties\AndroidManifest.xml:
+			<uses-permission android:name="android.permission.BLUETOOTH" />
+			<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+			<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+		And add a permission check in the OnCreate method in .Android\MainActivity.cs:
+			if (this.CheckSelfPermission(Manifest.Permission.AccessCoarseLocation) != Permission.Granted)
+			{
+				RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation }, 0);
+			}
+	 */
+
 	public class BlueAndroid : Android.Bluetooth.LE.ScanCallback, CamSlider.IBlueDevice
 	{
 		public BlueState _State = BlueState.Disconnected;
