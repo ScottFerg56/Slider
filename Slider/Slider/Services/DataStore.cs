@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Slider.Models;
+using CamSlider.Models;
 
-namespace Slider.Services
+namespace CamSlider.Services
 {
 	public static class DataStore
 	{

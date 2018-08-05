@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using Slider.Models;
-using Slider.Views;
-using Slider.ViewModels;
+using CamSlider.Models;
+using CamSlider.Views;
+using CamSlider.ViewModels;
 
-namespace Slider.Views
+namespace CamSlider.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ItemsPage : ContentPage
@@ -31,7 +31,6 @@ namespace Slider.Views
 				return;
 
 			await Navigation.PushModalAsync(new NavigationPage(new NewItemPage(item)));
-		//	await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
 
             // Manually deselect item.
             ItemsListView.SelectedItem = null;

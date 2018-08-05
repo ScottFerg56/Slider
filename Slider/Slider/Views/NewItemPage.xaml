@@ -1,11 +1,24 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             x:Class="Slider.Views.NewItemPage"
-		     Title="New Item">
+             x:Class="CamSlider.Views.NewItemPage"
+		     Title="Edit Item">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Clicked="Save_Clicked" />
-    </ContentPage.ToolbarItems>
+		<ToolbarItem Text="Save" Clicked="Save_Clicked" >
+			<ToolbarItem.Icon>
+				<OnPlatform x:TypeArguments="FileImageSource">
+					<On Platform="UWP" Value="check.png"/>
+				</OnPlatform>
+			</ToolbarItem.Icon>
+		</ToolbarItem>
+		<ToolbarItem Text="Remove" Clicked="Remove_Clicked">
+			<ToolbarItem.Icon>
+				<OnPlatform x:TypeArguments="FileImageSource">
+					<On Platform="UWP" Value="remove.png"/>
+				</OnPlatform>
+			</ToolbarItem.Icon>
+		</ToolbarItem>
+	</ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout Spacing="20" Padding="15">
 			<Label Text="Time" FontSize="Medium" />

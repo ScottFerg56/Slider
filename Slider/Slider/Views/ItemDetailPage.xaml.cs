@@ -3,10 +3,10 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using Slider.Models;
-using Slider.ViewModels;
+using CamSlider.Models;
+using CamSlider.ViewModels;
 
-namespace Slider.Views
+namespace CamSlider.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ItemDetailPage : ContentPage

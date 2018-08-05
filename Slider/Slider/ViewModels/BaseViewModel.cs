@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 
 using Xamarin.Forms;
 
-using Slider.Models;
-using Slider.Services;
+using CamSlider.Models;
+using CamSlider.Services;
 
-namespace Slider.ViewModels
+namespace CamSlider.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

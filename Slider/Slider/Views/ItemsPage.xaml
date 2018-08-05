@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Slider.Views.ItemsPage"
+             x:Class="CamSlider.Views.ItemsPage"
               Title="{Binding Title}"
              x:Name="BrowseItemsPage">
     <ContentPage.ToolbarItems>
@@ -12,7 +12,7 @@
                 </OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
-    </ContentPage.ToolbarItems>
+	</ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="ItemsListView" 
@@ -24,23 +24,30 @@
                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                  CachingStrategy="RetainElement"
                  ItemSelected="OnItemSelected">
-                <ListView.ItemTemplate>
+				<ListView.Header>
+					<Grid>
+						<Label Grid.Column="0" Text="Time" TextColor="Black" BackgroundColor="WhiteSmoke" />
+						<Label Grid.Column="1" Text="Slide" TextColor="Black" BackgroundColor="WhiteSmoke" />
+						<Label Grid.Column="2" Text="Pan" TextColor="Black" BackgroundColor="WhiteSmoke" />
+					</Grid>
+				</ListView.Header>
+				<ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Padding="10">
-                                <Label Text="{Binding Time}" 
+                            <Grid Padding="10">
+								<Label Grid.Column="0" Text="{Binding Time}" 
                        LineBreakMode="NoWrap" 
                        Style="{DynamicResource ListItemTextStyle}" 
-                       FontSize="16" />
-                                <Label Text="{Binding Slide}" 
+                       FontSize="13" />
+								<Label Grid.Column="1" Text="{Binding Slide}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
-								<Label Text="{Binding Pan}" 
+								<Label Grid.Column="2" Text="{Binding Pan}" 
                        LineBreakMode="NoWrap"
                        Style="{DynamicResource ListItemDetailTextStyle}"
                        FontSize="13" />
-							</StackLayout>
+							</Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>

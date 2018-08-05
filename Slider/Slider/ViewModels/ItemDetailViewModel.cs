@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Slider.Models;
+using CamSlider.Models;
 
-namespace Slider.ViewModels
+namespace CamSlider.ViewModels
 {
     public class ItemDetailViewModel : BaseViewModel
     {

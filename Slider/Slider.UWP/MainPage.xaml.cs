@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace Slider.UWP
+namespace CamSlider.UWP
 {
     public sealed partial class MainPage
     {
@@ -21,7 +21,7 @@ namespace Slider.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new Slider.App());
+            LoadApplication(new CamSlider.App());
         }
     }
 }

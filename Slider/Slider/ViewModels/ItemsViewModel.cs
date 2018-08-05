@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
-using Slider.Models;
-using Slider.Views;
+using CamSlider.Models;
+using CamSlider.Views;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Slider.ViewModels
+namespace CamSlider.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
@@ -36,12 +36,8 @@ namespace Slider.ViewModels
 
 				// find the item if this is an EDIT; or not if it's an ADD
 				// find current index
-				var oldIndex = Items.IndexOf(item);
-				// remove, if an edit
-				if (oldIndex >= 0)
-					Items.RemoveAt(oldIndex);
-				else
-					oldIndex = Items.Count;
+				// remove, if an edit and it already is in the list
+				Items.Remove(item);
 				// always add back in because a no-op move won't trigger a change
 				Items.Add(item);
 				// sort to a companion list
@@ -49,11 +45,17 @@ namespace Slider.ViewModels
 				// find the new index
 				var newIndex = list.IndexOf(item);
 				// move the item to keep the list sorted
-				Items.Move(oldIndex, newIndex);
+				Items.Move(Items.Count - 1, newIndex);
 				// update the data store
 				Services.DataStore.SaveDataStore("items", Items);
             });
-        }
+
+			MessagingCenter.Subscribe<NewItemPage, Item>(this, "RemoveItem", (obj, item) =>
+			{
+				Items.Remove(item);
+				Services.DataStore.SaveDataStore("items", Items);
+			});
+		}
 
 		void ExecuteLoadItemsCommand()
         {

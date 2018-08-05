@@ -1,10 +1,10 @@
 ﻿using System;
 using Xamarin.Forms;
-using Slider.Views;
+using CamSlider.Views;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
-namespace Slider
+namespace CamSlider
 {
 	public partial class App : Application
 	{

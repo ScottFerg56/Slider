@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Slider.Droid.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("CamSlider.Droid.Resource", IsApplication=true)]
 
-namespace Slider.Droid
+namespace CamSlider.Droid
 {
 	
 	
@@ -26,7 +26,7 @@ namespace Slider.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Slider.Droid.Resource.Attribute.actionBarSize;
+			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::CamSlider.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation

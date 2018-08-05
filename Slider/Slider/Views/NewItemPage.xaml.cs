@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using Slider.Models;
+using CamSlider.Models;
 
-namespace Slider.Views
+namespace CamSlider.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewItemPage : ContentPage
@@ -17,16 +17,7 @@ namespace Slider.Views
         {
             InitializeComponent();
 
-			Item = newItem;
-			if (Item == null)
-			{
-				Item = new Item
-				{
-					Time = 600.0,
-					Slide = 600.0,
-					Pan = 0.0,
-				};
-			}
+			Item = newItem ?? Item.DefaultItem();
 
             BindingContext = this;
         }
@@ -36,5 +27,11 @@ namespace Slider.Views
             MessagingCenter.Send(this, "AddItem", Item);
             await Navigation.PopModalAsync();
         }
-    }
+
+		async void Remove_Clicked(object sender, EventArgs e)
+		{
+			MessagingCenter.Send(this, "RemoveItem", Item);
+			await Navigation.PopModalAsync();
+		}
+	}
 }

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CamSlider.CustomControls"
+             x:Class="CamSlider.Views.ManualPage">
+    <ContentPage.Content>
+		<StackLayout>
+			<Button x:Name="BlueAction" Text="Connect"></Button>
+			<Label x:Name="LabelBlueState" Text="Disconnected"></Label>
+			<Label x:Name="LabelSlide" Text="0" XAlign="Center" FontSize="Large"/>
+			<local:FMSlider	x:Name="SliderSlide" Value="0" Minimum="-100" Maximum="100"/>
+			<Label x:Name="LabelPan" Text="0" XAlign="Center" FontSize="Large"/>
+			<local:FMSlider	x:Name="SliderPan" Value="0" Minimum="-100" Maximum="100"/>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>
