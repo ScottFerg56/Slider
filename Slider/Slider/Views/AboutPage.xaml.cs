@@ -27,6 +27,18 @@ namespace CamSlider.Views
 				this.Title = s;
 				if (this.Parent is NavigationPage p)
 					p.Title = s;
+				if (SliderComm.Instance.State == BlueState.Connected || SliderComm.Instance.State == BlueState.Disconnected)
+				{
+					var assembly = typeof(App).Assembly;
+					var file = SliderComm.Instance.State == BlueState.Connected ? "up" : "down";
+					System.IO.Stream audioStream = assembly.GetManifestResourceStream("Slider.Resources." + file + ".mp3");
+
+					var player = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
+					if (player.IsPlaying)
+						player.Stop();
+					player.Load(audioStream);
+					player.Play();
+				}
 			});
 		}
 
