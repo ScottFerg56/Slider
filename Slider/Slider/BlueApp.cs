@@ -70,7 +70,7 @@ namespace CamSlider
 				Debug.WriteLine("++> Queue emptied on state change");
 				Queue.Clear();
 			}
-			StateChange?.Invoke(sender, e);
+			StateChange?.Invoke(this, e);
 		}
 
 		public void Write(string data, bool required = true)

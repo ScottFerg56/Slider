@@ -19,7 +19,7 @@ namespace CamSlider.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Browse";
+            Title = "Sequence";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command( () => ExecuteLoadItemsCommand());
 
