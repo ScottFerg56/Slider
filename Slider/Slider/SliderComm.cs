@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CamSlider
@@ -14,6 +17,44 @@ namespace CamSlider
 		{
 			Blue = new BlueApp();
 			Blue.StateChange += Blue_StateChange;
+			Blue.InputAvailable += Blue_InputAvailable;
+		}
+
+		private void Command(string s)
+		{
+			Debug.WriteLine($"Blue input: {s}");
+			switch (s[0])
+			{
+				case 's':
+					Stepper.Slide.Command(s.Substring(1));
+					break;
+				case 'p':
+					Stepper.Pan.Command(s.Substring(1));
+					break;
+				default:
+					break;
+			}
+		}
+
+		private string Buffer = "";
+
+		private void Blue_InputAvailable(object sender, EventArgs e)
+		{
+			// packet format: [ '=' | data length byte | section byte | data ]
+			// data part may start with a section command character
+			while (Blue.ByteAvailable)
+			{
+				char c = (char)Blue.GetByte();
+				if (c == ';')
+				{
+					Command(Buffer);
+					Buffer = "";
+				}
+				else
+				{
+					Buffer += c;
+				}
+			}
 		}
 
 		private static SliderComm _Instance;
@@ -64,5 +105,77 @@ namespace CamSlider
 		{
 			StateChange?.Invoke(this, e);
 		}
+	}
+
+	public class Stepper : INotifyPropertyChanged
+	{
+		protected Stepper()
+		{
+		}
+
+		private static Stepper _Slide;
+		public static Stepper Slide
+		{
+			get
+			{
+				if (_Slide == null)
+					_Slide = new Stepper();
+				return _Slide;
+			}
+		}
+
+		private static Stepper _Pan;
+		public static Stepper Pan
+		{
+			get
+			{
+				if (_Pan == null)
+					_Pan = new Stepper();
+				return _Pan;
+			}
+		}
+
+		internal void Command(string s)
+		{
+			switch (s[0])
+			{
+				default:
+					{
+						if (double.TryParse(s, out double pos))
+						{
+							SetProperty(ref _Position, pos, nameof(Position));
+						}
+					}
+					break;
+			}
+		}
+
+		protected double _Position;
+		public double Position
+		{
+			get { return _Position; }
+			set { SetProperty(ref _Position, value); }
+		}
+
+		protected bool SetProperty<T>(ref T backingStore, T value,
+			[CallerMemberName]string propertyName = "",
+			Action onChanged = null)
+		{
+			if (EqualityComparer<T>.Default.Equals(backingStore, value))
+				return false;
+
+			backingStore = value;
+			onChanged?.Invoke();
+			OnPropertyChanged(propertyName);
+			return true;
+		}
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+		#endregion
 	}
 }

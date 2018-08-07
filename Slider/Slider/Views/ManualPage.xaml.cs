@@ -24,6 +24,38 @@ namespace CamSlider.Views
 			SliderPan.StoppedTracking += SliderPan_StoppedTracking;
 			SliderSlide.IsEnabled = false;
 			SliderPan.IsEnabled = false;
+			Stepper.Slide.PropertyChanged += Slide_PropertyChanged;
+			Stepper.Pan.PropertyChanged += Pan_PropertyChanged;
+		}
+
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			// ANDROID HACK:
+			// On Android these centered labels become left-aligned when the page disappears and reappears.
+			// But forcing a change seems to cause them to align properly.
+			LabelSlide.Text = "";
+			LabelSlide.Text = Stepper.Slide.Position.ToString();
+			LabelPan.Text = "";
+			LabelPan.Text = Stepper.Pan.Position.ToString();
+		}
+
+		private void Slide_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Position")
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+				{
+					LabelSlide.Text = Stepper.Slide.Position.ToString();
+				});
+		}
+
+		private void Pan_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Position")
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+				{
+					LabelPan.Text = Stepper.Pan.Position.ToString();
+				});
 		}
 
 		private void Blue_StateChange(object sender, EventArgs e)
@@ -38,7 +70,6 @@ namespace CamSlider.Views
 		private void SliderSlide_ValueChanged(object sender, ValueChangedEventArgs e)
 		{
 			//	Debug.WriteLine($"++> Changed Value = {val}");
-			LabelSlide.Text = ((int)SliderSlide.Value).ToString();
 			SliderComm.Instance.SetSlideVector(-SliderSlide.Value);
 		}
 
@@ -50,7 +81,6 @@ namespace CamSlider.Views
 
 		private void SliderPan_ValueChanged(object sender, ValueChangedEventArgs e)
 		{
-			LabelPan.Text = ((int)SliderPan.Value).ToString();
 			SliderComm.Instance.SetPanVector(-SliderPan.Value);
 		}
 

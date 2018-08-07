@@ -44,11 +44,11 @@ namespace CamSlider
 		public event EventHandler StateChange;
 		public event EventHandler InputAvailable;
 
-
 		public BlueApp()
 		{
 			BlueDevice = DependencyService.Get<IBlueDevice>();
 			BlueDevice.StateChange += BlueDevice_StateChange;
+			BlueDevice.InputAvailable += BlueDevice_InputAvailable;
 			timer = new Timer
 			{
 				Enabled = false,
@@ -57,11 +57,18 @@ namespace CamSlider
 			timer.Elapsed += Timer_Elapsed;
 		}
 
+		private void BlueDevice_InputAvailable(object sender, EventArgs e)
+		{
+			InputAvailable?.Invoke(this, e);
+		}
+
 		public void Connect(string name) => BlueDevice.Connect(name);
 		public void Disconnect() => BlueDevice.Disconnect();
 		public BlueState State { get => BlueDevice.State; }
 		public bool CanConnect { get => BlueDevice.CanConnect; }
 		public string ErrorMessage { get => BlueDevice.ErrorMessage; }
+		public bool ByteAvailable { get => BlueDevice.ByteAvailable; }
+		public byte GetByte() => BlueDevice.GetByte();
 
 		private void BlueDevice_StateChange(object sender, EventArgs e)
 		{

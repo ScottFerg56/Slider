@@ -1,0 +1,12 @@
+﻿Pan/Slider objects
+	request property values from device on first request
+Manual page
+	button to zero pan position
+Sequence playback page
+	integrate with 'details' listview page??
+	play / pause / stop / restart
+	list of sequence nodes
+	Slide/Pan position feedback
+Feedback from device when calibrated and ready
+	initialize all property values
+	navigate to Manual Page when ready

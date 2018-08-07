@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -36,8 +36,16 @@ namespace CamSlider.Views
 					var player = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
 					if (player.IsPlaying)
 						player.Stop();
-					player.Load(audioStream);
-					player.Play();
+					try
+					{
+						player.Load(audioStream);
+						player.Play();
+
+					}
+					catch (Exception ex)
+					{
+						Debug.WriteLine($"Play exception: {ex}");
+					}
 				}
 			});
 		}

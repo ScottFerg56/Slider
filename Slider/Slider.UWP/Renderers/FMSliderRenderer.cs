@@ -26,6 +26,8 @@ namespace CamSlider.UWP.Renderers
 				Slider = Control;
 			}
 
+			Slider.IsThumbToolTipEnabled = false;
+
 			if (e.OldElement != null)
 			{
 				// Unsubscribe
