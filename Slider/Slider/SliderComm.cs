@@ -110,6 +110,12 @@ namespace CamSlider
 
 		private void Blue_StateChange(object sender, EventArgs e)
 		{
+			if (SliderComm.Instance.State == BlueState.Connected)
+			{
+				// trigger updated values from the device
+				var pos = Stepper.Slide.Position.ToString();
+				pos = Stepper.Pan.Position.ToString();
+			}
 			StateChange?.Invoke(this, e);
 		}
 	}

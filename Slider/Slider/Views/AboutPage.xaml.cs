@@ -53,16 +53,11 @@ namespace CamSlider.Views
 					// switch to the ManualPage once we're connected
 					if (Parent.Parent is TabbedPage t)
 					{
-						// ANDROID HACK::
+						// ANDROID ISSUE:
 						// There's apparently some kind of timing problem such that the ManualPage
 						// has already appeared (before connection) so it gets no OnAppearing notification
 						// from this navigation (after conection)
-						// So it's request for updated position values fails and doesn't get re-triggered
-						// and we must do it here
 
-						// trigger updated values from the device
-						var pos = Stepper.Slide.Position.ToString();
-						pos = Stepper.Pan.Position.ToString();
 						// our Parent is a NavigationPage and his Parent is the TabbedPage (MainPage)
 						// we'll find the ManualPage among the TabbedPage's grandchildren
 						t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is ManualPage);
