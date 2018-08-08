@@ -28,40 +28,26 @@ namespace CamSlider.Views
 				this.Title = s;
 				if (this.Parent is NavigationPage p)
 					p.Title = s;
-				if (SliderComm.Instance.State == BlueState.Connected || SliderComm.Instance.State == BlueState.Disconnected)
+				switch (SliderComm.Instance.State)
 				{
-					var assembly = typeof(App).Assembly;
-					var file = SliderComm.Instance.State == BlueState.Connected ? "up" : "down";
-					System.IO.Stream audioStream = assembly.GetManifestResourceStream("Slider.Resources." + file + ".mp3");
+					case BlueState.Disconnected:
+						Slider.Services.PlaySound.Play("down");
+						break;
+					case BlueState.Connected:
+						Slider.Services.PlaySound.Play("up");
+						// switch to the ManualPage once we're connected
+						if (Parent.Parent is TabbedPage t)
+						{
+							// ANDROID ISSUE:
+							// There's apparently some kind of timing problem such that the ManualPage
+							// has already appeared (before connection) so it gets no OnAppearing notification
+							// from this navigation (after conection)
 
-					var player = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
-					if (player.IsPlaying)
-						player.Stop();
-					try
-					{
-						player.Load(audioStream);
-						player.Play();
-
-					}
-					catch (Exception ex)
-					{
-						Debug.WriteLine($"Play exception: {ex}");
-					}
-				}
-				if (SliderComm.Instance.State == BlueState.Connected)
-				{
-					// switch to the ManualPage once we're connected
-					if (Parent.Parent is TabbedPage t)
-					{
-						// ANDROID ISSUE:
-						// There's apparently some kind of timing problem such that the ManualPage
-						// has already appeared (before connection) so it gets no OnAppearing notification
-						// from this navigation (after conection)
-
-						// our Parent is a NavigationPage and his Parent is the TabbedPage (MainPage)
-						// we'll find the ManualPage among the TabbedPage's grandchildren
-						t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is ManualPage);
-					}
+							// our Parent is a NavigationPage and his Parent is the TabbedPage (MainPage)
+							// we'll find the ManualPage among the TabbedPage's grandchildren
+							t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is ManualPage);
+						}
+						break;
 				}
 			});
 		}

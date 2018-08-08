@@ -176,7 +176,6 @@ namespace CamSlider.Droid
 
 		private void GattCallback_ConnectionStateChange(object sender, ConnectionStateChangeEventArgs e)
 		{
-			State = (BlueState)e.NewState;
 			switch (e.NewState)
 			{
 				case ProfileState.Connected:
@@ -193,6 +192,7 @@ namespace CamSlider.Droid
 				default:
 					break;
 			}
+			State = (BlueState)e.NewState;
 		}
 
 		public async void Connect(string name)
