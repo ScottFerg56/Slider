@@ -20,16 +20,17 @@ namespace CamSlider
 			Blue.InputAvailable += Blue_InputAvailable;
 		}
 
-		private void Command(string s)
+		private void Input(string s)
 		{
+			// process Bluetooth input from the device
 			Debug.WriteLine($"Blue input: {s}");
 			switch (s[0])
 			{
 				case 's':
-					Stepper.Slide.Command(s.Substring(1));
+					Stepper.Slide.Input(s.Substring(1));
 					break;
 				case 'p':
-					Stepper.Pan.Command(s.Substring(1));
+					Stepper.Pan.Input(s.Substring(1));
 					break;
 				default:
 					break;
@@ -47,7 +48,7 @@ namespace CamSlider
 				char c = (char)Blue.GetByte();
 				if (c == ';')
 				{
-					Command(Buffer);
+					Input(Buffer);
 					Buffer = "";
 				}
 				else
@@ -73,6 +74,7 @@ namespace CamSlider
 		public BlueState State { get => Blue.State; }
 		public bool CanConnect { get => Blue.CanConnect; }
 		public string ErrorMessage { get => Blue.ErrorMessage; }
+		public void Command(string cmd, bool required = true) => Blue.Write(cmd + ';', required);
 
 		public string StateText
 		{
@@ -90,7 +92,7 @@ namespace CamSlider
 			if (SliderComm.Instance.State != BlueState.Connected)
 				return;
 			speed = Math.Round(speed, 1);
-			Blue.Write($"sv{speed:0.#};", Math.Abs(speed) < 0.01);
+			Command($"sv{speed:0.#}", Math.Abs(speed) < 0.01);
 		}
 
 		public void SetPanVector(double speed)
@@ -109,8 +111,10 @@ namespace CamSlider
 
 	public class Stepper : INotifyPropertyChanged
 	{
-		protected Stepper()
+		private readonly char Prefix;
+		protected Stepper(char prefix)
 		{
+			Prefix = prefix;
 		}
 
 		private static Stepper _Slide;
@@ -119,7 +123,7 @@ namespace CamSlider
 			get
 			{
 				if (_Slide == null)
-					_Slide = new Stepper();
+					_Slide = new Stepper('s');
 				return _Slide;
 			}
 		}
@@ -130,18 +134,20 @@ namespace CamSlider
 			get
 			{
 				if (_Pan == null)
-					_Pan = new Stepper();
+					_Pan = new Stepper('p');
 				return _Pan;
 			}
 		}
 
-		internal void Command(string s)
+		internal void Input(string s)
 		{
+			// process Bluetooth input from the device
 			switch (s[0])
 			{
-				default:
+				case 'p':
 					{
-						if (double.TryParse(s, out double pos))
+						// receiving current position from device
+						if (double.TryParse(s.Substring(1), out double pos))
 						{
 							SetProperty(ref _Position, pos, nameof(Position));
 						}
@@ -150,10 +156,20 @@ namespace CamSlider
 			}
 		}
 
-		protected double _Position;
+		protected double _Position = double.NaN;
 		public double Position
 		{
-			get { return _Position; }
+			get
+			{
+				if (double.IsNaN(_Position))
+				{
+					// send device query for position value for this stepper, by Prefix ('s' or 'p')
+					SliderComm.Instance.Command($"{Prefix}p?", false);
+					// client should be monitoring property change to update value when it comes in
+					return 0.0;
+				}
+				return _Position;
+			}
 			set { SetProperty(ref _Position, value); }
 		}
 

@@ -33,7 +33,10 @@ namespace CamSlider.Views
 			base.OnAppearing();
 			// ANDROID HACK:
 			// On Android these centered labels become left-aligned when the page disappears and reappears.
-			// But forcing a change seems to cause them to align properly.
+			// UGLY! But forcing a change seems to cause them to align properly.
+
+			// the first time the Positions are requested will also go to the device
+			// and bring us in sync with its current state
 			LabelSlide.Text = "";
 			LabelSlide.Text = Stepper.Slide.Position.ToString();
 			LabelPan.Text = "";
