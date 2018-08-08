@@ -40,6 +40,7 @@ namespace CamSlider
 		IBlueDevice BlueDevice;
 		List<string> Queue = new List<string>();
 		Timer timer;
+		static TraceSwitch sw = new TraceSwitch("BlueApp", "BlueApp") { Level = TraceLevel.Warning };
 
 		public event EventHandler StateChange;
 		public event EventHandler InputAvailable;
@@ -72,63 +73,77 @@ namespace CamSlider
 
 		private void BlueDevice_StateChange(object sender, EventArgs e)
 		{
-			if (Queue.Count > 0)
+			lock (Queue)
 			{
-				Debug.WriteLine("++> Queue emptied on state change");
-				Queue.Clear();
+				if (Queue.Count > 0)
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, "++> Queue emptied on state change");
+					Queue.Clear();
+				}
 			}
 			StateChange?.Invoke(this, e);
 		}
 
 		public void Write(string data, bool required = true)
 		{
-			if (Queue.Count > 0)
+			if (State != BlueState.Connected)
 			{
-				if (!required)
-				{
-				//	Debug.WriteLine($"++> Optional write ignored: {data}");
-					return;
-				}
-			//	Debug.WriteLine($"++> Required write queued: {data}");
-				Queue.Add(data);
-				timer.Enabled = true;
+				Debug.WriteLineIf(sw.TraceError, $"--> Write ignored while not connected: {data}");
 				return;
 			}
-			if (BlueDevice.Write(data))
+			lock (Queue)
 			{
-			//	Debug.WriteLine($"++> Write succeeded: {data}");
-			}
-			else if (required)
-			{
-			//	Debug.WriteLine($"++> Required write failed/queued: {data}");
-				Queue.Add(data);
-				timer.Enabled = true;
-			}
-			else
-			{
-			//	Debug.WriteLine($"++> Optional write failed/not queued: {data}");
+				if (Queue.Count > 0)
+				{
+					if (!required)
+					{
+						Debug.WriteLineIf(sw.TraceVerbose, $"++> Optional write ignored: {data}");
+						return;
+					}
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Required write queued: {data}");
+					Queue.Add(data);
+					timer.Enabled = true;
+					return;
+				}
+				if (BlueDevice.Write(data))
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Write succeeded: {data}");
+				}
+				else if (required)
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Required write failed/queued: {data}");
+					Queue.Add(data);
+					timer.Enabled = true;
+				}
+				else
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Optional write failed/not queued: {data}");
+				}
 			}
 		}
 
 		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			timer.Enabled = false;
-			if (Queue.Count == 0)
-				return;
-			string data = Queue.Last();
-			if (BlueDevice.Write(data))
+			lock (Queue)
 			{
-			//	Debug.WriteLine($"++> Queued write succeeded: {data}");
-				Queue.RemoveAt(Queue.Count - 1);
-			}
-			else
-			{
-			//	Debug.WriteLine($"++> Queued write failed: {data}");
-			}
-			if (Queue.Count > 0)
-			{
-			//	Debug.WriteLine("++> Queue not emptied");
-				timer.Enabled = true;
+				timer.Enabled = false;
+				if (Queue.Count == 0)
+					return;
+				string data = Queue.First();
+				if (BlueDevice.Write(data))
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Queued write succeeded: {data}");
+					Queue.RemoveAt(0);
+				}
+				else
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, $"++> Queued write failed: {data}");
+				}
+				if (Queue.Count > 0)
+				{
+					Debug.WriteLineIf(sw.TraceVerbose, "++> Queue not emptied");
+					timer.Enabled = true;
+				}
 			}
 		}
 	}

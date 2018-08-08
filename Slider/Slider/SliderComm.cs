@@ -23,7 +23,7 @@ namespace CamSlider
 		private void Input(string s)
 		{
 			// process Bluetooth input from the device
-			Debug.WriteLine($"Blue input: {s}");
+			Debug.WriteLine($"++> Blue input: {s}");
 			switch (s[0])
 			{
 				case 's':
@@ -74,7 +74,12 @@ namespace CamSlider
 		public BlueState State { get => Blue.State; }
 		public bool CanConnect { get => Blue.CanConnect; }
 		public string ErrorMessage { get => Blue.ErrorMessage; }
-		public void Command(string cmd, bool required = true) => Blue.Write(cmd + ';', required);
+
+		public void Command(string cmd, bool required = true)
+		{
+			Debug.WriteLine($"++> Blue command: {cmd}");
+			Blue.Write(cmd + ';', required);
+		}
 
 		public string StateText
 		{
@@ -164,7 +169,7 @@ namespace CamSlider
 				if (double.IsNaN(_Position))
 				{
 					// send device query for position value for this stepper, by Prefix ('s' or 'p')
-					SliderComm.Instance.Command($"{Prefix}p?", false);
+					SliderComm.Instance.Command($"{Prefix}p?");
 					// client should be monitoring property change to update value when it comes in
 					return 0.0;
 				}

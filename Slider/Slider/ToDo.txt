@@ -1,5 +1,6 @@
 ﻿Pan/Slider objects
 Manual page
+	button to calibrate slide position
 	button to zero pan position
 Sequence playback page
 	integrate with 'details' listview page??
@@ -7,4 +8,6 @@ Sequence playback page
 	list of sequence nodes
 	Slide/Pan position feedback
 Feedback from device when calibrated and ready
-	navigate to Manual Page when ready
+	'Ready' property that can be requested by app after connect
+	can be pushed by device when calibrating, whether by command or startup
+	used to enable UI, rather than connected state
