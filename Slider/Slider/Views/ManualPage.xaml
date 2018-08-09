@@ -5,11 +5,18 @@
              x:Class="CamSlider.Views.ManualPage"
 			 Title="Manual">
     <ContentPage.Content>
-		<StackLayout>
-			<Label x:Name="LabelSlide" Text="0" XAlign="Center" FontSize="Large"/>
-			<local:FMSlider	x:Name="SliderSlide" Value="0" Minimum="-100" Maximum="100"/>
-			<Label x:Name="LabelPan" Text="0" XAlign="Center" FontSize="Large"/>
-			<local:FMSlider	x:Name="SliderPan" Value="0" Minimum="-100" Maximum="100"/>
-		</StackLayout>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Label Grid.Row="0" Grid.Column="1" x:Name="LabelSlide" Text="0" XAlign="Center" FontSize="Large"/>
+			<local:FMSlider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="SliderSlide" Value="0" Minimum="-100" Maximum="100"/>
+			<Label x:Name="LabelPan" Grid.Row="2" Grid.Column="1" Text="0" XAlign="Center" FontSize="Large"/>
+			<Button x:Name="ButtonZero" Grid.Row="2" Grid.Column="2" Text="Zero" />
+			<local:FMSlider	Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" x:Name="SliderPan" Value="0" Minimum="-100" Maximum="100"/>
+		</Grid>
 	</ContentPage.Content>
 </ContentPage>

@@ -115,6 +115,7 @@ namespace CamSlider
 				// trigger updated values from the device
 				var pos = Stepper.Slide.Position.ToString();
 				pos = Stepper.Pan.Position.ToString();
+				var homed = Stepper.Slide.Homed;
 			}
 			StateChange?.Invoke(this, e);
 		}
@@ -160,7 +161,17 @@ namespace CamSlider
 						// receiving current position from device
 						if (double.TryParse(s.Substring(1), out double pos))
 						{
-							SetProperty(ref _Position, pos, nameof(Position));
+							Position = pos;
+						}
+					}
+					break;
+
+				case 'h':
+					{
+						// receiving current homed value from device
+						if (int.TryParse(s.Substring(1), out int homed))
+						{
+							Homed = homed != 0;
 						}
 					}
 					break;
@@ -181,7 +192,31 @@ namespace CamSlider
 				}
 				return _Position;
 			}
-			set { SetProperty(ref _Position, value); }
+			internal set { SetProperty(ref _Position, value); }
+		}
+
+		protected bool? _Homed = null;
+		public bool Homed
+		{
+			get
+			{
+				Debug.Assert(Prefix == 's', "--> Homed only valid for Slide");
+				if (!_Homed.HasValue)
+				{
+					// send device query for Homed value for this stepper, by Prefix ('s' or 'p')
+					SliderComm.Instance.Command($"{Prefix}h?");
+					// client should be monitoring property change to update value when it comes in
+					return false;
+				}
+				return _Homed.Value;
+			}
+			set { SetProperty(ref _Homed, value); }
+		}
+
+		public void Zero()
+		{
+			Debug.Assert(Prefix == 'p', "--> Zero only valid for Pan");
+			SliderComm.Instance.Command($"{Prefix}z");
 		}
 
 		protected bool SetProperty<T>(ref T backingStore, T value,

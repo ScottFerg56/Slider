@@ -2,6 +2,7 @@
 Manual page
 	button to calibrate slide position
 	button to zero pan position
+	stop button
 Sequence playback page
 	integrate with 'details' listview page??
 	play / pause / stop / restart
