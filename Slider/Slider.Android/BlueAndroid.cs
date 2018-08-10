@@ -74,11 +74,16 @@ namespace CamSlider.Droid
 		public BlueAndroid()
 		{
 			var appContext = Android.App.Application.Context;
+			if (appContext == null)
+				return;
 			// get a reference to the bluetooth system service
 			_manager = (BluetoothManager)appContext.GetSystemService("bluetooth");
+			if (_manager == null)
+				return;
 			_adapter = _manager.Adapter;
 			_gattCallback = new GattCallback();
-
+			if (_gattCallback == null)
+				return;
 			_gattCallback.ConnectionStateChange += GattCallback_ConnectionStateChange;
 			_gattCallback.ServicesDiscovered += GattCallback_ServicesDiscovered;
 			_gattCallback.CharacteristicValueUpdated += GattCallback_CharacteristicValueUpdated;
