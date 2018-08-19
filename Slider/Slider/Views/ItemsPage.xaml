@@ -9,7 +9,7 @@
             <ToolbarItem.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">
                     <On Platform="UWP" Value="add.png"/>
-                </OnPlatform>
+				</OnPlatform>
             </ToolbarItem.Icon>
         </ToolbarItem>
 	</ContentPage.ToolbarItems>

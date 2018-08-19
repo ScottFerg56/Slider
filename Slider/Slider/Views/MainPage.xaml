@@ -21,5 +21,11 @@
                 <views:ItemsPage />
             </x:Arguments>
         </NavigationPage>
-    </TabbedPage.Children>
+
+		<NavigationPage Title="Play">
+			<x:Arguments>
+				<views:PlayPage />
+			</x:Arguments>
+		</NavigationPage>
+	</TabbedPage.Children>
 </TabbedPage>
