@@ -232,6 +232,16 @@ namespace CamSlider
 			return true;
 		}
 
+		public static int LimitSlideValue(int v)
+		{
+			return Math.Max(Math.Min(v, 640), 0);
+		}
+
+		public static int LimitPanValue(int v)
+		{
+			return Math.Max(Math.Min(v, 360), -360);
+		}
+
 		#region INotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")

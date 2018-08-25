@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CamSlider.Views"
+             x:Class="CamSlider.Views.SequencePage"
+			 Title="Sequence">
+    <ContentPage.Content>
+		<StackLayout BackgroundColor="White">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Button Grid.Row="0" Grid.Column="0" x:Name="ButtonPlay" Image="play.png" BackgroundColor="White" />
+				<Button Grid.Row="0" Grid.Column="1" x:Name="ButtonPause" Image="pause.png" BackgroundColor="White" />
+				<Button Grid.Row="0" Grid.Column="2" x:Name="ButtonStop" Image="stop.png" BackgroundColor="White" />
+			</Grid>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Grid.Row="0" Grid.Column="1" Text="mm" VerticalTextAlignment="End" FontSize="Small" />
+				<Label Grid.Row="0" Grid.Column="2" Text="degrees" VerticalTextAlignment="End" FontSize="Small" />
+				<Label Grid.Row="1" Grid.Column="0" Text="IN:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Entry Grid.Row="1" Grid.Column="1" Text="{Binding SlideIn}" FontSize="Small">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior />
+					</Entry.Behaviors>
+				</Entry>
+				<Entry Grid.Row="1" Grid.Column="2" Text="{Binding PanIn}" FontSize="Small">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior />
+					</Entry.Behaviors>
+				</Entry>
+				<Button Grid.Row="1" Grid.Column="3" Command="{Binding SetInFromCurrentCommand}" Text="current" FontSize="Micro" />
+				<Button Grid.Row="1" Grid.Column="4" Command="{Binding MoveToInCommand}" Text="move to" FontSize="Micro" />
+				<Label Grid.Row="2" Grid.Column="0" Text="OUT:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding SlideOut}" FontSize="Small">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior />
+					</Entry.Behaviors>
+				</Entry>
+				<Entry Grid.Row="2" Grid.Column="2" Text="{Binding PanOut}" FontSize="Small">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior />
+					</Entry.Behaviors>
+				</Entry>
+				<Button Grid.Row="2" Grid.Column="3" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
+				<Button Grid.Row="2" Grid.Column="4" Command="{Binding MoveToOutCommand}" Text="move to" FontSize="Micro" />
+			</Grid>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

@@ -16,15 +16,9 @@
 			</x:Arguments>
 		</NavigationPage>
 
-        <NavigationPage Title="Sequence">
-            <x:Arguments>
-                <views:ItemsPage />
-            </x:Arguments>
-        </NavigationPage>
-
-		<NavigationPage Title="Play">
+		<NavigationPage Title="Sequence">
 			<x:Arguments>
-				<views:PlayPage />
+				<views:SequencePage />
 			</x:Arguments>
 		</NavigationPage>
 	</TabbedPage.Children>

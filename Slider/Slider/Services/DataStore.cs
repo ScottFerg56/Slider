@@ -18,8 +18,9 @@ namespace CamSlider.Services
 				{
 					return JsonConvert.DeserializeObject<T>(json);
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					Debug.WriteLine(ex);
 					return default(T);
 				}
 			}
