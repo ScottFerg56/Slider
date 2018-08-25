@@ -4,9 +4,6 @@
              x:Class="CamSlider.Views.AboutPage"
              xmlns:vm="clr-namespace:CamSlider.ViewModels"
              Title="Connect">
-    <ContentPage.BindingContext>
-        <vm:AboutViewModel />
-    </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
             <!--Page Level Resources: Compatibile with Xamarin Live Player -->
