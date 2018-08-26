@@ -92,6 +92,29 @@
 				<Label  Grid.Row="2" Grid.Column="6" Text="{Binding PlaybackSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
 				<loc:HoldButton Grid.Row="3" Grid.Column="6" x:Name="ButtonPSecsDn" Text="-" FontSize="Small"/>
 			</Grid>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Label Grid.Row="0" Grid.Column="0" Text="FPS:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Entry Grid.Row="0" Grid.Column="1" Text="{Binding FramesPerSecond}" FontSize="Small">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior />
+					</Entry.Behaviors>
+				</Entry>
+				<Label Grid.Row="0" Grid.Column="2" Text="Frames:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Label Grid.Row="0" Grid.Column="3" Text="{Binding Frames}" VerticalTextAlignment="Center" FontSize="Small" />
+				<Label Grid.Row="0" Grid.Column="4" Text="Interval:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Label Grid.Row="0" Grid.Column="5" Text="{Binding Interval, StringFormat='{0:0.###} sec'}" VerticalTextAlignment="Center" FontSize="Small" />
+			</Grid>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

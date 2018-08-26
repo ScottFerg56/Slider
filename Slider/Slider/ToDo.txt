@@ -1,8 +1,7 @@
 ﻿Pan/Slider objects
 Manual page
 	button to calibrate slide position??
-Sequence playback page
-	integrate with 'details' listview page??
-	play / pause / stop
-	list of sequence nodes
-	Slide/Pan position feedback
+Sequence page
+
+Playback x FPS -> #Frames
+Duration / #Frames -> Interval

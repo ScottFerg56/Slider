@@ -133,6 +133,22 @@ namespace CamSlider.ViewModels
 			}
 		}
 
+		public int FramesPerSecond
+		{
+			get { return GetProperty<int>(); }
+			set { SetProperty(value); }
+		}
+
+		public int Frames
+		{
+			get { return GetProperty<int>(); }
+		}
+
+		public double Interval
+		{
+			get { return GetProperty<double>(); }
+		}
+
 		public SequenceViewModel()
 		{
 			MoveToInCommand = new Command(() => ExecuteMoveToInCommand());
@@ -144,6 +160,12 @@ namespace CamSlider.ViewModels
 			{
 				Seq = new Sequence();
 			}
+			Seq.PropertyChanged += Seq_PropertyChanged;
+		}
+
+		private void Seq_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			PropertyChanged?.Invoke(this, e);
 		}
 
 		void ExecuteMoveToInCommand()
@@ -181,7 +203,8 @@ namespace CamSlider.ViewModels
 
 			pi.SetValue(Seq, value);
 			onChanged?.Invoke();
-			OnPropertyChanged(propertyName);
+			// the Seq object will propagate changes back up thru us
+		//	OnPropertyChanged(propertyName);
 			SaveSequence();
 			return true;
 		}
