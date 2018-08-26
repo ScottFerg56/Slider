@@ -54,5 +54,29 @@ namespace CamSlider.Models
 				_PanOut = Stepper.LimitPanValue(value);
 			}
 		}
+
+		protected int _Duration = 0;
+		public int Duration
+		{
+			get { return _Duration; }
+			set
+			{
+				if (value == _Duration)
+					return;
+				_Duration = Math.Max(0, value);
+			}
+		}
+
+		protected int _Playback = 0;
+		public int Playback
+		{
+			get { return _Playback; }
+			set
+			{
+				if (value == _Playback)
+					return;
+				_Playback = Math.Max(0, value);
+			}
+		}
 	}
 }

@@ -11,7 +11,7 @@ namespace CamSlider.ViewModels
 {
     public class SequenceViewModel : INotifyPropertyChanged
 	{
-		protected Sequence Seq;
+		public Sequence Seq;
 		public Command MoveToInCommand { get; set; }
 		public Command MoveToOutCommand { get; set; }
 		public Command SetInFromCurrentCommand { get; set; }
@@ -39,6 +39,98 @@ namespace CamSlider.ViewModels
 		{
 			get { return GetProperty<int>(); }
 			set { SetProperty(value); }
+		}
+
+		public int Duration
+		{
+			get { return GetProperty<int>(); }
+			set { SetProperty(value); }
+		}
+
+		protected TimeSpan DurationTimeSpan
+		{
+			get { return new TimeSpan(0, 0, Duration); }
+			set { Duration = (int)value.TotalSeconds; }
+		}
+
+		public int DurationHrs
+		{
+			get { return DurationTimeSpan.Hours; }
+			set
+			{
+				var ts = DurationTimeSpan;
+				DurationTimeSpan = new TimeSpan(Math.Max(0, value), ts.Minutes, ts.Seconds);
+				OnPropertyChanged();
+			}
+		}
+
+		public int DurationMins
+		{
+			get { return DurationTimeSpan.Minutes; }
+			set
+			{
+				var ts = DurationTimeSpan;
+				DurationTimeSpan = new TimeSpan(ts.Hours, Math.Max(0, value), ts.Seconds);
+				OnPropertyChanged();
+			}
+		}
+
+		public int DurationSecs
+		{
+			get { return DurationTimeSpan.Seconds; }
+			set
+			{
+				var ts = DurationTimeSpan;
+				var v = (value + 60) % 60;
+				DurationTimeSpan = new TimeSpan(ts.Hours, ts.Minutes, v);
+				OnPropertyChanged();
+			}
+		}
+
+		public int Playback
+		{
+			get { return GetProperty<int>(); }
+			set { SetProperty(value); }
+		}
+
+		protected TimeSpan PlaybackTimeSpan
+		{
+			get { return new TimeSpan(0, 0, Playback); }
+			set { Playback = (int)value.TotalSeconds; }
+		}
+
+		public int PlaybackHrs
+		{
+			get { return PlaybackTimeSpan.Hours; }
+			set
+			{
+				var ts = PlaybackTimeSpan;
+				PlaybackTimeSpan = new TimeSpan(Math.Max(0, value), ts.Minutes, ts.Seconds);
+				OnPropertyChanged();
+			}
+		}
+
+		public int PlaybackMins
+		{
+			get { return PlaybackTimeSpan.Minutes; }
+			set
+			{
+				var ts = PlaybackTimeSpan;
+				PlaybackTimeSpan = new TimeSpan(ts.Hours, Math.Max(0, value), ts.Seconds);
+				OnPropertyChanged();
+			}
+		}
+
+		public int PlaybackSecs
+		{
+			get { return PlaybackTimeSpan.Seconds; }
+			set
+			{
+				var ts = PlaybackTimeSpan;
+				var v = (value + 60) % 60;
+				PlaybackTimeSpan = new TimeSpan(ts.Hours, ts.Minutes, Math.Max(0, Math.Min(59, v)));
+				OnPropertyChanged();
+			}
 		}
 
 		public SequenceViewModel()

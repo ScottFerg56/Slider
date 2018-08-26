@@ -29,7 +29,7 @@
 				</Grid.ColumnDefinitions>
 				<Label Grid.Row="0" Grid.Column="1" Text="mm" VerticalTextAlignment="End" FontSize="Small" />
 				<Label Grid.Row="0" Grid.Column="2" Text="degrees" VerticalTextAlignment="End" FontSize="Small" />
-				<Label Grid.Row="1" Grid.Column="0" Text="IN:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Label Grid.Row="1" Grid.Column="0" Text="In:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
 				<Entry Grid.Row="1" Grid.Column="1" Text="{Binding SlideIn}" FontSize="Small">
 					<Entry.Behaviors>
 						<local:NumericValidationBehavior />
@@ -42,7 +42,7 @@
 				</Entry>
 				<Button Grid.Row="1" Grid.Column="3" Command="{Binding SetInFromCurrentCommand}" Text="current" FontSize="Micro" />
 				<Button Grid.Row="1" Grid.Column="4" Command="{Binding MoveToInCommand}" Text="move to" FontSize="Micro" />
-				<Label Grid.Row="2" Grid.Column="0" Text="OUT:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
+				<Label Grid.Row="2" Grid.Column="0" Text="Out:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
 				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding SlideOut}" FontSize="Small">
 					<Entry.Behaviors>
 						<local:NumericValidationBehavior />
@@ -55,6 +55,41 @@
 				</Entry>
 				<Button Grid.Row="2" Grid.Column="3" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
 				<Button Grid.Row="2" Grid.Column="4" Command="{Binding MoveToOutCommand}" Text="move to" FontSize="Micro" />
+			</Grid>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="3*" />
+				</Grid.ColumnDefinitions>
+				<Label  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Duration:" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="Medium" />
+				<Button Grid.Row="1" Grid.Column="0" x:Name="ButtonMinsUp" Text="+" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="0" Text="{Binding DurationMins, StringFormat='{0} min'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="3" Grid.Column="0" x:Name="ButtonMinsDn" Text="-" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="1" Text=":" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="1" Grid.Column="2" x:Name="ButtonSecsUp" Text="+" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="2" Text="{Binding DurationSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="3" Grid.Column="2" x:Name="ButtonSecsDn" Text="-" FontSize="Small"/>
+				
+				<Label  Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Text="Playback:" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="Medium" />
+				<Button Grid.Row="1" Grid.Column="4" x:Name="ButtonPMinsUp" Text="+" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="4" Text="{Binding PlaybackMins, StringFormat='{0} min'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="3" Grid.Column="4" x:Name="ButtonPMinsDn" Text="-" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="5" Text=":" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="1" Grid.Column="6" x:Name="ButtonPSecsUp" Text="+" FontSize="Small"/>
+				<Label  Grid.Row="2" Grid.Column="6" Text="{Binding PlaybackSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
+				<Button Grid.Row="3" Grid.Column="6" x:Name="ButtonPSecsDn" Text="-" FontSize="Small"/>
 			</Grid>
 		</StackLayout>
 	</ContentPage.Content>
