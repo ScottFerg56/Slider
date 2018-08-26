@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CamSlider.Views"
+             xmlns:loc="clr-namespace:CamSlider.CustomControls"
              x:Class="CamSlider.Views.SequencePage"
 			 Title="Sequence">
     <ContentPage.Content>
@@ -74,22 +75,22 @@
 					<ColumnDefinition Width="3*" />
 				</Grid.ColumnDefinitions>
 				<Label  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="Duration:" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="Medium" />
-				<Button Grid.Row="1" Grid.Column="0" x:Name="ButtonMinsUp" Text="+" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="1" Grid.Column="0" x:Name="ButtonMinsUp" Text="+" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="0" Text="{Binding DurationMins, StringFormat='{0} min'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="3" Grid.Column="0" x:Name="ButtonMinsDn" Text="-" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="3" Grid.Column="0" x:Name="ButtonMinsDn" Text="-" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="1" Text=":" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="1" Grid.Column="2" x:Name="ButtonSecsUp" Text="+" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="1" Grid.Column="2" x:Name="ButtonSecsUp" Text="+" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="2" Text="{Binding DurationSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="3" Grid.Column="2" x:Name="ButtonSecsDn" Text="-" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="3" Grid.Column="2" x:Name="ButtonSecsDn" Text="-" FontSize="Small"/>
 				
 				<Label  Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Text="Playback:" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="Medium" />
-				<Button Grid.Row="1" Grid.Column="4" x:Name="ButtonPMinsUp" Text="+" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="1" Grid.Column="4" x:Name="ButtonPMinsUp" Text="+" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="4" Text="{Binding PlaybackMins, StringFormat='{0} min'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="3" Grid.Column="4" x:Name="ButtonPMinsDn" Text="-" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="3" Grid.Column="4" x:Name="ButtonPMinsDn" Text="-" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="5" Text=":" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="1" Grid.Column="6" x:Name="ButtonPSecsUp" Text="+" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="1" Grid.Column="6" x:Name="ButtonPSecsUp" Text="+" FontSize="Small"/>
 				<Label  Grid.Row="2" Grid.Column="6" Text="{Binding PlaybackSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
-				<Button Grid.Row="3" Grid.Column="6" x:Name="ButtonPSecsDn" Text="-" FontSize="Small"/>
+				<loc:HoldButton Grid.Row="3" Grid.Column="6" x:Name="ButtonPSecsDn" Text="-" FontSize="Small"/>
 			</Grid>
 		</StackLayout>
 	</ContentPage.Content>
