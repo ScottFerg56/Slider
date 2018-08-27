@@ -17,6 +17,16 @@ namespace CamSlider.ViewModels
 		public Command SetInFromCurrentCommand { get; set; }
 		public Command SetOutFromCurrentCommand { get; set; }
 
+		public SequenceViewModel()
+		{
+			MoveToInCommand = new Command(() => ExecuteMoveToInCommand());
+			MoveToOutCommand = new Command(() => ExecuteMoveToOutCommand());
+			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
+			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
+			Seq = Services.DataStore.LoadDataStore<Sequence>("sequence") ?? new Sequence();
+			Seq.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
+		}
+
 		public int SlideIn
 		{
 			get { return GetProperty<int>(); }
@@ -147,25 +157,6 @@ namespace CamSlider.ViewModels
 		public double Interval
 		{
 			get { return GetProperty<double>(); }
-		}
-
-		public SequenceViewModel()
-		{
-			MoveToInCommand = new Command(() => ExecuteMoveToInCommand());
-			MoveToOutCommand = new Command(() => ExecuteMoveToOutCommand());
-			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
-			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
-			Seq = Services.DataStore.LoadDataStore<Sequence>("sequence");
-			if (Seq == null)
-			{
-				Seq = new Sequence();
-			}
-			Seq.PropertyChanged += Seq_PropertyChanged;
-		}
-
-		private void Seq_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			PropertyChanged?.Invoke(this, e);
 		}
 
 		void ExecuteMoveToInCommand()

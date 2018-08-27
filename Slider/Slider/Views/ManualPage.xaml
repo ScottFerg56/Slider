@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:CamSlider.CustomControls"
+             xmlns:loc="clr-namespace:CamSlider.CustomControls"
              x:Class="CamSlider.Views.ManualPage"
 			 Title="Manual">
     <ContentPage.Content>
@@ -12,11 +12,11 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-			<Label Grid.Row="0" Grid.Column="1" x:Name="LabelSlide" Text="0" XAlign="Center" FontSize="Large"/>
-			<local:FMSlider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="SliderSlide" Value="0" Minimum="-100" Maximum="100"/>
-			<Label x:Name="LabelPan" Grid.Row="2" Grid.Column="1" Text="0" XAlign="Center" FontSize="Large"/>
-			<Button x:Name="ButtonZero" Grid.Row="2" Grid.Column="2" Text="Zero" />
-			<local:FMSlider	Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" x:Name="SliderPan" Value="0" Minimum="-100" Maximum="100"/>
+			<Label Grid.Row="0" Grid.Column="1" x:Name="LabelSlide" Text="{Binding SlidePosition}" XAlign="Center" FontSize="Large"/>
+			<loc:FMSlider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding SlideVector, Mode=OneWayToSource}" x:Name="SliderSlide" Minimum="-100" Maximum="100"/>
+			<Label x:Name="LabelPan" Grid.Row="2" Grid.Column="1" Text="{Binding PanPosition}" XAlign="Center" FontSize="Large"/>
+			<Button x:Name="ButtonZero" Grid.Row="2" Grid.Column="2" IsEnabled="{Binding Enabled}" Command="{Binding PanZeroCommand}" Text="Zero" />
+			<loc:FMSlider Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding PanVector, Mode=OneWayToSource}" x:Name="SliderPan" Minimum="-100" Maximum="100"/>
 		</Grid>
 	</ContentPage.Content>
 </ContentPage>

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CamSlider
 {
-	public class SliderComm
+	public class SliderComm : INotifyPropertyChanged
 	{
 		BlueApp Blue;
 
@@ -27,10 +27,10 @@ namespace CamSlider
 			switch (s[0])
 			{
 				case 's':
-					Stepper.Slide.Input(s.Substring(1));
+					Slide.Input(s.Substring(1));
 					break;
 				case 'p':
-					Stepper.Pan.Input(s.Substring(1));
+					Pan.Input(s.Substring(1));
 					break;
 				default:
 					break;
@@ -69,6 +69,9 @@ namespace CamSlider
 			}
 		}
 
+		public Stepper Slide { get { return Stepper.Slide; } }
+		public Stepper Pan { get { return Stepper.Pan; } }
+
 		public void Connect(string name) => Blue.Connect(name);
 		public void Disconnect() => Blue.Disconnect();
 		public BlueState State { get => Blue.State; }
@@ -92,45 +95,50 @@ namespace CamSlider
 			}
 		}
 
-		public void SetSlideVector(double speed)
-		{
-			if (SliderComm.Instance.State != BlueState.Connected)
-				return;
-			speed = Math.Round(speed, 1);
-			Command($"sv{speed:0.#}", Math.Abs(speed) < 0.01);
-		}
-
-		public void SetPanVector(double speed)
-		{
-			if (SliderComm.Instance.State != BlueState.Connected)
-				return;
-			speed = Math.Round(speed, 1);
-			Blue.Write($"pv{speed:0.#};", Math.Abs(speed) < 0.01);
-		}
-
 		private void Blue_StateChange(object sender, EventArgs e)
 		{
 			if (SliderComm.Instance.State == BlueState.Connected)
 			{
 				// trigger updated values from the device
-				var pos = Stepper.Slide.Position.ToString();
-				pos = Stepper.Pan.Position.ToString();
-				var homed = Stepper.Slide.Homed;
+				var pos = Slide.Position.ToString();
+				pos = Pan.Position.ToString();
+				var homed = Slide.Homed;
 			}
 			StateChange?.Invoke(this, e);
 		}
+
+		protected bool SetProperty<T>(ref T backingStore, T value,
+			[CallerMemberName]string propertyName = "",
+			Action onChanged = null)
+		{
+			if (EqualityComparer<T>.Default.Equals(backingStore, value))
+				return false;
+
+			backingStore = value;
+			onChanged?.Invoke();
+			OnPropertyChanged(propertyName);
+			return true;
+		}
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+		#endregion
 	}
 
 	public class Stepper : INotifyPropertyChanged
 	{
 		private readonly char Prefix;
-		protected Stepper(char prefix)
+		internal Stepper(char prefix)
 		{
 			Prefix = prefix;
 		}
 
 		private static Stepper _Slide;
-		public static Stepper Slide
+		internal static Stepper Slide
 		{
 			get
 			{
@@ -141,7 +149,7 @@ namespace CamSlider
 		}
 
 		private static Stepper _Pan;
-		public static Stepper Pan
+		internal static Stepper Pan
 		{
 			get
 			{
@@ -193,6 +201,15 @@ namespace CamSlider
 				return _Position;
 			}
 			internal set { SetProperty(ref _Position, value); }
+		}
+
+		public double Vector
+		{
+			set
+			{
+				var speed = Math.Round(value, 1);
+				SliderComm.Instance.Command($"{Prefix}v{speed:0.#}", Math.Abs(speed) < 0.01);
+			}
 		}
 
 		protected bool? _Homed = null;

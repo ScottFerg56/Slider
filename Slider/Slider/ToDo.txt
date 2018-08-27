@@ -1,7 +1,11 @@
 ﻿Pan/Slider objects
 Manual page
 	button to calibrate slide position??
+	Enabled should also take into account connected
 Sequence page
 
 Playback x FPS -> #Frames
 Duration / #Frames -> Interval
+
+// ANDROID HACK:
+// On Android centered labels become left-aligned when the page disappears and reappears.
