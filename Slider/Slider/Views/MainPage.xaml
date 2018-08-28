@@ -21,5 +21,11 @@
 				<views:SequencePage />
 			</x:Arguments>
 		</NavigationPage>
+
+		<NavigationPage Title="Settings">
+			<x:Arguments>
+				<views:SettingsPage />
+			</x:Arguments>
+		</NavigationPage>
 	</TabbedPage.Children>
 </TabbedPage>

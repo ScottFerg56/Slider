@@ -3,9 +3,25 @@ Manual page
 	button to calibrate slide position??
 	Enabled should also take into account connected
 Sequence page
+	Playback x FPS -> #Frames
+	Duration / #Frames -> Interval
+Run page (modal)
+	Status: moving to in / running
+	Percent Done
+	Elapsed Time (elapsed/remaining/total)
+	Frames (#/remaining/total)
+	Distance Traveled (traveled/remaining/total)
+	Position (position/goal)
+	GO / STOP
+Settings page
+	Acceleration
+	Move Speed
+	Speed Limit
+	Focus delay
+	Shutter Hold
 
-Playback x FPS -> #Frames
-Duration / #Frames -> Interval
+Deal with Back button on Android modal RunPage
+	https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/modal
 
 // ANDROID HACK:
 // On Android centered labels become left-aligned when the page disappears and reappears.

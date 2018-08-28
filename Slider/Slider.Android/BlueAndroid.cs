@@ -111,7 +111,6 @@ namespace CamSlider.Droid
 
 		public string ErrorMessage { get; protected set; }
 
-		//	public bool ByteAvailable { get { return BytesRead.Count != 0; } }
 		public bool ByteAvailable => BytesRead.Count != 0;
 
 		public byte GetByte()

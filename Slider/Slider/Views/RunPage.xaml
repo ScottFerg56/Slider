@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Slider.Views.RunPage">
+    <ContentPage.Content>
+        <StackLayout>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Row="0" Grid.Column="1" Clicked="OnPlay" Image="play.png" BackgroundColor="White" />
+				<Button Grid.Row="0" Grid.Column="2" Clicked="OnStop" Image="stop.png" BackgroundColor="White" />
+			</Grid>
+		</StackLayout>
+    </ContentPage.Content>
+</ContentPage>

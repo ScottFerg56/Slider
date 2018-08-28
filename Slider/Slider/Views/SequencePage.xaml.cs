@@ -1,5 +1,6 @@
 ﻿using CamSlider.Models;
 using CamSlider.ViewModels;
+using Slider.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace CamSlider.Views
 			InitializeComponent ();
 
 			BindingContext = SeqViewModel = new SequenceViewModel();
+
 			ButtonMinsUp.Held += (s, e) => { SeqViewModel.DurationMins++; };
 			ButtonMinsDn.Held += (s, e) => { SeqViewModel.DurationMins--; };
 			ButtonSecsUp.Held += (s, e) => { SeqViewModel.DurationSecs++; };
@@ -31,54 +33,10 @@ namespace CamSlider.Views
 			ButtonPSecsUp.Held += (s, e) => { SeqViewModel.PlaybackSecs++; };
 			ButtonPSecsDn.Held += (s, e) => { SeqViewModel.PlaybackSecs--; };
 		}
-	}
 
-	public class NumericValidationBehavior : Behavior<Entry>
-	{
-
-		protected override void OnAttachedTo(Entry entry)
+		private async void OnRun(object sender, EventArgs e)
 		{
-			entry.TextChanged += OnEntryTextChanged;
-			base.OnAttachedTo(entry);
+			await Navigation.PushModalAsync(new RunPage());
 		}
-
-		protected override void OnDetachingFrom(Entry entry)
-		{
-			entry.TextChanged -= OnEntryTextChanged;
-			base.OnDetachingFrom(entry);
-		}
-
-		private static void OnEntryTextChanged(object sender, TextChangedEventArgs args)
-		{
-			var s = args.NewTextValue;
-			if (!string.IsNullOrWhiteSpace(s))
-			{
-				bool neg = s.Contains("-");
-				bool pos = s.Contains("+");
-				if (neg || pos)
-				{
-					s = s.Replace("+", "");
-					s = s.Replace("-", "");
-				}
-				bool isValid = int.TryParse(s, out int v);
-
-				if (!isValid)
-				{
-					s = new string(s.Where(c => char.IsDigit(c)).ToArray());
-					int.TryParse(s, out v);
-				//	System.Diagnostics.Debug.WriteLine("fix numeric: " + s);
-				}
-				s = v.ToString();
-				if (neg && !pos)
-					s = "-" + s;
-			}
-			else
-			{
-				s = "0";
-			}
-			((Entry)sender).Text = s;
-		}
-
-
 	}
 }

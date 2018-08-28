@@ -23,140 +23,125 @@ namespace CamSlider.ViewModels
 			MoveToOutCommand = new Command(() => ExecuteMoveToOutCommand());
 			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
 			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
+
 			Seq = Services.DataStore.LoadDataStore<Sequence>("sequence") ?? new Sequence();
 			Seq.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
 		}
 
 		public int SlideIn
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		public int PanIn
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		public int SlideOut
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		public int PanOut
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		public int Duration
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		protected TimeSpan DurationTimeSpan
 		{
-			get { return new TimeSpan(0, 0, Duration); }
-			set { Duration = (int)value.TotalSeconds; }
-		}
-
-		public int DurationHrs
-		{
-			get { return DurationTimeSpan.Hours; }
-			set
-			{
-				var ts = DurationTimeSpan;
-				DurationTimeSpan = new TimeSpan(Math.Max(0, value), ts.Minutes, ts.Seconds);
-				OnPropertyChanged();
-			}
+			get => new TimeSpan(0, 0, Duration);
+			set => Duration = (int)value.TotalSeconds;
 		}
 
 		public int DurationMins
 		{
-			get { return DurationTimeSpan.Minutes; }
+			get => DurationTimeSpan.Minutes;
 			set
 			{
 				var ts = DurationTimeSpan;
-				DurationTimeSpan = new TimeSpan(ts.Hours, Math.Max(0, value), ts.Seconds);
+				DurationTimeSpan = new TimeSpan(0, Math.Max(0, value), ts.Seconds);
 				OnPropertyChanged();
 			}
 		}
 
 		public int DurationSecs
 		{
-			get { return DurationTimeSpan.Seconds; }
+			get => DurationTimeSpan.Seconds;
 			set
 			{
 				var ts = DurationTimeSpan;
 				var v = (value + 60) % 60;
-				DurationTimeSpan = new TimeSpan(ts.Hours, ts.Minutes, v);
+				DurationTimeSpan = new TimeSpan(0, ts.Minutes, v);
 				OnPropertyChanged();
 			}
 		}
 
 		public int Playback
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		protected TimeSpan PlaybackTimeSpan
 		{
-			get { return new TimeSpan(0, 0, Playback); }
-			set { Playback = (int)value.TotalSeconds; }
-		}
-
-		public int PlaybackHrs
-		{
-			get { return PlaybackTimeSpan.Hours; }
-			set
-			{
-				var ts = PlaybackTimeSpan;
-				PlaybackTimeSpan = new TimeSpan(Math.Max(0, value), ts.Minutes, ts.Seconds);
-				OnPropertyChanged();
-			}
+			get => new TimeSpan(0, 0, Playback);
+			set => Playback = (int)value.TotalSeconds;
 		}
 
 		public int PlaybackMins
 		{
-			get { return PlaybackTimeSpan.Minutes; }
+			get => PlaybackTimeSpan.Minutes;
 			set
 			{
 				var ts = PlaybackTimeSpan;
-				PlaybackTimeSpan = new TimeSpan(ts.Hours, Math.Max(0, value), ts.Seconds);
+				PlaybackTimeSpan = new TimeSpan(0, Math.Max(0, value), ts.Seconds);
 				OnPropertyChanged();
 			}
 		}
 
 		public int PlaybackSecs
 		{
-			get { return PlaybackTimeSpan.Seconds; }
+			get => PlaybackTimeSpan.Seconds;
 			set
 			{
 				var ts = PlaybackTimeSpan;
 				var v = (value + 60) % 60;
-				PlaybackTimeSpan = new TimeSpan(ts.Hours, ts.Minutes, Math.Max(0, Math.Min(59, v)));
+				PlaybackTimeSpan = new TimeSpan(0, ts.Minutes, Math.Max(0, Math.Min(59, v)));
 				OnPropertyChanged();
 			}
 		}
 
 		public int FramesPerSecond
 		{
-			get { return GetProperty<int>(); }
-			set { SetProperty(value); }
+			get => GetProperty<int>();
+			set => SetProperty(value);
 		}
 
 		public int Frames
 		{
-			get { return GetProperty<int>(); }
+			get => GetProperty<int>();
 		}
 
 		public double Interval
 		{
-			get { return GetProperty<double>(); }
+			get => GetProperty<double>();
+		}
+
+		public bool Intervalometer
+		{
+			get => GetProperty<bool>();
+			set => SetProperty(value);
 		}
 
 		void ExecuteMoveToInCommand()

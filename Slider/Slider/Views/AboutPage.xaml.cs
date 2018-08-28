@@ -25,9 +25,9 @@ namespace CamSlider.Views
 				LabelBlueState.Text = SliderComm.Instance.StateText;
 				var s = SliderComm.Instance.CanConnect ? "Connect" : "Disconnect";
 				BlueAction.Text = s;
-				this.Title = s;
-				if (this.Parent is NavigationPage p)
-					p.Title = s;
+			//	this.Title = s;
+			//	if (this.Parent is NavigationPage p)
+			//		p.Title = s;
 				switch (SliderComm.Instance.State)
 				{
 					case BlueState.Disconnected:
@@ -45,7 +45,7 @@ namespace CamSlider.Views
 
 							// our Parent is a NavigationPage and his Parent is the TabbedPage (MainPage)
 							// we'll find the ManualPage among the TabbedPage's grandchildren
-							t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is ManualPage);
+						//	t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is ManualPage);
 						}
 						break;
 				}

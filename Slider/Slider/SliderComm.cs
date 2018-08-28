@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CamSlider.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,10 +12,14 @@ namespace CamSlider
 	{
 		BlueApp Blue;
 
+		public readonly Settings Settings;
+
 		public event EventHandler StateChange;
 
 		protected SliderComm()
 		{
+			Settings = Services.DataStore.LoadDataStore<Settings>("settings") ?? new Settings();
+
 			Blue = new BlueApp();
 			Blue.StateChange += Blue_StateChange;
 			Blue.InputAvailable += Blue_InputAvailable;
@@ -69,8 +74,8 @@ namespace CamSlider
 			}
 		}
 
-		public Stepper Slide { get { return Stepper.Slide; } }
-		public Stepper Pan { get { return Stepper.Pan; } }
+		public Stepper Slide { get => Stepper.Slide; }
+		public Stepper Pan { get => Stepper.Pan; }
 
 		public void Connect(string name) => Blue.Connect(name);
 		public void Disconnect() => Blue.Disconnect();

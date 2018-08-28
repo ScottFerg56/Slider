@@ -12,74 +12,87 @@ namespace CamSlider.Models
 		protected int _SlideIn = 0;
 		public int SlideIn
 		{
-			get { return _SlideIn; }
-			set { SetProperty(ref _SlideIn, Stepper.LimitSlideValue(value)); }
+			get => _SlideIn;
+			set => SetProperty(ref _SlideIn, value, Stepper.LimitSlideValue);
 		}
 
 		protected int _SlideOut = 640;
 		public int SlideOut
 		{
-			get { return _SlideOut; }
-			set { SetProperty(ref _SlideOut, Stepper.LimitSlideValue(value)); }
+			get => _SlideOut;
+			set => SetProperty(ref _SlideOut, value, Stepper.LimitSlideValue);
 		}
 
 		protected int _PanIn = 0;
 		public int PanIn
 		{
-			get { return _PanIn; }
-			set { SetProperty(ref _PanIn, Stepper.LimitPanValue(value)); }
+			get => _PanIn;
+			set => SetProperty(ref _PanIn, value, Stepper.LimitPanValue);
 		}
 
 		protected int _PanOut = 0;
 		public int PanOut
 		{
-			get { return _PanOut; }
-			set { SetProperty(ref _PanOut, Stepper.LimitPanValue(value)); }
+			get => _PanOut;
+			set => SetProperty(ref _PanOut, value, Stepper.LimitPanValue);
 		}
 
 		protected int _Duration = 1800;
 		public int Duration
 		{
-			get { return _Duration; }
-			set { SetProperty(ref _Duration, Math.Max(0, value), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; }); }
+			get => _Duration;
+			set => SetProperty(ref _Duration, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });
 		}
 
 		protected int _Playback = 120;
 		public int Playback
 		{
-			get { return _Playback; }
-			set { SetProperty(ref _Playback, Math.Max(0, value), onChanged: () => { Frames = Playback * FramesPerSecond; }); }
+			get => _Playback;
+			set => SetProperty(ref _Playback, value, (v) => Math.Max(0, v), onChanged: () => { Frames = Playback * FramesPerSecond; });
 		}
 
 		protected int _FramesPerSecond = 30;
 		public int FramesPerSecond
 		{
-			get { return _FramesPerSecond; }
-			set { SetProperty(ref _FramesPerSecond, Math.Max(0, value), onChanged: () => { Frames = Playback * FramesPerSecond; }); }
+			get => _FramesPerSecond;
+			set => SetProperty(ref _FramesPerSecond, value, (v) => Math.Max(0, v), onChanged: () => { Frames = Playback * FramesPerSecond; });
 		}
 
 		protected int _Frames = 0;
 		public int Frames
 		{
-			get { return _Frames; }
-			protected set { SetProperty(ref _Frames, Math.Max(0, value), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; }); }
+			get => _Frames;
+			protected set => SetProperty(ref _Frames, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });
 		}
 
 		protected double _Interval = 0;
 		public double Interval
 		{
-			get { return _Interval; }
-			protected set { SetProperty(ref _Interval, Math.Max(0, value)); }
+			get => _Interval;
+			protected set => SetProperty(ref _Interval, value, (v) => Math.Max(0, v));
 		}
 
-		protected bool SetProperty<T>(ref T backingStore, T value,
+		protected bool _Intervalometer = false;
+		public bool Intervalometer
+		{
+			get => _Intervalometer;
+			set => SetProperty(ref _Intervalometer, value);
+		}
+
+		protected bool SetProperty<T>(ref T backingStore, T value, Func<T, T> filter = null,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
 		{
+			// NOTE: For the binding interactions with XAML controls
+			// we need to test for equality before filtering
+			// so that property change notifications are sent
+			// even if not ultimately changed
+			// because it's still different from what the UI has
+
 			if (EqualityComparer<T>.Default.Equals(backingStore, value))
 				return false;
 
-			backingStore = value;
+			backingStore = (filter != null) ? filter(value) : value;
 			onChanged?.Invoke();
 			OnPropertyChanged(propertyName);
 			return true;

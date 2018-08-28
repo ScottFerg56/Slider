@@ -32,30 +32,15 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("Enabled");
 		}
 
-		public int SlidePosition
-		{
-			get { return (int)SliderComm.Instance.Slide.Position; }
-		}
+		public int SlidePosition { get => (int)SliderComm.Instance.Slide.Position; }
 
-		public double SlideVector
-		{
-			set { SliderComm.Instance.Slide.Vector = -value; }
-		}
+		public double SlideVector { set => SliderComm.Instance.Slide.Vector = -value; }
 
-		public int PanPosition
-		{
-			get { return (int)SliderComm.Instance.Pan.Position; }
-		}
+		public int PanPosition { get => (int)SliderComm.Instance.Pan.Position; }
 
-		public double PanVector
-		{
-			set { SliderComm.Instance.Pan.Vector = -value; }
-		}
+		public double PanVector { set => SliderComm.Instance.Pan.Vector = -value; }
 
-		public bool Enabled
-		{
-			get { return SliderComm.Instance.Slide.Homed; }
-		}
+		public bool Enabled { get => SliderComm.Instance.Slide.Homed; }
 
 		#region INotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
