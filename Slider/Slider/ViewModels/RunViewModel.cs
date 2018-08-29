@@ -56,6 +56,8 @@ namespace CamSlider.ViewModels
 
 		public void Stop()
 		{
+			Command = RunCommand.Stopped;
+			StatusMsg = "Stopped";
 			Comm.Slide.Vector = 0;
 			Comm.Pan.Vector = 0;
 		}

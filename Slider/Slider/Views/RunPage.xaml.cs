@@ -37,10 +37,12 @@ namespace CamSlider.Views
 		}
 
 		RunCommand Command;
+		bool Closed;
 
 		public void Init(RunCommand cmd)
 		{
 			Command = cmd;
+			Closed = false;
 		}
 
 		protected override void OnAppearing()
@@ -49,15 +51,23 @@ namespace CamSlider.Views
 			ViewModel.Init(Command);
 		}
 
-		private void ViewModel_Stopped(object sender, EventArgs e)
+		private async void ViewModel_Stopped(object sender, EventArgs e)
 		{
-			OnStop(sender, e);
+			if (!Closed)
+			{
+				await Navigation.PopModalAsync();
+				Closed = true;
+			}
 		}
 
 		private async void OnStop(object sender, EventArgs e)
 		{
 			ViewModel.Stop();
-			await Navigation.PopModalAsync();
+			if (!Closed)
+			{
+				await Navigation.PopModalAsync();
+				Closed = true;
+			}
 		}
 
 		private void OnPlay(object sender, EventArgs e)
