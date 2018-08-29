@@ -31,10 +31,10 @@ namespace CamSlider.Views
 				switch (SliderComm.Instance.State)
 				{
 					case BlueState.Disconnected:
-						Slider.Services.PlaySound.Play("down");
+						CamSlider.Services.PlaySound.Play("down");
 						break;
 					case BlueState.Connected:
-						Slider.Services.PlaySound.Play("up");
+						CamSlider.Services.PlaySound.Play("up");
 						// switch to the ManualPage once we're connected
 						if (Parent.Parent is TabbedPage t)
 						{

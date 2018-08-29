@@ -12,12 +12,25 @@ namespace CamSlider
 	{
 		BlueApp Blue;
 
+		public readonly Sequence Sequence;
 		public readonly Settings Settings;
 
 		public event EventHandler StateChange;
 
+		private static SliderComm _Instance;
+		public static SliderComm Instance
+		{
+			get
+			{
+				if (_Instance == null)
+					_Instance = new SliderComm();
+				return _Instance;
+			}
+		}
+
 		protected SliderComm()
 		{
+			Sequence = Services.DataStore.LoadDataStore<Sequence>("sequence") ?? new Sequence();
 			Settings = Services.DataStore.LoadDataStore<Settings>("settings") ?? new Settings();
 
 			Blue = new BlueApp();
@@ -63,17 +76,6 @@ namespace CamSlider
 			}
 		}
 
-		private static SliderComm _Instance;
-		public static SliderComm Instance
-		{
-			get
-			{
-				if (_Instance == null)
-					_Instance = new SliderComm();
-				return _Instance;
-			}
-		}
-
 		public Stepper Slide { get => Stepper.Slide; }
 		public Stepper Pan { get => Stepper.Pan; }
 
@@ -105,8 +107,8 @@ namespace CamSlider
 			if (SliderComm.Instance.State == BlueState.Connected)
 			{
 				// trigger updated values from the device
-				var pos = Slide.Position.ToString();
-				pos = Pan.Position.ToString();
+				var pos = Slide.Position;
+				pos = Pan.Position;
 				var homed = Slide.Homed;
 			}
 			StateChange?.Invoke(this, e);
@@ -136,6 +138,8 @@ namespace CamSlider
 
 	public class Stepper : INotifyPropertyChanged
 	{
+		protected SliderComm Comm { get => SliderComm.Instance; }
+
 		private readonly char Prefix;
 		internal Stepper(char prefix)
 		{
@@ -179,6 +183,16 @@ namespace CamSlider
 					}
 					break;
 
+				case 'm':
+					{
+						// receiving current homed value from device
+						if (int.TryParse(s.Substring(1), out int moving))
+						{
+							Moving = moving != 0;
+						}
+					}
+					break;
+
 				case 'h':
 					{
 						// receiving current homed value from device
@@ -191,21 +205,38 @@ namespace CamSlider
 			}
 		}
 
-		protected double _Position = double.NaN;
+		protected double? _Position;
 		public double Position
 		{
 			get
 			{
-				if (double.IsNaN(_Position))
+				if (!_Position.HasValue)
 				{
 					// send device query for position value for this stepper, by Prefix ('s' or 'p')
 					SliderComm.Instance.Command($"{Prefix}p?");
 					// client should be monitoring property change to update value when it comes in
 					return 0.0;
 				}
-				return _Position;
+				return _Position.Value;
 			}
 			internal set { SetProperty(ref _Position, value); }
+		}
+
+		protected bool? _Moving;
+		public bool Moving
+		{
+			get
+			{
+				if (!_Moving.HasValue)
+				{
+					// send device query for moving value for this stepper, by Prefix ('s' or 'p')
+					SliderComm.Instance.Command($"{Prefix}m?");
+					// client should be monitoring property change to update value when it comes in
+					return false;
+				}
+				return _Moving.Value;
+			}
+			internal set => SetProperty(ref _Moving, value);
 		}
 
 		public double Vector
@@ -215,6 +246,13 @@ namespace CamSlider
 				var speed = Math.Round(value, 1);
 				SliderComm.Instance.Command($"{Prefix}v{speed:0.#}", Math.Abs(speed) < 0.01);
 			}
+		}
+
+		public void Move(double position)
+		{
+			var speed = Prefix == 's' ? Comm.Settings.SlideMoveSpeed : Comm.Settings.PanMoveSpeed;
+			SliderComm.Instance.Command($"{Prefix}s{speed:0.#}");
+			SliderComm.Instance.Command($"{Prefix}p{position:0.#}");
 		}
 
 		protected bool? _Homed = null;

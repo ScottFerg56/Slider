@@ -11,21 +11,16 @@ namespace CamSlider.ViewModels
 {
     public class SequenceViewModel : INotifyPropertyChanged
 	{
-		public Sequence Seq;
-		public Command MoveToInCommand { get; set; }
-		public Command MoveToOutCommand { get; set; }
 		public Command SetInFromCurrentCommand { get; set; }
 		public Command SetOutFromCurrentCommand { get; set; }
 
+		public Sequence Sequence { get => SliderComm.Instance.Sequence; }
+
 		public SequenceViewModel()
 		{
-			MoveToInCommand = new Command(() => ExecuteMoveToInCommand());
-			MoveToOutCommand = new Command(() => ExecuteMoveToOutCommand());
 			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
 			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
-
-			Seq = Services.DataStore.LoadDataStore<Sequence>("sequence") ?? new Sequence();
-			Seq.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
+			Sequence.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
 		}
 
 		public int SlideIn
@@ -144,16 +139,6 @@ namespace CamSlider.ViewModels
 			set => SetProperty(value);
 		}
 
-		void ExecuteMoveToInCommand()
-		{
-			Debug.WriteLine("Move To In -- not implemented");
-		}
-
-		void ExecuteMoveToOutCommand()
-		{
-			Debug.WriteLine("Move To Out -- not implemented");
-		}
-
 		void ExecuteSetInFromCurrentCommand()
 		{
 			Debug.WriteLine("Set In From Current -- not implemented");
@@ -166,18 +151,18 @@ namespace CamSlider.ViewModels
 
 		protected T GetProperty<T>([CallerMemberName]string propertyName = "")
 		{
-			return (T)Seq.GetType().GetProperty(propertyName).GetValue(Seq);
+			return (T)Sequence.GetType().GetProperty(propertyName).GetValue(Sequence);
 		}
 
 		protected bool SetProperty<T>(T value,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
 		{
-			var pi = Seq.GetType().GetProperty(propertyName);
-			if (EqualityComparer<T>.Default.Equals((T)pi.GetValue(Seq), value))
+			var pi = Sequence.GetType().GetProperty(propertyName);
+			if (EqualityComparer<T>.Default.Equals((T)pi.GetValue(Sequence), value))
 				return false;
 
-			pi.SetValue(Seq, value);
+			pi.SetValue(Sequence, value);
 			onChanged?.Invoke();
 			// the Seq object will propagate changes back up thru us
 		//	OnPropertyChanged(propertyName);
@@ -187,7 +172,7 @@ namespace CamSlider.ViewModels
 
 		protected void SaveSequence()
 		{
-			Services.DataStore.SaveDataStore("sequence", Seq);
+			Services.DataStore.SaveDataStore("sequence", Sequence);
 		}
 
 		#region INotifyPropertyChanged

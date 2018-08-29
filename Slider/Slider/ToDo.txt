@@ -7,10 +7,11 @@ Sequence page
 	Duration / #Frames -> Interval
 Run page (modal)
 	Status: moving to in / running
+	Slide/Pan positions
+	Distance Traveled (traveled/remaining/total)
 	Percent Done
 	Elapsed Time (elapsed/remaining/total)
 	Frames (#/remaining/total)
-	Distance Traveled (traveled/remaining/total)
 	Position (position/goal)
 	GO / STOP
 Settings page

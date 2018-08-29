@@ -1,8 +1,9 @@
 ﻿using CamSlider.Models;
 using CamSlider.ViewModels;
-using Slider.Views;
+using CamSlider.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +37,20 @@ namespace CamSlider.Views
 
 		private async void OnRun(object sender, EventArgs e)
 		{
-			await Navigation.PushModalAsync(new RunPage());
+			RunPage.Instance.Init(RunCommand.RunSequence);
+			await Navigation.PushModalAsync(RunPage.Instance);
+		}
+
+		private async void OnMoveToIn(object sender, EventArgs e)
+		{
+			RunPage.Instance.Init(RunCommand.MoveToIn);
+			await Navigation.PushModalAsync(RunPage.Instance);
+		}
+
+		private async void OnMoveToOut(object sender, EventArgs e)
+		{
+			RunPage.Instance.Init(RunCommand.MoveToOut);
+			await Navigation.PushModalAsync(RunPage.Instance);
 		}
 	}
 }

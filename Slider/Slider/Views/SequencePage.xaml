@@ -34,7 +34,7 @@
 					</Entry.Behaviors>
 				</Entry>
 				<Button Grid.Row="1" Grid.Column="3" Command="{Binding SetInFromCurrentCommand}" Text="current" FontSize="Micro" />
-				<Button Grid.Row="1" Grid.Column="4" Command="{Binding MoveToInCommand}" Text="move to" FontSize="Micro" />
+				<Button Grid.Row="1" Grid.Column="4" Clicked="OnMoveToIn" Text="move to" FontSize="Micro" />
 				<Label Grid.Row="2" Grid.Column="0" Text="Out:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
 				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding SlideOut}" FontSize="Small">
 					<Entry.Behaviors>
@@ -47,7 +47,7 @@
 					</Entry.Behaviors>
 				</Entry>
 				<Button Grid.Row="2" Grid.Column="3" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
-				<Button Grid.Row="2" Grid.Column="4" Command="{Binding MoveToOutCommand}" Text="move to" FontSize="Micro" />
+				<Button Grid.Row="2" Grid.Column="4" Clicked="OnMoveToOut" Text="move to" FontSize="Micro" />
 			</Grid>
 			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
 				<Grid.RowDefinitions>
