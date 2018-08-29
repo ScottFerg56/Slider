@@ -31,6 +31,7 @@ namespace CamSlider.Services
 		{
 			var json = JsonConvert.SerializeObject(data);
 			App.Current.Properties[name] = json;
+			App.Current.SavePropertiesAsync();
 		}
 	}
 }
