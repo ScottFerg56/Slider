@@ -178,7 +178,7 @@ namespace CamSlider
 						// receiving current position from device
 						if (double.TryParse(s.Substring(1), out double pos))
 						{
-							Position = pos;
+							Position = (int)Math.Round(pos);
 						}
 					}
 					break;
@@ -205,8 +205,8 @@ namespace CamSlider
 			}
 		}
 
-		protected double? _Position;
-		public double Position
+		protected int? _Position;
+		public int Position
 		{
 			get
 			{
@@ -215,7 +215,7 @@ namespace CamSlider
 					// send device query for position value for this stepper, by Prefix ('s' or 'p')
 					SliderComm.Instance.Command($"{Prefix}p?");
 					// client should be monitoring property change to update value when it comes in
-					return 0.0;
+					return 0;
 				}
 				return _Position.Value;
 			}

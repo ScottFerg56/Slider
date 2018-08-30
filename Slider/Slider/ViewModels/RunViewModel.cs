@@ -20,6 +20,8 @@ namespace CamSlider.ViewModels
 	{
 		public RunCommand Command;
 		protected SliderComm Comm { get => SliderComm.Instance; }
+		bool PanDiff;
+		bool SlideDiff;
 
 		public event EventHandler Stopped;
 
@@ -31,7 +33,7 @@ namespace CamSlider.ViewModels
 
 		public void Init(RunCommand cmd)
 		{
-			PanMoved = SlideMoved = false;
+			PanDiff = SlideDiff = false;
 
 			Command = cmd;
 
@@ -39,13 +41,31 @@ namespace CamSlider.ViewModels
 			{
 				case RunCommand.MoveToIn:
 					StatusMsg = "Moving to IN";
-					Comm.Slide.Move(Comm.Sequence.SlideIn);
-					Comm.Pan.Move(Comm.Sequence.PanIn);
+					SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideIn;
+					PanDiff = Comm.Pan.Position != Comm.Sequence.PanIn;
+					if (SlideDiff || PanDiff)
+					{
+						Comm.Slide.Move(Comm.Sequence.SlideIn);
+						Comm.Pan.Move(Comm.Sequence.PanIn);
+					}
+					else
+					{
+						Stop();
+					}
 					break;
 				case RunCommand.MoveToOut:
 					StatusMsg = "Moving to OUT";
-					Comm.Slide.Move(Comm.Sequence.SlideOut);
-					Comm.Pan.Move(Comm.Sequence.PanOut);
+					SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
+					PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
+					if (SlideDiff || PanDiff)
+					{
+						Comm.Slide.Move(Comm.Sequence.SlideOut);
+						Comm.Pan.Move(Comm.Sequence.PanOut);
+					}
+					else
+					{
+						Stop();
+					}
 					break;
 				case RunCommand.RunSequence:
 					break;
@@ -60,6 +80,10 @@ namespace CamSlider.ViewModels
 			StatusMsg = "Stopped";
 			Comm.Slide.Vector = 0;
 			Comm.Pan.Vector = 0;
+			Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+			{
+				Stopped?.Invoke(this, EventArgs.Empty);
+			});
 		}
 
 		public string _StatusMsg = "";
@@ -75,8 +99,8 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("PanPosition");
 			else if (e.PropertyName == "Moving")
 			{
-				if (Comm.Pan.Moving)
-					PanMoved = true;
+				if (!Comm.Pan.Moving)
+					PanDiff = false;
 				CheckStopped();
 			}
 		}
@@ -87,31 +111,23 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("SlidePosition");
 			else if (e.PropertyName == "Moving")
 			{
-				if (Comm.Slide.Moving)
-					SlideMoved = true;
+				if (!Comm.Slide.Moving)
+					SlideDiff = false;
 				CheckStopped();
 			}
 		}
 
-		bool PanMoved;
-		bool SlideMoved;
-
 		void CheckStopped()
 		{
-			if (Command != RunCommand.Stopped && SlideMoved && PanMoved && !Comm.Slide.Moving && !Comm.Pan.Moving)
+			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff)	// && !Comm.Slide.Moving && !Comm.Pan.Moving)
 			{
-				Command = RunCommand.Stopped;
-				StatusMsg = "Stopped";
-				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-				{
-					Stopped?.Invoke(this, EventArgs.Empty);
-				});
+				Stop();
 			}
 		}
 
-		public int SlidePosition { get => (int)Math.Round(SliderComm.Instance.Slide.Position); }
+		public int SlidePosition { get => SliderComm.Instance.Slide.Position; }
 
-		public int PanPosition { get => (int)Math.Round(SliderComm.Instance.Pan.Position); }
+		public int PanPosition { get => SliderComm.Instance.Pan.Position; }
 
 		protected bool SetProperty<T>(ref T backingStore, T value, Func<T, T> filter = null,
 			[CallerMemberName]string propertyName = "",

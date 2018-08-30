@@ -32,11 +32,11 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("Enabled");
 		}
 
-		public int SlidePosition { get => (int)Math.Round(SliderComm.Instance.Slide.Position); }
+		public int SlidePosition { get => SliderComm.Instance.Slide.Position; }
 
 		public double SlideVector { set => SliderComm.Instance.Slide.Vector = -value; }
 
-		public int PanPosition { get => (int)Math.Round(SliderComm.Instance.Pan.Position); }
+		public int PanPosition { get => SliderComm.Instance.Pan.Position; }
 
 		public double PanVector { set => SliderComm.Instance.Pan.Vector = -value; }
 

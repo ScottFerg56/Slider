@@ -60,14 +60,9 @@ namespace CamSlider.Views
 			}
 		}
 
-		private async void OnStop(object sender, EventArgs e)
+		private void OnStop(object sender, EventArgs e)
 		{
-			ViewModel.Stop();
-			if (!Closed)
-			{
-				await Navigation.PopModalAsync();
-				Closed = true;
-			}
+			ViewModel.Stop();	// this invokes our Stopped event
 		}
 
 		private void OnPlay(object sender, EventArgs e)
