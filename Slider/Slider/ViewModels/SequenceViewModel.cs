@@ -11,6 +11,7 @@ namespace CamSlider.ViewModels
 {
     public class SequenceViewModel : INotifyPropertyChanged
 	{
+		protected SliderComm Comm { get => SliderComm.Instance; }
 		public Command SetInFromCurrentCommand { get; set; }
 		public Command SetOutFromCurrentCommand { get; set; }
 
@@ -141,12 +142,14 @@ namespace CamSlider.ViewModels
 
 		void ExecuteSetInFromCurrentCommand()
 		{
-			Debug.WriteLine("Set In From Current -- not implemented");
+			SlideIn = Comm.Slide.Position;
+			PanIn = Comm.Pan.Position;
 		}
 
 		void ExecuteSetOutFromCurrentCommand()
 		{
-			Debug.WriteLine("Set Out From Current -- not implemented");
+			SlideOut = Comm.Slide.Position;
+			PanOut = Comm.Pan.Position;
 		}
 
 		protected T GetProperty<T>([CallerMemberName]string propertyName = "")
