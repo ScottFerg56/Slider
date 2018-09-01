@@ -185,10 +185,20 @@ namespace CamSlider
 
 				case 'm':
 					{
-						// receiving current homed value from device
+						// receiving current moving value from device
 						if (int.TryParse(s.Substring(1), out int moving))
 						{
 							Moving = moving != 0;
+						}
+					}
+					break;
+
+				case 's':
+					{
+						// receiving current speed value from device
+						if (double.TryParse(s.Substring(1), out double speed))
+						{
+							Speed = speed;
 						}
 					}
 					break;
@@ -246,6 +256,23 @@ namespace CamSlider
 				var speed = Math.Round(value, 1);
 				SliderComm.Instance.Command($"{Prefix}v{speed:0.#}", Math.Abs(speed) < 0.01);
 			}
+		}
+
+		protected double? _Speed;
+		public double Speed
+		{
+			get
+			{
+				if (!_Speed.HasValue)
+				{
+					// send device query for speed value for this stepper, by Prefix ('s' or 'p')
+					SliderComm.Instance.Command($"{Prefix}s?");
+					// client should be monitoring property change to update value when it comes in
+					return 0;
+				}
+				return _Speed.Value;
+			}
+			internal set => SetProperty(ref _Speed, value);
 		}
 
 		public void Move(double position)

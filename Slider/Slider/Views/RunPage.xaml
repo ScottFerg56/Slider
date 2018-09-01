@@ -15,10 +15,14 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Grid.Column="0" Text="SlidePosition (mm):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="0" Grid.Column="0" Text="Slide Position (mm):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
 				<Label Grid.Row="0" Grid.Column="1" Text="{Binding SlidePosition}" XAlign="Center" FontSize="Small"/>
-				<Label Grid.Row="1" Grid.Column="0" Text="Pan Position (deg):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
-				<Label Grid.Row="1" Grid.Column="1" Text="{Binding PanPosition}" XAlign="Center" FontSize="Small"/>
+				<Label Grid.Row="1" Grid.Column="0" Text="Slide Speed (mm/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="1" Grid.Column="1" Text="{Binding SlideSpeed}" XAlign="Center" FontSize="Small"/>
+				<Label Grid.Row="2" Grid.Column="0" Text="Pan Position (deg):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="2" Grid.Column="1" Text="{Binding PanPosition}" XAlign="Center" FontSize="Small"/>
+				<Label Grid.Row="3" Grid.Column="0" Text="Pan Speed (deg/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="3" Grid.Column="1" Text="{Binding PanSpeed}" XAlign="Center" FontSize="Small"/>
 			</Grid>
 			<Grid>
 				<Grid.RowDefinitions>

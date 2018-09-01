@@ -97,6 +97,8 @@ namespace CamSlider.ViewModels
 		{
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("PanPosition");
+			else if (e.PropertyName == "Speed")
+				OnPropertyChanged("PanSpeed");
 			else if (e.PropertyName == "Moving")
 			{
 				if (!Comm.Pan.Moving)
@@ -109,6 +111,8 @@ namespace CamSlider.ViewModels
 		{
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("SlidePosition");
+			else if (e.PropertyName == "Speed")
+				OnPropertyChanged("SlideSpeed");
 			else if (e.PropertyName == "Moving")
 			{
 				if (!Comm.Slide.Moving)
@@ -127,7 +131,11 @@ namespace CamSlider.ViewModels
 
 		public int SlidePosition { get => SliderComm.Instance.Slide.Position; }
 
+		public double SlideSpeed { get => SliderComm.Instance.Slide.Speed; }
+
 		public int PanPosition { get => SliderComm.Instance.Pan.Position; }
+
+		public double PanSpeed { get => SliderComm.Instance.Pan.Speed; }
 
 		protected bool SetProperty<T>(ref T backingStore, T value, Func<T, T> filter = null,
 			[CallerMemberName]string propertyName = "",
