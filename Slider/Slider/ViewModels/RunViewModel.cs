@@ -98,10 +98,9 @@ namespace CamSlider.ViewModels
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("PanPosition");
 			else if (e.PropertyName == "Speed")
+			{ 
 				OnPropertyChanged("PanSpeed");
-			else if (e.PropertyName == "Moving")
-			{
-				if (!Comm.Pan.Moving)
+				if (Comm.Pan.Speed == 0)
 					PanDiff = false;
 				CheckStopped();
 			}
@@ -112,10 +111,9 @@ namespace CamSlider.ViewModels
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("SlidePosition");
 			else if (e.PropertyName == "Speed")
-				OnPropertyChanged("SlideSpeed");
-			else if (e.PropertyName == "Moving")
 			{
-				if (!Comm.Slide.Moving)
+				OnPropertyChanged("SlideSpeed");
+				if (Comm.Slide.Speed == 0)
 					SlideDiff = false;
 				CheckStopped();
 			}
@@ -123,7 +121,7 @@ namespace CamSlider.ViewModels
 
 		void CheckStopped()
 		{
-			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff)	// && !Comm.Slide.Moving && !Comm.Pan.Moving)
+			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff)
 			{
 				Stop();
 			}

@@ -13,28 +13,28 @@ namespace CamSlider.Models
 		public int SlideIn
 		{
 			get => _SlideIn;
-			set => SetProperty(ref _SlideIn, value, Stepper.LimitSlideValue);
+			set => SetProperty(ref _SlideIn, value, SliderComm.Instance.Slide.LimitValue);
 		}
 
 		protected int _SlideOut = 640;
 		public int SlideOut
 		{
 			get => _SlideOut;
-			set => SetProperty(ref _SlideOut, value, Stepper.LimitSlideValue);
+			set => SetProperty(ref _SlideOut, value, SliderComm.Instance.Slide.LimitValue);
 		}
 
 		protected int _PanIn = 0;
 		public int PanIn
 		{
 			get => _PanIn;
-			set => SetProperty(ref _PanIn, value, Stepper.LimitPanValue);
+			set => SetProperty(ref _PanIn, value, SliderComm.Instance.Pan.LimitValue);
 		}
 
 		protected int _PanOut = 0;
 		public int PanOut
 		{
 			get => _PanOut;
-			set => SetProperty(ref _PanOut, value, Stepper.LimitPanValue);
+			set => SetProperty(ref _PanOut, value, SliderComm.Instance.Pan.LimitValue);
 		}
 
 		protected int _Duration = 1800;
