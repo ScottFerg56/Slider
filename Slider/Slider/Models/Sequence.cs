@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -9,42 +10,42 @@ namespace CamSlider.Models
 {
     public class Sequence : INotifyPropertyChanged
     {
-		protected int _SlideIn = 0;
+		protected int _SlideIn = 100;
 		public int SlideIn
 		{
 			get => _SlideIn;
 			set => SetProperty(ref _SlideIn, value, SliderComm.Instance.Slide.LimitValue);
 		}
 
-		protected int _SlideOut = 640;
+		protected int _SlideOut = 400;
 		public int SlideOut
 		{
 			get => _SlideOut;
 			set => SetProperty(ref _SlideOut, value, SliderComm.Instance.Slide.LimitValue);
 		}
 
-		protected int _PanIn = 0;
+		protected int _PanIn = 30;
 		public int PanIn
 		{
 			get => _PanIn;
 			set => SetProperty(ref _PanIn, value, SliderComm.Instance.Pan.LimitValue);
 		}
 
-		protected int _PanOut = 0;
+		protected int _PanOut = -30;
 		public int PanOut
 		{
 			get => _PanOut;
 			set => SetProperty(ref _PanOut, value, SliderComm.Instance.Pan.LimitValue);
 		}
 
-		protected int _Duration = 1800;
+		protected int _Duration = 60;
 		public int Duration
 		{
 			get => _Duration;
 			set => SetProperty(ref _Duration, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });
 		}
 
-		protected int _Playback = 120;
+		protected int _Playback = 10;
 		public int Playback
 		{
 			get => _Playback;
@@ -59,6 +60,7 @@ namespace CamSlider.Models
 		}
 
 		protected int _Frames = 0;
+		[JsonIgnore]
 		public int Frames
 		{
 			get => _Frames;
@@ -66,6 +68,7 @@ namespace CamSlider.Models
 		}
 
 		protected double _Interval = 0;
+		[JsonIgnore]
 		public double Interval
 		{
 			get => _Interval;
