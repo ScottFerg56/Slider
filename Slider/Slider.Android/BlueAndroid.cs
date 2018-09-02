@@ -210,6 +210,7 @@ namespace CamSlider.Droid
 			// start scanning
 			_device = null;
 			_adapter.BluetoothLeScanner.StartScan(this);
+			State = BlueState.Searching;
 
 			// in 10 seconds, stop the scan
 			await Task.Delay(10000);
