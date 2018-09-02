@@ -6,7 +6,7 @@
 			 Title="Settings">
     <ContentPage.Content>
         <StackLayout>
-			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>

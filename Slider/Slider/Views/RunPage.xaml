@@ -5,13 +5,13 @@
     <ContentPage.Content>
         <StackLayout>
 			<Label Text="{Binding StatusMsg}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontAttributes="Bold" FontSize="Medium" />
-			<Grid>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="2*" />
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
@@ -23,8 +23,10 @@
 				<Label Grid.Row="2" Grid.Column="1" Text="{Binding PanPosition}" XAlign="Center" FontSize="Small"/>
 				<Label Grid.Row="3" Grid.Column="0" Text="Pan Speed (deg/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
 				<Label Grid.Row="3" Grid.Column="1" Text="{Binding PanSpeed}" XAlign="Center" FontSize="Small"/>
+				<Label Grid.Row="4" Grid.Column="0" Text="Time Remaining (sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="4" Grid.Column="1" Text="{Binding TimeRemaining, StringFormat='{0:0}'}" XAlign="Center" FontSize="Small"/>
 			</Grid>
-			<Grid>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
@@ -34,8 +36,8 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Row="0" Grid.Column="1" Clicked="OnPlay" Image="play.png" BackgroundColor="White" />
-				<Button Grid.Row="0" Grid.Column="2" Clicked="OnStop" Image="stop.png" BackgroundColor="White" />
+				<Button Grid.Row="0" Grid.Column="1" Clicked="OnPlay" Image="play.png" BackgroundColor="#202020" />
+				<Button Grid.Row="0" Grid.Column="2" Clicked="OnStop" Image="stop.png" BackgroundColor="#202020" />
 			</Grid>
 		</StackLayout>
     </ContentPage.Content>

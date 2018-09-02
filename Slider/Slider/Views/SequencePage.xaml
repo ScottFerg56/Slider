@@ -6,8 +6,8 @@
              x:Class="CamSlider.Views.SequencePage"
 			 Title="Sequence">
     <ContentPage.Content>
-		<StackLayout BackgroundColor="White">
-			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+		<StackLayout>
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -49,7 +49,7 @@
 				<Button Grid.Row="2" Grid.Column="3" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
 				<Button Grid.Row="2" Grid.Column="4" Clicked="OnMoveToOut" Text="move to" FontSize="Micro" />
 			</Grid>
-			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -84,7 +84,7 @@
 				<Label  Grid.Row="2" Grid.Column="6" Text="{Binding PlaybackSecs, StringFormat='{0} sec'}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" FontSize="Small"/>
 				<ctrls:HoldButton Grid.Row="3" Grid.Column="6" x:Name="ButtonPSecsDn" Text="-" FontSize="Small"/>
 			</Grid>
-			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
@@ -96,7 +96,7 @@
 				<Label Grid.Row="0" Grid.Column="0" Text="Intervalometer" VerticalTextAlignment="Center"  HorizontalTextAlignment="End" FontSize="Small" />
 				<Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding Intervalometer}" />
 			</Grid>
-			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#E0E0E0">
+			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
@@ -123,7 +123,7 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
-				<Button Grid.Row="0" Grid.Column="0" Clicked="OnRun" Image="play.png" BackgroundColor="White" />
+				<Button Grid.Row="0" Grid.Column="0" Clicked="OnRun" Image="play.png" BackgroundColor="#202020" />
 			</Grid>
 		</StackLayout>
 	</ContentPage.Content>

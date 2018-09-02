@@ -1,4 +1,6 @@
-﻿
+﻿Android Connecting state improvement
+Settings plugin
+
 Manual page
 	* button to calibrate slide position??
 	* Enabled should also take into account connected

@@ -26,8 +26,19 @@
             </StackLayout>
         </StackLayout>
 		<StackLayout Grid.Row="1">
-			<Button x:Name="BlueAction" Text="Connect"></Button>
-			<Label x:Name="LabelBlueState" Text="Disconnected" BackgroundColor="Beige" HorizontalTextAlignment="Center"></Label>
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="LabelBlueState" Text="Disconnected" FontSize="Large" HorizontalTextAlignment="Center"></Label>
+				<Button Grid.Row="1" Grid.Column="1" x:Name="BlueAction" Text="Connect" FontSize="Medium" FontAttributes="Bold"></Button>
+			</Grid>
 		</StackLayout>
         <ScrollView Grid.Row="2">
             <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">

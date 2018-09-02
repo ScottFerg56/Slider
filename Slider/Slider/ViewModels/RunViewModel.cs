@@ -96,12 +96,20 @@ namespace CamSlider.ViewModels
 		private void Pan_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Position")
+			{
 				OnPropertyChanged("PanPosition");
+				PanTimeRemaining = Comm.Pan.TimeRemaining(Comm.Pan.GoalPosition - PanPosition);
+				OnPropertyChanged("TimeRemaining");
+			}
 			else if (e.PropertyName == "Speed")
-			{ 
+			{
 				OnPropertyChanged("PanSpeed");
 				if (Comm.Pan.Speed == 0)
+				{
 					PanDiff = false;
+					PanTimeRemaining = 0;
+					OnPropertyChanged("TimeRemaining");
+				}
 				CheckStopped();
 			}
 		}
@@ -109,12 +117,20 @@ namespace CamSlider.ViewModels
 		private void Slide_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Position")
+			{
 				OnPropertyChanged("SlidePosition");
+				SlideTimeRemaining = Comm.Slide.TimeRemaining(Comm.Slide.GoalPosition - SlidePosition);
+				OnPropertyChanged("TimeRemaining");
+			}
 			else if (e.PropertyName == "Speed")
 			{
 				OnPropertyChanged("SlideSpeed");
 				if (Comm.Slide.Speed == 0)
+				{
 					SlideDiff = false;
+					SlideTimeRemaining = 0;
+					OnPropertyChanged("TimeRemaining");
+				}
 				CheckStopped();
 			}
 		}
@@ -127,13 +143,24 @@ namespace CamSlider.ViewModels
 			}
 		}
 
-		public int SlidePosition { get => SliderComm.Instance.Slide.Position; }
+		public int SlidePosition { get => Comm.Slide.Position; }
 
-		public double SlideSpeed { get => SliderComm.Instance.Slide.Speed; }
+		public double SlideSpeed { get => Comm.Slide.Speed; }
 
-		public int PanPosition { get => SliderComm.Instance.Pan.Position; }
+		public int PanPosition { get => Comm.Pan.Position; }
 
-		public double PanSpeed { get => SliderComm.Instance.Pan.Speed; }
+		public double PanSpeed { get => Comm.Pan.Speed; }
+
+		double PanTimeRemaining;
+		double SlideTimeRemaining;
+		public double TimeRemaining
+		{
+			get
+			{
+			//	Debug.WriteLine($"++> Slide Time: {SlideTimeRemaining}  Pan Time: {PanTimeRemaining}");
+				return Math.Max(PanTimeRemaining, SlideTimeRemaining);
+			}
+		}
 
 		protected bool SetProperty<T>(ref T backingStore, T value, Func<T, T> filter = null,
 			[CallerMemberName]string propertyName = "",
