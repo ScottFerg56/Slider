@@ -128,10 +128,10 @@ namespace CamSlider
 				// trigger updated values from the device
 				var i = Slide.Position;
 				i = Pan.Position;
-				i = Slide.MaxSpeed;
-				i = Pan.MaxSpeed;
 				var d = Slide.Speed;
 				d = Pan.Speed;
+				d = Slide.MaxSpeed;
+				d = Pan.MaxSpeed;
 				d = Slide.Acceleration;
 				d = Pan.Acceleration;
 				var homed = Slide.Homed;
@@ -221,7 +221,7 @@ namespace CamSlider
 					Speed = v;
 					break;
 				case Properties.Prop_MaxSpeed:
-					MaxSpeed = (int)Math.Round(v);
+					MaxSpeed = v;
 					break;
 				case Properties.Prop_SpeedLimit:
 					SpeedLimit = (int)Math.Round(v);
@@ -289,8 +289,8 @@ namespace CamSlider
 			}
 		}
 
-		protected int? _MaxSpeed;
-		public int MaxSpeed
+		protected double? _MaxSpeed;
+		public double MaxSpeed
 		{
 			get
 			{
@@ -349,10 +349,11 @@ namespace CamSlider
 			internal set => SetProperty(ref _Speed, value);
 		}
 
-		public void Move(int position)
+		public void Move(int position, double? speed = null)
 		{
-			var speed = Prefix == 's' ? Comm.Settings.SlideMoveSpeed : Comm.Settings.PanMoveSpeed;
-			MaxSpeed = speed;
+			if (!speed.HasValue)
+				speed = Prefix == 's' ? Comm.Settings.SlideMoveSpeed : Comm.Settings.PanMoveSpeed;
+			MaxSpeed = speed.Value;
 			GoalPosition = position;
 			Command($"p{position}");
 		}

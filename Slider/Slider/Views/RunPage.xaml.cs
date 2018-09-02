@@ -67,7 +67,7 @@ namespace CamSlider.Views
 
 		private void OnPlay(object sender, EventArgs e)
 		{
-
+			ViewModel.Play();
 		}
 	}
 }

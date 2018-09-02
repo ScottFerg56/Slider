@@ -36,7 +36,27 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Row="0" Grid.Column="1" Clicked="OnPlay" Image="play.png" BackgroundColor="#202020" />
+				<Button Grid.Row="0" Grid.Column="1" x:Name="PlayButton" IsEnabled="{Binding CanPlay}" Clicked="OnPlay" Image="play.png" BackgroundColor="#202020" >
+					<VisualStateManager.VisualStateGroups>
+						<VisualStateGroup x:Name="CommonStates">
+							<VisualState x:Name="Normal">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="play.png" />
+								</VisualState.Setters>
+							</VisualState>
+							<VisualState x:Name="Focused">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="play.png" />
+								</VisualState.Setters>
+							</VisualState>
+							<VisualState x:Name="Disabled">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="noplay.png" />
+								</VisualState.Setters>
+							</VisualState>
+						</VisualStateGroup>
+					</VisualStateManager.VisualStateGroups>
+				</Button>
 				<Button Grid.Row="0" Grid.Column="2" Clicked="OnStop" Image="stop.png" BackgroundColor="#202020" />
 			</Grid>
 		</StackLayout>
