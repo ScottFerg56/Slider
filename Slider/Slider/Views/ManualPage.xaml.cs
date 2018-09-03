@@ -13,6 +13,8 @@ namespace CamSlider.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ManualPage : ContentPage
 	{
+		protected SliderComm Comm { get => SliderComm.Instance; }
+
 		public ManualPage()
 		{
 			InitializeComponent();
@@ -21,6 +23,16 @@ namespace CamSlider.Views
 
 			SliderSlide.StoppedTracking += (s, e) => { SliderSlide.Value = 0; };
 			SliderPan.StoppedTracking += (s, e) => { SliderPan.Value = 0; };
+		}
+
+		private void PanZero(object sender, EventArgs e)
+		{
+			Comm.Pan.Zero();
+		}
+
+		private void Calibrate(object sender, EventArgs e)
+		{
+			Comm.Slide.Home();
 		}
 	}
 }

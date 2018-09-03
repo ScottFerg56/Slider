@@ -383,6 +383,12 @@ namespace CamSlider
 			Command("z1");
 		}
 
+		public void Home()
+		{
+			Debug.Assert(Prefix == 's', "--> Home only valid for Slider");
+			Command("h0");
+		}
+
 		public double MaxSpeedForDistanceAndTime(double distance, double seconds)
 		{
 			//

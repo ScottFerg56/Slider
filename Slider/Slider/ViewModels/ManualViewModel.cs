@@ -10,11 +10,9 @@ namespace CamSlider.ViewModels
     public class ManualViewModel : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
-		public Command PanZeroCommand { get; set; }
 
 		public ManualViewModel()
 		{
-			PanZeroCommand = new Command(() => { Comm.Pan.Zero(); });
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
 			Comm.Pan.PropertyChanged += Pan_PropertyChanged; ;
 			Comm.StateChange += Comm_StateChange;
