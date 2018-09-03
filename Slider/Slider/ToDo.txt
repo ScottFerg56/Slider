@@ -3,27 +3,17 @@
 Manual page
 	* button to calibrate slide position??
 	* Enabled should also take into account connected
-Sequence page
-	Playback x FPS -> #Frames
-	Duration / #Frames -> Interval
 Run page (modal)
 	* TimeRemaining: consider single-phase solution of accelerating / decelerating only
 	* Deal with Back button on Android modal RunPage
-	https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/modal
-	Status: moving to in / running
+		https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/modal
 	* Slide/Pan (position/goal)
 	* Distance Traveled (traveled/remaining/total)
 	* Percent Done
 	* Elapsed Time (elapsed/remaining/total)
 	* Frames (#/remaining/total)
-	GO / STOP
 Settings page
 	* Add Motor Location (Left/Right) to Settings Page
-	Acceleration
-	Move Speed
-	Speed Limit
-	Focus delay
-	Shutter Hold
 
-// ANDROID HACK:
+// ANDROID BUG:
 // On Android centered labels become left-aligned when the page disappears and reappears.

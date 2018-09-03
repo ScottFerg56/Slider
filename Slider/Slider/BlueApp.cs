@@ -129,6 +129,11 @@ namespace CamSlider
 				timer.Enabled = false;
 				if (Queue.Count == 0)
 					return;
+				if (State != BlueState.Connected)
+				{
+					Queue.Clear();
+					return;
+				}
 				string data = Queue.First();
 				if (BlueDevice.Write(data))
 				{

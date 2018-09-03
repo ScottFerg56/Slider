@@ -59,6 +59,7 @@ namespace CamSlider.Models
 			set => SetProperty(ref _FramesPerSecond, value, (v) => Math.Max(0, v), onChanged: () => { Frames = Playback * FramesPerSecond; });
 		}
 
+		// Playback x FPS -> #Frames
 		protected int _Frames = 0;
 		[JsonIgnore]
 		public int Frames
@@ -67,6 +68,7 @@ namespace CamSlider.Models
 			protected set => SetProperty(ref _Frames, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });
 		}
 
+		// Duration / #Frames -> Interval
 		protected double _Interval = 0;
 		[JsonIgnore]
 		public double Interval

@@ -215,7 +215,22 @@ namespace CamSlider.UWP
 				return;
 			}
 			_RX.ValueChanged += Receive_ValueChanged;
+			bluetoothLeDevice.ConnectionStatusChanged += BluetoothLeDevice_ConnectionStatusChanged;
 			State = BlueState.Connected;
+		}
+
+		private void BluetoothLeDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+		{
+			switch (bluetoothLeDevice.ConnectionStatus)
+			{
+				case BluetoothConnectionStatus.Disconnected:
+					Disconnect();
+					break;
+				case BluetoothConnectionStatus.Connected:
+					break;
+				default:
+					break;
+			}
 		}
 
 		private void Receive_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
@@ -281,7 +296,11 @@ namespace CamSlider.UWP
 		void Cleanup()
 		{
 			DeviceInfo = null;
-			_RX = null;
+			if (_RX != null)
+			{
+				_RX.ValueChanged -= Receive_ValueChanged;
+				_RX = null;
+			}
 			_TX = null;
 			if (Service != null)
 			{
@@ -290,6 +309,7 @@ namespace CamSlider.UWP
 			}
 			if (bluetoothLeDevice != null)
 			{
+				bluetoothLeDevice.ConnectionStatusChanged -= BluetoothLeDevice_ConnectionStatusChanged;
 				bluetoothLeDevice.Dispose();
 				bluetoothLeDevice = null;
 			}
@@ -311,6 +331,8 @@ namespace CamSlider.UWP
 
 		public bool Write(params byte[] data)
 		{
+			if (State != BlueState.Connected)
+				return false;
 			if (_TX == null)
 			{
 				Debug.WriteLine($"--> Write no TX characteristic");
@@ -332,6 +354,13 @@ namespace CamSlider.UWP
 					Debug.WriteLine($"--> Write failed: {result.GetResults()}");
 					return false;
 				}
+			}
+			
+			catch (Exception ex) when ((uint)ex.HResult == 0x80131500)
+			{
+				Debug.WriteLine($"--> Unexpected disconnection: {ex.Message}");
+				Disconnect();
+				return false;
 			}
 			catch (Exception ex) when ((uint)ex.HResult == 0x80650003 || (uint)ex.HResult == 0x80070005)
 			{
