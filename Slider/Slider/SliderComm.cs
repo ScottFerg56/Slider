@@ -215,22 +215,22 @@ namespace CamSlider
 			switch ((Properties)s[0])
 			{
 				case Properties.Prop_Position:
-					SetProperty(ref _Position, (int)Math.Round(v));
+					SetProperty(ref _Position, (int)Math.Round(v), "Position");
 					break;
 				case Properties.Prop_Acceleration:
-					SetProperty(ref _Acceleration, v);
+					SetProperty(ref _Acceleration, v, "Acceleration");
 					break;
 				case Properties.Prop_Speed:
-					SetProperty(ref _Speed, v);
+					SetProperty(ref _Speed, v, "Speed");
 					break;
 				case Properties.Prop_MaxSpeed:
-					SetProperty(ref _MaxSpeed, v);
+					SetProperty(ref _MaxSpeed, v, "MaxSpeed");
 					break;
 				case Properties.Prop_SpeedLimit:
-					SetProperty(ref _SpeedLimit, (int)Math.Round(v));
+					SetProperty(ref _SpeedLimit, (int)Math.Round(v), "SpeedLimit");
 					break;
 				case Properties.Prop_Homed:
-					SetProperty(ref _Homed, v != 0);
+					SetProperty(ref _Homed, v != 0, "Homed");
 					break;
 				default:
 					break;
