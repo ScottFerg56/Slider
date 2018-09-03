@@ -16,23 +16,24 @@ namespace CamSlider.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class SequencePage : ContentPage
 	{
-		SequenceViewModel SeqViewModel;
+		SequenceViewModel ViewModel;
+		protected SliderComm Comm { get => SliderComm.Instance; }
 
 		public SequencePage ()
 		{
 			InitializeComponent ();
 
-			BindingContext = SeqViewModel = new SequenceViewModel();
+			BindingContext = ViewModel = new SequenceViewModel();
 
-			ButtonMinsUp.Held += (s, e) => { SeqViewModel.DurationMins++; };
-			ButtonMinsDn.Held += (s, e) => { SeqViewModel.DurationMins--; };
-			ButtonSecsUp.Held += (s, e) => { SeqViewModel.DurationSecs++; };
-			ButtonSecsDn.Held += (s, e) => { SeqViewModel.DurationSecs--; };
+			ButtonMinsUp.Held += (s, e) => { ViewModel.DurationMins++; };
+			ButtonMinsDn.Held += (s, e) => { ViewModel.DurationMins--; };
+			ButtonSecsUp.Held += (s, e) => { ViewModel.DurationSecs++; };
+			ButtonSecsDn.Held += (s, e) => { ViewModel.DurationSecs--; };
 
-			ButtonPMinsUp.Held += (s, e) => { SeqViewModel.PlaybackMins++; };
-			ButtonPMinsDn.Held += (s, e) => { SeqViewModel.PlaybackMins--; };
-			ButtonPSecsUp.Held += (s, e) => { SeqViewModel.PlaybackSecs++; };
-			ButtonPSecsDn.Held += (s, e) => { SeqViewModel.PlaybackSecs--; };
+			ButtonPMinsUp.Held += (s, e) => { ViewModel.PlaybackMins++; };
+			ButtonPMinsDn.Held += (s, e) => { ViewModel.PlaybackMins--; };
+			ButtonPSecsUp.Held += (s, e) => { ViewModel.PlaybackSecs++; };
+			ButtonPSecsDn.Held += (s, e) => { ViewModel.PlaybackSecs--; };
 		}
 
 		private async void OnRun(object sender, EventArgs e)
@@ -51,6 +52,18 @@ namespace CamSlider.Views
 		{
 			RunPage.Instance.Init(RunCommand.MoveToOut);
 			await Navigation.PushModalAsync(RunPage.Instance, false);
+		}
+
+		private void SetInFromCurrent(object sender, EventArgs e)
+		{
+			ViewModel.SlideIn = Comm.Slide.Position;
+			ViewModel.PanIn = Comm.Pan.Position;
+		}
+
+		private void SetOutFromCurrent(object sender, EventArgs e)
+		{
+			ViewModel.SlideOut = Comm.Slide.Position;
+			ViewModel.PanOut = Comm.Pan.Position;
 		}
 	}
 }

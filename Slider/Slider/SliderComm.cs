@@ -209,25 +209,28 @@ namespace CamSlider
 
 			Debug.WriteLine($"++> {Name} {(Properties)s[0]} <- {v}");
 
+			// Invoke SetProperty directly rather than set the property.
+			// Using the property setter may reflect the value back to the device
+			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
 			switch ((Properties)s[0])
 			{
 				case Properties.Prop_Position:
-					Position = (int)Math.Round(v);
+					SetProperty(ref _Position, (int)Math.Round(v));
 					break;
 				case Properties.Prop_Acceleration:
-					Acceleration = v;
+					SetProperty(ref _Acceleration, v);
 					break;
 				case Properties.Prop_Speed:
-					Speed = v;
+					SetProperty(ref _Speed, v);
 					break;
 				case Properties.Prop_MaxSpeed:
-					MaxSpeed = v;
+					SetProperty(ref _MaxSpeed, v);
 					break;
 				case Properties.Prop_SpeedLimit:
-					SpeedLimit = (int)Math.Round(v);
+					SetProperty(ref _SpeedLimit, (int)Math.Round(v));
 					break;
 				case Properties.Prop_Homed:
-					Homed = v != 0;
+					SetProperty(ref _Homed, v != 0);
 					break;
 				default:
 					break;

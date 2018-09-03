@@ -12,15 +12,11 @@ namespace CamSlider.ViewModels
     public class SequenceViewModel : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
-		public Command SetInFromCurrentCommand { get; set; }
-		public Command SetOutFromCurrentCommand { get; set; }
 
 		public Sequence Sequence { get => Comm.Sequence; }
 
 		public SequenceViewModel()
 		{
-			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
-			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
 			Sequence.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
 			Comm.StateChange += Comm_StateChange;
@@ -153,18 +149,6 @@ namespace CamSlider.ViewModels
 		{
 			get => GetProperty<bool>();
 			set => SetProperty(value);
-		}
-
-		void ExecuteSetInFromCurrentCommand()
-		{
-			SlideIn = Comm.Slide.Position;
-			PanIn = Comm.Pan.Position;
-		}
-
-		void ExecuteSetOutFromCurrentCommand()
-		{
-			SlideOut = Comm.Slide.Position;
-			PanOut = Comm.Pan.Position;
 		}
 
 		protected T GetProperty<T>([CallerMemberName]string propertyName = "")
