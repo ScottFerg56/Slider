@@ -33,8 +33,8 @@
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Button Grid.Row="1" Grid.Column="3" Command="{Binding SetInFromCurrentCommand}" Text="current" FontSize="Micro" />
-				<Button Grid.Row="1" Grid.Column="4" Clicked="OnMoveToIn" Text="move to" FontSize="Micro" />
+				<Button Grid.Row="1" Grid.Column="3" IsEnabled="{Binding Enabled}" Command="{Binding SetInFromCurrentCommand}" Text="current" FontSize="Micro" />
+				<Button Grid.Row="1" Grid.Column="4" IsEnabled="{Binding Enabled}" Clicked="OnMoveToIn" Text="move to" FontSize="Micro" />
 				<Label Grid.Row="2" Grid.Column="0" Text="Out:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Medium" />
 				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding SlideOut}" FontSize="Small">
 					<Entry.Behaviors>
@@ -46,8 +46,8 @@
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Button Grid.Row="2" Grid.Column="3" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
-				<Button Grid.Row="2" Grid.Column="4" Clicked="OnMoveToOut" Text="move to" FontSize="Micro" />
+				<Button Grid.Row="2" Grid.Column="3" IsEnabled="{Binding Enabled}" Command="{Binding SetOutFromCurrentCommand}" Text="current" FontSize="Micro" />
+				<Button Grid.Row="2" Grid.Column="4" IsEnabled="{Binding Enabled}" Clicked="OnMoveToOut" Text="move to" FontSize="Micro" />
 			</Grid>
 			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>
@@ -123,7 +123,27 @@
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
-				<Button Grid.Row="0" Grid.Column="0" Clicked="OnRun" Image="play.png" BackgroundColor="#202020" />
+				<Button Grid.Row="0" Grid.Column="0" IsEnabled="{Binding Enabled}" Clicked="OnRun" Image="play.png" BackgroundColor="#202020">
+					<VisualStateManager.VisualStateGroups>
+						<VisualStateGroup x:Name="CommonStates">
+							<VisualState x:Name="Normal">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="play.png" />
+								</VisualState.Setters>
+							</VisualState>
+							<VisualState x:Name="Focused">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="play.png" />
+								</VisualState.Setters>
+							</VisualState>
+							<VisualState x:Name="Disabled">
+								<VisualState.Setters>
+									<Setter Property="Image" Value="noplay.png" />
+								</VisualState.Setters>
+							</VisualState>
+						</VisualStateGroup>
+					</VisualStateManager.VisualStateGroups>
+				</Button>
 			</Grid>
 		</StackLayout>
 	</ContentPage.Content>

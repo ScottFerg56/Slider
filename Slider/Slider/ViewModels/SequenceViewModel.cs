@@ -15,14 +15,29 @@ namespace CamSlider.ViewModels
 		public Command SetInFromCurrentCommand { get; set; }
 		public Command SetOutFromCurrentCommand { get; set; }
 
-		public Sequence Sequence { get => SliderComm.Instance.Sequence; }
+		public Sequence Sequence { get => Comm.Sequence; }
 
 		public SequenceViewModel()
 		{
 			SetInFromCurrentCommand = new Command(() => ExecuteSetInFromCurrentCommand());
 			SetOutFromCurrentCommand = new Command(() => ExecuteSetOutFromCurrentCommand());
 			Sequence.PropertyChanged += (s, e) => { PropertyChanged?.Invoke(this, e); };
+			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
+			Comm.StateChange += Comm_StateChange;
 		}
+
+		private void Comm_StateChange(object sender, EventArgs e)
+		{
+			OnPropertyChanged("Enabled");
+		}
+
+		private void Slide_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Homed")
+				OnPropertyChanged("Enabled");
+		}
+
+		public bool Enabled { get => Comm.Slide.Homed && Comm.State == BlueState.Connected; }
 
 		public int SlideIn
 		{

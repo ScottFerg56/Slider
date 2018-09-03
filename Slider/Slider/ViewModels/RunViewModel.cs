@@ -29,7 +29,14 @@ namespace CamSlider.ViewModels
 		public RunViewModel()
 		{
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
-			Comm.Pan.PropertyChanged += Pan_PropertyChanged; ;
+			Comm.Pan.PropertyChanged += Pan_PropertyChanged;
+			Comm.StateChange += Comm_StateChange;
+		}
+
+		private void Comm_StateChange(object sender, EventArgs e)
+		{
+			if (Comm.State != BlueState.Connected)
+				Stop();
 		}
 
 		public void Init(RunCommand cmd)

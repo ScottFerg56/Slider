@@ -9,13 +9,20 @@ namespace CamSlider.ViewModels
 {
     public class ManualViewModel : INotifyPropertyChanged
 	{
+		protected SliderComm Comm { get => SliderComm.Instance; }
 		public Command PanZeroCommand { get; set; }
 
 		public ManualViewModel()
 		{
-			PanZeroCommand = new Command(() => { SliderComm.Instance.Pan.Zero(); });
-			SliderComm.Instance.Slide.PropertyChanged += Slide_PropertyChanged;
-			SliderComm.Instance.Pan.PropertyChanged += Pan_PropertyChanged; ;
+			PanZeroCommand = new Command(() => { Comm.Pan.Zero(); });
+			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
+			Comm.Pan.PropertyChanged += Pan_PropertyChanged; ;
+			Comm.StateChange += Comm_StateChange;
+		}
+
+		private void Comm_StateChange(object sender, EventArgs e)
+		{
+			OnPropertyChanged("Enabled");
 		}
 
 		private void Pan_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -32,15 +39,15 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("Enabled");
 		}
 
-		public int SlidePosition { get => SliderComm.Instance.Slide.Position; }
+		public int SlidePosition { get => Comm.Slide.Position; }
 
-		public double SlideVector { set => SliderComm.Instance.Slide.Vector = -value; }
+		public double SlideVector { set => Comm.Slide.Vector = -value; }
 
-		public int PanPosition { get => SliderComm.Instance.Pan.Position; }
+		public int PanPosition { get => Comm.Pan.Position; }
 
-		public double PanVector { set => SliderComm.Instance.Pan.Vector = -value; }
+		public double PanVector { set => Comm.Pan.Vector = -value; }
 
-		public bool Enabled { get => SliderComm.Instance.Slide.Homed; }
+		public bool Enabled { get => Comm.Slide.Homed && Comm.State == BlueState.Connected; }
 
 		#region INotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;
