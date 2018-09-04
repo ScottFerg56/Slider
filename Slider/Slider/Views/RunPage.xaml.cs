@@ -45,6 +45,12 @@ namespace CamSlider.Views
 			Closed = false;
 		}
 
+		protected override bool OnBackButtonPressed()
+		{
+			ViewModel.Stop();   // this invokes our Stopped event
+			return true;
+		}
+
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

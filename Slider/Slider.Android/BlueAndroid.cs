@@ -212,7 +212,7 @@ namespace CamSlider.Droid
 			State = BlueState.Searching;
 
 			// in 10 seconds, stop the scan
-			await Task.Delay(10000);
+			await Task.Delay(20000);
 
 			if (State == BlueState.Searching)
 			{
