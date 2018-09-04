@@ -18,6 +18,7 @@ namespace CamSlider.Views
 	{
 		SequenceViewModel ViewModel;
 		protected SliderComm Comm { get => SliderComm.Instance; }
+		Timer timer = new Timer() { Interval = 1000, Enabled = false };
 
 		public SequencePage ()
 		{
@@ -34,6 +35,26 @@ namespace CamSlider.Views
 			ButtonPMinsDn.Held += (s, e) => { ViewModel.PlaybackMins--; };
 			ButtonPSecsUp.Held += (s, e) => { ViewModel.PlaybackSecs++; };
 			ButtonPSecsDn.Held += (s, e) => { ViewModel.PlaybackSecs--; };
+
+			timer.Elapsed += Timer_Elapsed;
+		}
+
+		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			timer.Enabled = false;
+			Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
+			{
+				RunPage.Instance.Init(RunCommand.Resume);
+				await Navigation.PushModalAsync(RunPage.Instance, false);
+			});
+		}
+
+		public void Resume()
+		{
+			// We apparently cannot rely on OnAppearing being called in this case
+			// and pushing the modal RunPage before appearing causes lots of problems
+			// so set a timer and launch the RunPage from there
+			timer.Enabled = true;
 		}
 
 		private async void OnRun(object sender, EventArgs e)

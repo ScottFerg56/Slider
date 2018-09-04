@@ -12,12 +12,12 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-			<Label Grid.Row="0" Grid.Column="1" x:Name="LabelSlide" Text="{Binding SlidePosition}" XAlign="Center" FontSize="Large"/>
+			<Label Grid.Row="0" Grid.Column="1" Text="{Binding SlidePosition}" XAlign="Center" FontSize="Large"/>
 			<Button Grid.Row="0" Grid.Column="2" IsEnabled="{Binding Enabled}" Clicked="Calibrate" Text="Calibrate" />
-			<loc:FMSlider Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding SlideVector, Mode=OneWayToSource}" x:Name="SliderSlide" Minimum="-100" Maximum="100"/>
+			<loc:FMSlider x:Name="SliderSlide" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding SlideVector, Mode=OneWayToSource}" Minimum="-100" Maximum="100"/>
 			<Label Grid.Row="2" Grid.Column="1" Text="{Binding PanPosition}" XAlign="Center" FontSize="Large"/>
 			<Button Grid.Row="2" Grid.Column="2" IsEnabled="{Binding Enabled}" Clicked="PanZero" Text="Zero" />
-			<loc:FMSlider Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding PanVector, Mode=OneWayToSource}" x:Name="SliderPan" Minimum="-100" Maximum="100"/>
+			<loc:FMSlider x:Name="SliderPan" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsEnabled="{Binding Enabled}" Value="{Binding PanVector, Mode=OneWayToSource}" Minimum="-100" Maximum="100"/>
 		</Grid>
 	</ContentPage.Content>
 </ContentPage>

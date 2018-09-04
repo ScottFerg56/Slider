@@ -34,7 +34,7 @@ namespace CamSlider.Droid
 		{
 			base.OnServicesDiscovered(gatt, status);
 
-		//	Debug.WriteLine("++> OnServicesDiscovered: " + status.ToString());
+			Debug.WriteLine($"++> OnServicesDiscovered: {status}");
 
 			ServicesDiscovered(this, EventArgs.Empty);
 		}

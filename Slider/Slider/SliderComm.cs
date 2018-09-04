@@ -63,6 +63,9 @@ namespace CamSlider
 			// process Bluetooth input from the device
 			switch (s[0])
 			{
+				case 'g':
+					GlobalInput(s.Substring(1));
+					break;
 				case 's':
 					Slide.Input(s.Substring(1));
 					break;
@@ -95,6 +98,62 @@ namespace CamSlider
 			}
 		}
 
+		enum Globals { Global_Action = 'a'};
+
+		internal void GlobalInput(string s)
+		{
+			// process Bluetooth input from the device
+			if (!double.TryParse(s.Substring(1), out double v))
+				return;
+
+			Debug.WriteLine($"++> Global {(Globals)s[0]} <- {v}");
+
+			// Invoke SetProperty directly rather than set the property.
+			// Using the property setter may reflect the value back to the device
+			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
+			switch ((Globals)s[0])
+			{
+				case Globals.Global_Action:
+					SetProperty(ref _Action, (Actions)(int)v, "Action");
+					break;
+			}
+		}
+
+		void SetDeviceGlobal(Globals prop, double v)
+		{
+			Command($"g{(char)prop}{v:0.#}");
+		}
+
+		void RequestDeviceGlobal(Globals prop)
+		{
+			Command($"g{(char)prop}?");
+		}
+
+		public void RequestAllDeviceGlobals()
+		{
+			foreach (var prop in (Globals[])Enum.GetValues(typeof(Globals)))
+			{
+				RequestDeviceGlobal(prop);
+			}
+		}
+
+		public enum Actions { None, MovingToIn, MovingToOut, Running, Unknown };
+
+		protected Actions _Action = Actions.Unknown;
+		public Actions Action
+		{
+			get
+			{
+				if (_Action == Actions.Unknown)
+				{
+					RequestDeviceGlobal(Globals.Global_Action);
+					return 0;
+				}
+				return _Action;
+			}
+			internal set => SetProperty(ref _Action, value, onChanged: () => SetDeviceGlobal(Globals.Global_Action, (int)value));
+		}
+
 		public Stepper Slide { get => Stepper.Slide; }
 		public Stepper Pan { get => Stepper.Pan; }
 
@@ -123,18 +182,12 @@ namespace CamSlider
 
 		private void Blue_StateChange(object sender, EventArgs e)
 		{
-			if (SliderComm.Instance.State == BlueState.Connected)
+			if (State == BlueState.Connected)
 			{
 				// trigger updated values from the device
-				var i = Slide.Position;
-				i = Pan.Position;
-				var d = Slide.Speed;
-				d = Pan.Speed;
-				d = Slide.MaxSpeed;
-				d = Pan.MaxSpeed;
-				d = Slide.Acceleration;
-				d = Pan.Acceleration;
-				var homed = Slide.Homed;
+				RequestAllDeviceGlobals();
+				Slide.RequestAllDeviceProps();
+				Pan.RequestAllDeviceProps();
 			}
 			StateChange?.Invoke(this, e);
 		}
@@ -207,12 +260,16 @@ namespace CamSlider
 			if (!double.TryParse(s.Substring(1), out double v))
 				return;
 
-			Debug.WriteLine($"++> {Name} {(Properties)s[0]} <- {v}");
+			var prop = (Properties)s[0];
+
+			Debug.WriteLine($"++> {Name} {prop} <- {v}");
+			if (requestedProps.Contains(prop))
+				requestedProps.Remove(prop);
 
 			// Invoke SetProperty directly rather than set the property.
 			// Using the property setter may reflect the value back to the device
 			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
-			switch ((Properties)s[0])
+			switch (prop)
 			{
 				case Properties.Prop_Position:
 					SetProperty(ref _Position, (int)Math.Round(v), "Position");
@@ -239,7 +296,7 @@ namespace CamSlider
 
 		void Command(string s, bool required = true)
 		{
-			SliderComm.Instance.Command($"{Prefix}{s}");
+			Comm.Command($"{Prefix}{s}", required);
 		}
 
 		void SetDeviceProp(Properties prop, double v)
@@ -247,9 +304,23 @@ namespace CamSlider
 			Command($"{(char)prop}{v:0.#}");
 		}
 
+		List<Properties> requestedProps = new List<Properties>();
+
 		void RequestDeviceProp(Properties prop)
 		{
+			if (requestedProps.Contains(prop))
+				return;
+			requestedProps.Add(prop);
 			Command($"{(char)prop}?");
+		}
+
+		public void RequestAllDeviceProps()
+		{
+			requestedProps.Clear();
+			foreach (var prop in (Properties[])Enum.GetValues(typeof(Properties)))
+			{
+				RequestDeviceProp(prop);
+			}
 		}
 
 		protected int? _Position;

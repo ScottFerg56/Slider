@@ -14,6 +14,7 @@ namespace CamSlider.ViewModels
 		MoveToIn,
 		MoveToOut,
 		RunSequence,
+		Resume,
 	}
 
 	public class RunViewModel : INotifyPropertyChanged
@@ -69,19 +70,48 @@ namespace CamSlider.ViewModels
 						StatusMsg = "Ready to run";
 					}
 					break;
+				case RunCommand.Resume:
+					switch (Comm.Action)
+					{
+						case SliderComm.Actions.MovingToIn:
+							if (!SetupMoveToIn(true))
+							{
+								Stop();
+							}
+							break;
+						case SliderComm.Actions.MovingToOut:
+							if (!SetupMoveToOut(true))
+							{
+								Stop();
+							}
+							break;
+						case SliderComm.Actions.Running:
+							if (!SetupRun(true))
+							{
+								Stop();
+							}
+							break;
+						default:
+							Debug.WriteLine($"Invalid resume action: {Comm.Action}");
+							break;
+					}
+					break;
 				default:
 					break;
 			}
 		}
 
-		bool SetupRun()
+		bool SetupRun(bool resume = false)
 		{
+			Comm.Action = SliderComm.Actions.Running;
 			CanPlay = false;
-			StatusMsg = "Running";
+			StatusMsg = (resume ? "Resume " : "") + "Running";
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
 			PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
 			if (SlideDiff || PanDiff)
 			{
+				if (resume)
+					return true;
 				var slideMaxSpeed = Comm.Slide.MaxSpeedForDistanceAndTime(Comm.Sequence.SlideOut - Comm.Slide.Position, Comm.Sequence.Duration);
 				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - Comm.Pan.Position, Comm.Sequence.Duration);
 				Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
@@ -92,13 +122,16 @@ namespace CamSlider.ViewModels
 			return false;
 		}
 
-		bool SetupMoveToIn()
+		bool SetupMoveToIn(bool resume = false)
 		{
-			StatusMsg = "Moving to IN";
+			Comm.Action = SliderComm.Actions.MovingToIn;
+			StatusMsg = (resume ? "Resume " : "") + "Moving to IN";
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideIn;
 			PanDiff = Comm.Pan.Position != Comm.Sequence.PanIn;
 			if (SlideDiff || PanDiff)
 			{
+				if (resume)
+					return true;
 				Comm.Slide.Move(Comm.Sequence.SlideIn);
 				Comm.Pan.Move(Comm.Sequence.PanIn);
 				return true;
@@ -106,13 +139,16 @@ namespace CamSlider.ViewModels
 			return false;
 		}
 
-		bool SetupMoveToOut()
+		bool SetupMoveToOut(bool resume = false)
 		{
-			StatusMsg = "Moving to OUT";
+			Comm.Action = SliderComm.Actions.MovingToOut;
+			StatusMsg = (resume ? "Resume " : "") + "Moving to OUT";
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
 			PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
 			if (SlideDiff || PanDiff)
 			{
+				if (resume)
+					return true;
 				Comm.Slide.Move(Comm.Sequence.SlideOut);
 				Comm.Pan.Move(Comm.Sequence.PanOut);
 				return true;
@@ -130,6 +166,7 @@ namespace CamSlider.ViewModels
 
 		public void Stop()
 		{
+			Comm.Action = SliderComm.Actions.None;
 			Command = RunCommand.Stopped;
 			StatusMsg = "Stopped";
 			Comm.Slide.Vector = 0;
@@ -207,6 +244,7 @@ namespace CamSlider.ViewModels
 				else
 				{
 					PreMoveToIn = false;
+					Comm.Action = SliderComm.Actions.None;
 					CanPlay = true;
 					StatusMsg = "Ready to run";
 				}

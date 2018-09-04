@@ -1,15 +1,11 @@
 ﻿* fix Settings persistence lost with major change to Android
 
-Manual page
-	* button to calibrate slide position??
-	* Enabled should also take into account connected
 Run page (modal)
+	* robustness during loss of connection
 	* TimeRemaining: consider single-phase solution of accelerating / decelerating only
 	* Deal with Back button on Android modal RunPage
 		https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/modal
 	* Slide/Pan (position/goal)
-	* Distance Traveled (traveled/remaining/total)
-	* Percent Done
 	* Elapsed Time (elapsed/remaining/total)
 	* Frames (#/remaining/total)
 Settings page

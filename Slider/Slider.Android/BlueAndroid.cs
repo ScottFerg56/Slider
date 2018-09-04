@@ -66,10 +66,6 @@ namespace CamSlider.Droid
 
 		protected List<byte[]> BytesRead = new List<byte[]>();
 		protected int BytesIndex = 0;
-		protected byte[] Packet = new byte[10];
-		protected int PacketIndex = 0;
-		protected int PacketEnd;
-		protected const int PKT_DATA_START = 2;
 
 		public BlueAndroid()
 		{
@@ -163,16 +159,18 @@ namespace CamSlider.Droid
 
 		private void GattCallback_ServicesDiscovered(object sender, EventArgs e)
 		{
+			Debug.WriteLine("++> GattCallback_ServicesDiscovered");
 			_service = _gatt.GetService(uuidService);
 			_TX = _service.GetCharacteristic(uuidTX);
 			_RX = _service.GetCharacteristic(uuidRX);
 			BluetoothGattDescriptor config = _RX.GetDescriptor(uuidCharacteristicConfig);
 			if (config == null)
 			{
+				Debug.WriteLine("--> _RX.GetDescriptor failed");
 				return;
 			}
 			bool b = _gatt.SetCharacteristicNotification(_RX, true);
-			b = _gatt.SetCharacteristicNotification(_RX, true);
+		//	b = _gatt.SetCharacteristicNotification(_RX, true);
 			// enableNotification/disable remotely
 			b = config.SetValue(BluetoothGattDescriptor.EnableNotificationValue.ToArray());
 			b = _gatt.WriteDescriptor(config);
@@ -180,6 +178,7 @@ namespace CamSlider.Droid
 
 		private void GattCallback_ConnectionStateChange(object sender, ConnectionStateChangeEventArgs e)
 		{
+			Debug.WriteLine($"++> GattCallback_ConnectionStateChange: {e.NewState}");
 			switch (e.NewState)
 			{
 				case ProfileState.Connected:
@@ -260,6 +259,7 @@ namespace CamSlider.Droid
 
 		public override void OnBatchScanResults(IList<ScanResult> results)
 		{
+			Debug.WriteLine("++> OnBatchScanResults");
 			foreach (var result in results)
 			{
 				DeviceResult(result);
@@ -269,13 +269,14 @@ namespace CamSlider.Droid
 		public override void OnScanFailed([GeneratedEnum] ScanFailure errorCode)
 		{
 			//	base.OnScanFailed(errorCode);
+			Debug.WriteLine($"--> OnScanFailed: {errorCode}");
 		}
 
 		public void DeviceResult(ScanResult result)
 		{
 			if (result == null)
 				return;
-			//	Console.WriteLine ("Adapter.LeScanCallback: " + result.Device.Name);
+			Debug.WriteLine($"++> DeviceResult: {result.Device.Name}");
 
 			if (_device == null && result.Device.Name == TargetDeviceName)
 			{
