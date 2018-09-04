@@ -40,8 +40,8 @@ namespace CamSlider.Droid.Renderers
 			}
 
 			ShapeDrawable th = new ShapeDrawable(new OvalShape());
-			th.SetIntrinsicWidth(50);
-			th.SetIntrinsicHeight(50);
+			th.SetIntrinsicWidth(100);
+			th.SetIntrinsicHeight(100);
 			th.SetColorFilter(Android.Graphics.Color.Red, Android.Graphics.PorterDuff.Mode.SrcOver);
 			SeekBar.SetThumb(th);
 
