@@ -72,7 +72,11 @@ namespace CamSlider
 				case 'p':
 					Pan.Input(s.Substring(1));
 					break;
+				case 'c':
+					Camera.Input(s.Substring(1));
+					break;
 				default:
+					Debug.WriteLine($"--> Unknown device class: {s[0]}");
 					break;
 			}
 		}
@@ -98,7 +102,7 @@ namespace CamSlider
 			}
 		}
 
-		enum Globals { Global_Action = 'a'};
+		enum Globals { Global_Action = 'a' };
 
 		internal void GlobalInput(string s)
 		{
@@ -156,6 +160,7 @@ namespace CamSlider
 
 		public Stepper Slide { get => Stepper.Slide; }
 		public Stepper Pan { get => Stepper.Pan; }
+		public Camera Camera { get => Camera.Cam; }
 
 		public void Connect(string name) => Blue.Connect(name);
 		public void Disconnect() => Blue.Disconnect();
@@ -188,6 +193,7 @@ namespace CamSlider
 				RequestAllDeviceGlobals();
 				Slide.RequestAllDeviceProps();
 				Pan.RequestAllDeviceProps();
+				Camera.RequestAllDeviceProps();
 			}
 			StateChange?.Invoke(this, e);
 		}
@@ -224,7 +230,7 @@ namespace CamSlider
 		readonly int LimitMin;
 		readonly int LimitMax;
 
-		internal Stepper(string name, int limitMin, int limitMax)
+		protected Stepper(string name, int limitMin, int limitMax)
 		{
 			Name = name;
 			Prefix = char.ToLower(name[0]);
@@ -560,18 +566,18 @@ namespace CamSlider
 			distance = Math.Abs(distance);
 			if (distance == 0)
 			{
-			//	Debug.WriteLine($"--> {Name} Distance is 0");
+				//	Debug.WriteLine($"--> {Name} Distance is 0");
 				return 0;
 			}
 			var speed1 = Math.Abs(Speed);
 			if (speed1 == 0)
 			{
-			//	Debug.WriteLine($"--> {Name} Speed is 0");
+				//	Debug.WriteLine($"--> {Name} Speed is 0");
 				return 0;
 			}
 			if (Acceleration == 0)
 			{
-			//	Debug.WriteLine($"--> {Name} Acceleration not loaded");
+				//	Debug.WriteLine($"--> {Name} Acceleration not loaded");
 				return 0;
 			}
 
@@ -636,19 +642,19 @@ namespace CamSlider
 				{
 					// one solution
 					max = -b / (2 * a);
-				//	Debug.WriteLine($"--> {Name} max: {max}");
+					//	Debug.WriteLine($"--> {Name} max: {max}");
 				}
 				else if (disc > 0)
 				{
 					// two solutions; the lesser (with the negative term) being invalid
 					max = (-b + Math.Sqrt(disc)) / (2 * a);
-				//	var max2 = (-b - Math.Sqrt(disc)) / (2 * a);
-				//	Debug.WriteLine($"--> {Name} max1: {max}");
+					//	var max2 = (-b - Math.Sqrt(disc)) / (2 * a);
+					//	Debug.WriteLine($"--> {Name} max1: {max}");
 				}
 				else
 				{
 					// no solution - but very close to the finish
-				//	Debug.WriteLine($"--> {Name} disc: {disc}");
+					//	Debug.WriteLine($"--> {Name} disc: {disc}");
 					return 0;
 				}
 				// calculate changes in velocity for the acceleration and deceleration phases
@@ -657,12 +663,12 @@ namespace CamSlider
 				// calculate time spent in the acceleration and deceleration phases
 				ta = deltaV1 / Acceleration;
 				td = deltaV2 / Acceleration;
-			//	da = deltaV1 * ta * 0.5;
-			//	dd = deltaV2 * td * 0.5;
-			//	dm = distance - da - dd;	// should be nearly 0!
+				//	da = deltaV1 * ta * 0.5;
+				//	dd = deltaV2 * td * 0.5;
+				//	dm = distance - da - dd;	// should be nearly 0!
 				// total the times
 				var tx = ta + td;
-			//	Debug.WriteLine($"--> {Name} dm: {dm} tx: {tx}");
+				//	Debug.WriteLine($"--> {Name} dm: {dm} tx: {tx}");
 				return tx;
 			}
 
@@ -691,6 +697,183 @@ namespace CamSlider
 		public int LimitValue(int v)
 		{
 			return Math.Max(Math.Min(v, LimitMax), LimitMin);
+		}
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+		#endregion
+	}
+
+	public class Camera : INotifyPropertyChanged
+	{
+		protected SliderComm Comm { get => SliderComm.Instance; }
+		enum CamProperties { Cam_FocusDelay = 'd', Cam_ShutterHold = 's', Cam_Interval = 'i', Cam_Frames = 'f' };
+
+		protected Camera()
+		{
+		}
+
+		private static Camera _Cam;
+		internal static Camera Cam
+		{
+			get
+			{
+				if (_Cam == null)
+					_Cam = new Camera();
+				return _Cam;
+			}
+		}
+
+		internal void Input(string s)
+		{
+			// process Bluetooth input from the device
+			if (!uint.TryParse(s.Substring(1), out uint v))
+				return;
+
+			var prop = (CamProperties)s[0];
+
+			Debug.WriteLine($"++> Camera {prop} <- {v}");
+			if (requestedProps.Contains(prop))
+				requestedProps.Remove(prop);
+
+			// Invoke SetProperty directly rather than set the property.
+			// Using the property setter may reflect the value back to the device
+			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
+			switch (prop)
+			{
+				case CamProperties.Cam_FocusDelay:
+					SetProperty(ref _FocusDelay, v, "FocusDelay");
+					break;
+				case CamProperties.Cam_ShutterHold:
+					SetProperty(ref _ShutterHold, v, "ShutterHold");
+					break;
+				case CamProperties.Cam_Interval:
+					SetProperty(ref _Interval, v, "Interval");
+					break;
+				case CamProperties.Cam_Frames:
+					SetProperty(ref _Frames, v, "Frames");
+					break;
+				default:
+					break;
+			}
+		}
+
+		void Command(string s, bool required = true)
+		{
+			Comm.Command($"c{s}", required);
+		}
+
+		void SetDeviceProp(CamProperties prop, uint v)
+		{
+			Command($"{(char)prop}{v}");
+		}
+
+		List<CamProperties> requestedProps = new List<CamProperties>();
+
+		void RequestDeviceProp(CamProperties prop)
+		{
+			if (requestedProps.Contains(prop))
+				return;
+			requestedProps.Add(prop);
+			Command($"{(char)prop}?");
+		}
+
+		public void RequestAllDeviceProps()
+		{
+			requestedProps.Clear();
+			foreach (var prop in (CamProperties[])Enum.GetValues(typeof(CamProperties)))
+			{
+				RequestDeviceProp(prop);
+			}
+		}
+
+		protected uint? _FocusDelay;
+		public uint FocusDelay
+		{
+			get
+			{
+				if (!_FocusDelay.HasValue)
+				{
+					RequestDeviceProp(CamProperties.Cam_FocusDelay);
+					return 0;
+				}
+				return _FocusDelay.Value;
+			}
+			internal set
+			{
+				SetProperty(ref _FocusDelay, value, onChanged: () => SetDeviceProp(CamProperties.Cam_FocusDelay, _FocusDelay.Value));
+			}
+		}
+
+		protected uint? _ShutterHold;
+		public uint ShutterHold
+		{
+			get
+			{
+				if (!_ShutterHold.HasValue)
+				{
+					RequestDeviceProp(CamProperties.Cam_ShutterHold);
+					return 0;
+				}
+				return _ShutterHold.Value;
+			}
+			internal set
+			{
+				SetProperty(ref _ShutterHold, value, onChanged: () => SetDeviceProp(CamProperties.Cam_ShutterHold, _ShutterHold.Value));
+			}
+		}
+
+		protected uint? _Interval;
+		public uint Interval
+		{
+			get
+			{
+				if (!_Interval.HasValue)
+				{
+					RequestDeviceProp(CamProperties.Cam_Interval);
+					return 0;
+				}
+				return _Interval.Value;
+			}
+			internal set
+			{
+				SetProperty(ref _Interval, value, onChanged: () => SetDeviceProp(CamProperties.Cam_Interval, _Interval.Value));
+			}
+		}
+
+		protected uint? _Frames;
+		public uint Frames
+		{
+			get
+			{
+				if (!_Frames.HasValue)
+				{
+					RequestDeviceProp(CamProperties.Cam_Frames);
+					return 0;
+				}
+				return _Frames.Value;
+			}
+			internal set
+			{
+				SetProperty(ref _Frames, value, onChanged: () => SetDeviceProp(CamProperties.Cam_Frames, _Frames.Value));
+			}
+		}
+
+		protected bool SetProperty<T>(ref T backingStore, T value,
+			[CallerMemberName]string propertyName = "",
+			Action onChanged = null)
+		{
+			if (EqualityComparer<T>.Default.Equals(backingStore, value))
+				return false;
+
+			backingStore = value;
+			onChanged?.Invoke();
+			OnPropertyChanged(propertyName);
+			return true;
 		}
 
 		#region INotifyPropertyChanged

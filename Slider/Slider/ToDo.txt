@@ -3,8 +3,6 @@
 Run page (modal)
 	* robustness during loss of connection
 	* TimeRemaining: consider single-phase solution of accelerating / decelerating only
-	* Deal with Back button on Android modal RunPage
-		https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/navigation/modal
 	* Slide/Pan (position/goal)
 	* Elapsed Time (elapsed/remaining/total)
 	* Frames (#/remaining/total)

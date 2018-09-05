@@ -50,7 +50,7 @@ namespace CamSlider.Models
 			set => SetProperty(ref _PanSpeedLimit, value, (v) => Math.Max(0, Math.Min(90, v)));
 		}
 
-		public int _FocusDelay = 500;
+		public int _FocusDelay = 100;
 		public int FocusDelay
 		{
 			get => _FocusDelay;
