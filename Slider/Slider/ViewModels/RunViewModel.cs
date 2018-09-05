@@ -31,6 +31,7 @@ namespace CamSlider.ViewModels
 		{
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
 			Comm.Pan.PropertyChanged += Pan_PropertyChanged;
+			Comm.Camera.PropertyChanged += Camera_PropertyChanged;
 			Comm.StateChange += Comm_StateChange;
 		}
 
@@ -108,7 +109,7 @@ namespace CamSlider.ViewModels
 			StatusMsg = (resume ? "Resume " : "") + "Running";
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
 			PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
-			if (SlideDiff || PanDiff)
+			if (SlideDiff || PanDiff || Comm.Sequence.Intervalometer && Comm.Sequence.Frames != 0)
 			{
 				if (resume)
 					return true;
@@ -117,6 +118,8 @@ namespace CamSlider.ViewModels
 				Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed);
 				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed);
+				Comm.Camera.Interval = Comm.Sequence.Intervalometer ? (uint)Math.Round(Comm.Sequence.Interval * 1000) : 0;
+				Comm.Camera.Frames = Comm.Sequence.Intervalometer ? Comm.Sequence.Frames : 0;
 				return true;
 			}
 			return false;
@@ -171,6 +174,7 @@ namespace CamSlider.ViewModels
 			StatusMsg = "Stopped";
 			Comm.Slide.Vector = 0;
 			Comm.Pan.Vector = 0;
+			Comm.Camera.Frames = 0;
 			Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
 			{
 				Stopped?.Invoke(this, EventArgs.Empty);
@@ -233,9 +237,18 @@ namespace CamSlider.ViewModels
 			}
 		}
 
+		private void Camera_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Frames")
+			{
+				OnPropertyChanged("FramesRemaining");
+				CheckStopped();
+			}
+		}
+
 		void CheckStopped()
 		{
-			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff)
+			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff && (!Comm.Sequence.Intervalometer || Comm.Camera.Frames == 0))
 			{
 				if (!PreMoveToIn)
 				{
@@ -258,6 +271,8 @@ namespace CamSlider.ViewModels
 		public int PanPosition { get => Comm.Pan.Position; }
 
 		public double PanSpeed { get => Comm.Pan.Speed; }
+
+		public uint FramesRemaining { get => Comm.Camera.Frames; }
 
 		double PanTimeRemaining;
 		double SlideTimeRemaining;

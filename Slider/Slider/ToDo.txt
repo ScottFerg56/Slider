@@ -1,4 +1,5 @@
-﻿* fix Settings persistence lost with major change to Android
+﻿* fix settings persistence lost with major change to Android
+* integrate app Settings
 
 Run page (modal)
 	* robustness during loss of connection

@@ -25,6 +25,8 @@
 				<Label Grid.Row="3" Grid.Column="1" Text="{Binding PanSpeed}" XAlign="Center" FontSize="Small"/>
 				<Label Grid.Row="4" Grid.Column="0" Text="Time Remaining (sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
 				<Label Grid.Row="4" Grid.Column="1" Text="{Binding TimeRemaining, StringFormat='{0:0}'}" XAlign="Center" FontSize="Small"/>
+				<Label Grid.Row="5" Grid.Column="0" Text="Frames Remaining:" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontAttributes="Bold" FontSize="Small" />
+				<Label Grid.Row="5" Grid.Column="1" Text="{Binding FramesRemaining}" XAlign="Center" FontSize="Small"/>
 			</Grid>
 			<Grid Margin="5,5,5,5" Padding="5,5,5,5" BackgroundColor="#202020">
 				<Grid.RowDefinitions>

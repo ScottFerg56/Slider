@@ -38,31 +38,31 @@ namespace CamSlider.Models
 			set => SetProperty(ref _PanOut, value, SliderComm.Instance.Pan.LimitValue);
 		}
 
-		protected int _Duration = 60;
-		public int Duration
+		protected uint _Duration = 60;
+		public uint Duration
 		{
 			get => _Duration;
 			set => SetProperty(ref _Duration, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });
 		}
 
-		protected int _Playback = 10;
-		public int Playback
+		protected uint _Playback = 10;
+		public uint Playback
 		{
 			get => _Playback;
 			set => SetProperty(ref _Playback, value, (v) => Math.Max(0, v), onChanged: () => { Frames = Playback * FramesPerSecond; });
 		}
 
-		protected int _FramesPerSecond = 30;
-		public int FramesPerSecond
+		protected uint _FramesPerSecond = 30;
+		public uint FramesPerSecond
 		{
 			get => _FramesPerSecond;
 			set => SetProperty(ref _FramesPerSecond, value, (v) => Math.Max(0, v), onChanged: () => { Frames = Playback * FramesPerSecond; });
 		}
 
 		// Playback x FPS -> #Frames
-		protected int _Frames = 0;
+		protected uint _Frames = 0;
 		[JsonIgnore]
-		public int Frames
+		public uint Frames
 		{
 			get => _Frames;
 			protected set => SetProperty(ref _Frames, value, (v) => Math.Max(0, v), onChanged: () => { Interval = (Frames == 0) ? 0 : (double)Duration / Frames; });

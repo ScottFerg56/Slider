@@ -59,85 +59,85 @@ namespace CamSlider.ViewModels
 			set => SetProperty(value);
 		}
 
-		public int Duration
+		public uint Duration
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
 		protected TimeSpan DurationTimeSpan
 		{
-			get => new TimeSpan(0, 0, Duration);
-			set => Duration = (int)value.TotalSeconds;
+			get => new TimeSpan(0, 0, (int)Duration);
+			set => Duration = (uint)value.TotalSeconds;
 		}
 
-		public int DurationMins
+		public uint DurationMins
 		{
-			get => DurationTimeSpan.Minutes;
+			get => (uint)DurationTimeSpan.Minutes;
 			set
 			{
 				var ts = DurationTimeSpan;
-				DurationTimeSpan = new TimeSpan(0, Math.Max(0, value), ts.Seconds);
+				DurationTimeSpan = new TimeSpan(0, (int)Math.Max(0, value), ts.Seconds);
 				OnPropertyChanged();
 			}
 		}
 
-		public int DurationSecs
+		public uint DurationSecs
 		{
-			get => DurationTimeSpan.Seconds;
+			get => (uint)DurationTimeSpan.Seconds;
 			set
 			{
 				var ts = DurationTimeSpan;
 				var v = (value + 60) % 60;
-				DurationTimeSpan = new TimeSpan(0, ts.Minutes, v);
+				DurationTimeSpan = new TimeSpan(0, ts.Minutes, (int)v);
 				OnPropertyChanged();
 			}
 		}
 
-		public int Playback
+		public uint Playback
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
 		protected TimeSpan PlaybackTimeSpan
 		{
-			get => new TimeSpan(0, 0, Playback);
-			set => Playback = (int)value.TotalSeconds;
+			get => new TimeSpan(0, 0, (int)Playback);
+			set => Playback = (uint)value.TotalSeconds;
 		}
 
-		public int PlaybackMins
+		public uint PlaybackMins
 		{
-			get => PlaybackTimeSpan.Minutes;
+			get => (uint)PlaybackTimeSpan.Minutes;
 			set
 			{
 				var ts = PlaybackTimeSpan;
-				PlaybackTimeSpan = new TimeSpan(0, Math.Max(0, value), ts.Seconds);
+				PlaybackTimeSpan = new TimeSpan(0, (int)Math.Max(0, value), ts.Seconds);
 				OnPropertyChanged();
 			}
 		}
 
-		public int PlaybackSecs
+		public uint PlaybackSecs
 		{
-			get => PlaybackTimeSpan.Seconds;
+			get => (uint)PlaybackTimeSpan.Seconds;
 			set
 			{
 				var ts = PlaybackTimeSpan;
 				var v = (value + 60) % 60;
-				PlaybackTimeSpan = new TimeSpan(0, ts.Minutes, Math.Max(0, Math.Min(59, v)));
+				PlaybackTimeSpan = new TimeSpan(0, ts.Minutes, (int)Math.Max(0, Math.Min(59, v)));
 				OnPropertyChanged();
 			}
 		}
 
-		public int FramesPerSecond
+		public uint FramesPerSecond
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int Frames
+		public uint Frames
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 		}
 
 		public double Interval
