@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:svcs="clr-namespace:CamSlider.Services"
+             xmlns:loc="clr-namespace:CamSlider.CustomControls"
              x:Class="CamSlider.Views.SettingsPage"
 			 Title="Settings">
     <ContentPage.Content>
@@ -15,38 +16,40 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Label Grid.Row="0" Grid.Column="0" Text="Slide Move Speed (mm/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="0" Grid.Column="1" Text="{Binding SlideMoveSpeed}" FontSize="Small">
+				<Label Grid.Row="0" Grid.Column="0" Text="Motor Location:" VerticalTextAlignment="Center" HorizontalTextAlignment="End" FontSize="Small" />
+				<loc:FMSwitch Grid.Row="0" Grid.Column="1" IsToggled="{Binding MotorLocation}" TextOff="LEFT" TextOn="RIGHT" HorizontalOptions="Start" OnColor="LightGray" />
+				<Label Grid.Row="1" Grid.Column="0" Text="Slide Move Speed (mm/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="1" Grid.Column="1" Text="{Binding SlideMoveSpeed}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Label Grid.Row="1" Grid.Column="0" Text="Slide Acceleration (mm/sec/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="1" Grid.Column="1" Text="{Binding SlideAcceleration}" FontSize="Small">
+				<Label Grid.Row="2" Grid.Column="0" Text="Slide Acceleration (mm/sec/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding SlideAcceleration}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Label Grid.Row="2" Grid.Column="0" Text="Pan Move Speed (deg/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="2" Grid.Column="1" Text="{Binding PanMoveSpeed}" FontSize="Small">
+				<Label Grid.Row="3" Grid.Column="0" Text="Pan Move Speed (deg/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="3" Grid.Column="1" Text="{Binding PanMoveSpeed}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Label Grid.Row="3" Grid.Column="0" Text="Pan Acceleration (deg/sec/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="3" Grid.Column="1" Text="{Binding PanAcceleration}" FontSize="Small">
+				<Label Grid.Row="4" Grid.Column="0" Text="Pan Acceleration (deg/sec/sec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="4" Grid.Column="1" Text="{Binding PanAcceleration}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Label Grid.Row="4" Grid.Column="0" Text="Focus Delay (msec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="4" Grid.Column="1" Text="{Binding FocusDelay}" FontSize="Small">
+				<Label Grid.Row="5" Grid.Column="0" Text="Focus Delay (msec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="5" Grid.Column="1" Text="{Binding FocusDelay}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>
 				</Entry>
-				<Label Grid.Row="5" Grid.Column="0" Text="Shutter Hold (msec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
-				<Entry Grid.Row="5" Grid.Column="1" Text="{Binding ShutterHold}" FontSize="Small">
+				<Label Grid.Row="6" Grid.Column="0" Text="Shutter Hold (msec):" VerticalTextAlignment="End" HorizontalTextAlignment="End" FontSize="Small" />
+				<Entry Grid.Row="6" Grid.Column="1" Text="{Binding ShutterHold}" FontSize="Small">
 					<Entry.Behaviors>
 						<svcs:NumericValidationBehavior />
 					</Entry.Behaviors>

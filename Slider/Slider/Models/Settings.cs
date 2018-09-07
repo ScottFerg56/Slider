@@ -8,6 +8,13 @@ namespace CamSlider.Models
 {
     public class Settings : INotifyPropertyChanged
 	{
+		private bool _MotorLocation = false;	// false means motor/stepper is on the left
+		public bool MotorLocation
+		{
+			get => _MotorLocation;
+			set => SetProperty(ref _MotorLocation, value);
+		}
+
 		private int _SlideAcceleration = 25;
 		public int SlideAcceleration
 		{

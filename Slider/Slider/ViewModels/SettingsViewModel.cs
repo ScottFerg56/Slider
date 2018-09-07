@@ -19,6 +19,12 @@ namespace CamSlider.ViewModels
 			return (T)SliderComm.Instance.Settings.GetType().GetProperty(propertyName).GetValue(SliderComm.Instance.Settings);
 		}
 
+		public bool MotorLocation
+		{
+			get => GetProperty<bool>();
+			set => SetProperty(value);
+		}
+
 		public int SlideMoveSpeed
 		{
 			get => GetProperty<int>();
