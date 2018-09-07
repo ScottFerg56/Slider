@@ -14,7 +14,7 @@ namespace CamSlider.ViewModels
 		public ManualViewModel()
 		{
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
-			Comm.Pan.PropertyChanged += Pan_PropertyChanged; ;
+			Comm.Pan.PropertyChanged += Pan_PropertyChanged;
 			Comm.StateChange += Comm_StateChange;
 		}
 
@@ -39,7 +39,7 @@ namespace CamSlider.ViewModels
 
 		public int SlidePosition { get => Comm.Slide.Position; }
 
-		public double SlideVector { set => Comm.Slide.Vector = -value; }
+		public double SlideVector { set => Comm.Slide.Vector = Comm.Settings.MotorLocation ? -value : value; }
 
 		public int PanPosition { get => Comm.Pan.Position; }
 

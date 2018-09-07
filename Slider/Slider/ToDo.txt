@@ -4,8 +4,6 @@
 Run page (modal)
 	* robustness during loss of connection
 	* TimeRemaining: consider single-phase solution of accelerating / decelerating only
-Settings page
-	* Add Motor Location (Left/Right) to Settings Page
 
 // ANDROID BUG:
 // On Android centered labels become left-aligned when the page disappears and reappears.
