@@ -25,39 +25,39 @@ namespace CamSlider.ViewModels
 			set => SetProperty(value);
 		}
 
-		public int SlideMoveSpeed
+		public uint SlideMoveSpeed
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int SlideAcceleration
+		public uint SlideAcceleration
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int PanMoveSpeed
+		public uint PanMoveSpeed
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int PanAcceleration
+		public uint PanAcceleration
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int FocusDelay
+		public uint FocusDelay
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 
-		public int ShutterHold
+		public uint ShutterHold
 		{
-			get => GetProperty<int>();
+			get => GetProperty<uint>();
 			set => SetProperty(value);
 		}
 

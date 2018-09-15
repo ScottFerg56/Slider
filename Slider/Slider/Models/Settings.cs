@@ -15,57 +15,57 @@ namespace CamSlider.Models
 			set => SetProperty(ref _MotorLocation, value);
 		}
 
-		private int _SlideAcceleration = 25;
-		public int SlideAcceleration
+		private uint _SlideAcceleration = 25;
+		public uint SlideAcceleration
 		{
 			get => _SlideAcceleration;
-			set => SetProperty(ref _SlideAcceleration, value, (v) => Math.Max(0, Math.Min(50, v)));
+			set => SetProperty(ref _SlideAcceleration, value, (v) => Math.Min(50, v));
 		}
 
-		public int _SlideMoveSpeed = 30;
-		public int SlideMoveSpeed
+		public uint _SlideMoveSpeed = 30;
+		public uint SlideMoveSpeed
 		{
 			get => _SlideMoveSpeed;
-			set => SetProperty(ref _SlideMoveSpeed, value, (v) => Math.Max(0, Math.Min(SlideSpeedLimit, v)));
+			set => SetProperty(ref _SlideMoveSpeed, value, (v) => Math.Min(SlideSpeedLimit, v));
 		}
 
-		public int _SlideSpeedLimit = 50;
-		public int SlideSpeedLimit
+		public uint _SlideSpeedLimit = 50;
+		public uint SlideSpeedLimit
 		{
 			get => _SlideSpeedLimit;
-			set => SetProperty(ref _SlideSpeedLimit, value, (v) => Math.Max(0, Math.Min(50, v)));
+			set => SetProperty(ref _SlideSpeedLimit, value, (v) => Math.Min(50, v));
 		}
 
-		private int _PanAcceleration = 45;
-		public int PanAcceleration
+		private uint _PanAcceleration = 45;
+		public uint PanAcceleration
 		{
 			get => _PanAcceleration;
-			set => SetProperty(ref _PanAcceleration, value, (v) => Math.Max(0, Math.Min(90, v)));
+			set => SetProperty(ref _PanAcceleration, value, (v) => Math.Min(90, v));
 		}
 
-		public int _PanMoveSpeed = 55;
-		public int PanMoveSpeed
+		public uint _PanMoveSpeed = 55;
+		public uint PanMoveSpeed
 		{
 			get => _PanMoveSpeed;
-			set => SetProperty(ref _PanMoveSpeed, value, (v) => Math.Max(0, Math.Min(PanSpeedLimit, v)));
+			set => SetProperty(ref _PanMoveSpeed, value, (v) => Math.Min(PanSpeedLimit, v));
 		}
 
-		public int _PanSpeedLimit = 90;
-		public int PanSpeedLimit
+		public uint _PanSpeedLimit = 90;
+		public uint PanSpeedLimit
 		{
 			get => _PanSpeedLimit;
-			set => SetProperty(ref _PanSpeedLimit, value, (v) => Math.Max(0, Math.Min(90, v)));
+			set => SetProperty(ref _PanSpeedLimit, value, (v) => Math.Min(90, v));
 		}
 
-		public int _FocusDelay = 150;
-		public int FocusDelay
+		public uint _FocusDelay = 150;
+		public uint FocusDelay
 		{
 			get => _FocusDelay;
 			set => SetProperty(ref _FocusDelay, value, (v) => Math.Max(0, v));
 		}
 
-		public int _ShutterHold = 50;
-		public int ShutterHold
+		public uint _ShutterHold = 50;
+		public uint ShutterHold
 		{
 			get => _ShutterHold;
 			set => SetProperty(ref _ShutterHold, value, (v) => Math.Max(0, v));

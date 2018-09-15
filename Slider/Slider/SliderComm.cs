@@ -223,7 +223,16 @@ namespace CamSlider
 	public class Stepper : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
-		enum Properties { Prop_Position = 'p', Prop_Acceleration = 'a', Prop_Speed = 's', Prop_MaxSpeed = 'm', Prop_SpeedLimit = 'l', Prop_Homed = 'h' };
+		enum Properties
+		{
+			Prop_Position = 'p',
+			Prop_Acceleration = 'a',
+			Prop_Speed = 's',
+			Prop_MaxSpeed = 'm',
+			Prop_SpeedLimit = 'l',
+			Prop_Homed = 'h',
+			Prop_TargetPosition = 't'
+		};
 
 		public string Name;
 		private readonly char Prefix;
@@ -290,10 +299,13 @@ namespace CamSlider
 					SetProperty(ref _MaxSpeed, v, "MaxSpeed");
 					break;
 				case Properties.Prop_SpeedLimit:
-					SetProperty(ref _SpeedLimit, (int)Math.Round(v), "SpeedLimit");
+					SetProperty(ref _SpeedLimit, (uint)Math.Round(v), "SpeedLimit");
 					break;
 				case Properties.Prop_Homed:
 					SetProperty(ref _Homed, v != 0, "Homed");
+					break;
+				case Properties.Prop_TargetPosition:
+					SetProperty(ref _TargetPosition, (int)Math.Round(v), "TargetPosition");
 					break;
 				default:
 					break;
@@ -344,11 +356,19 @@ namespace CamSlider
 			internal set { SetProperty(ref _Position, value); }
 		}
 
-		protected int _GoalPosition;
-		public int GoalPosition
+		protected int? _TargetPosition;
+		public int TargetPosition
 		{
-			get => _GoalPosition;
-			internal set => SetProperty(ref _GoalPosition, value);
+			get
+			{
+				if (!_TargetPosition.HasValue)
+				{
+					RequestDeviceProp(Properties.Prop_TargetPosition);
+					return 0;
+				}
+				return _TargetPosition.Value;
+			}
+			internal set => SetProperty(ref _TargetPosition, value);
 		}
 
 		protected double? _Acceleration;
@@ -387,21 +407,17 @@ namespace CamSlider
 			}
 		}
 
-		protected int? _SpeedLimit;
-		public int SpeedLimit
+		protected uint? _SpeedLimit;
+		public uint SpeedLimit
 		{
 			get
 			{
 				if (!_SpeedLimit.HasValue)
 				{
 					RequestDeviceProp(Properties.Prop_SpeedLimit);
-					return 0;
+					return 9999;
 				}
 				return _SpeedLimit.Value;
-			}
-			internal set
-			{
-				SetProperty(ref _SpeedLimit, value, onChanged: () => SetDeviceProp(Properties.Prop_SpeedLimit, _SpeedLimit.Value));
 			}
 		}
 
@@ -433,8 +449,9 @@ namespace CamSlider
 		{
 			if (!speed.HasValue)
 				speed = Prefix == 's' ? Comm.Settings.SlideMoveSpeed : Comm.Settings.PanMoveSpeed;
+			Acceleration = Prefix == 's' ? Comm.Settings.SlideAcceleration : Comm.Settings.PanAcceleration;
 			MaxSpeed = speed.Value;
-			GoalPosition = position;
+			TargetPosition = position;
 			Command($"p{position}");
 		}
 
@@ -464,6 +481,7 @@ namespace CamSlider
 		{
 			Debug.Assert(Prefix == 's', "--> Home only valid for Slider");
 			Command("h0");
+			TargetPosition = 0;
 		}
 
 		public double MaxSpeedForDistanceAndTime(double distance, double seconds)

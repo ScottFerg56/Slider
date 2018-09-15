@@ -8,6 +8,7 @@ namespace CamSlider.Services
 {
 	public class NumericValidationBehavior : Behavior<Entry>
 	{
+		public bool Unsigned { get; set; } = true;
 
 		protected override void OnAttachedTo(Entry entry)
 		{
@@ -23,6 +24,7 @@ namespace CamSlider.Services
 
 		private static void OnEntryTextChanged(object sender, TextChangedEventArgs args)
 		{
+			var beh = ((Entry)sender).Behaviors.OfType<NumericValidationBehavior>().First();
 			var s = args.NewTextValue;
 			if (!string.IsNullOrWhiteSpace(s))
 			{
@@ -33,6 +35,8 @@ namespace CamSlider.Services
 					s = s.Replace("+", "");
 					s = s.Replace("-", "");
 				}
+				if (beh.Unsigned)
+					neg = pos = false;
 				bool isValid = int.TryParse(s, out int v);
 
 				if (!isValid)

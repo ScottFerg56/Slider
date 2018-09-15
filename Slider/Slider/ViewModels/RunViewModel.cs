@@ -118,8 +118,18 @@ namespace CamSlider.ViewModels
 				Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed);
 				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed);
-				Comm.Camera.Interval = Comm.Sequence.Intervalometer ? (uint)Math.Round(Comm.Sequence.Interval * 1000) : 0;
-				Comm.Camera.Frames = Comm.Sequence.Intervalometer ? Comm.Sequence.Frames : 0;
+				if (Comm.Sequence.Intervalometer)
+				{
+					Comm.Camera.FocusDelay = Comm.Settings.FocusDelay;
+					Comm.Camera.ShutterHold = Comm.Settings.ShutterHold;
+					Comm.Camera.Interval = (uint)Math.Round(Comm.Sequence.Interval * 1000);
+					// setting Frames will trigger the device to begin the camera shutter sequence
+					Comm.Camera.Frames = Comm.Sequence.Frames;
+				}
+				else
+				{
+					Comm.Camera.Frames = 0;
+				}
 				return true;
 			}
 			return false;
@@ -200,7 +210,7 @@ namespace CamSlider.ViewModels
 			if (e.PropertyName == "Position")
 			{
 				OnPropertyChanged("PanPosition");
-				PanTimeRemaining = Comm.Pan.TimeRemaining(Comm.Pan.GoalPosition - PanPosition);
+				PanTimeRemaining = Comm.Pan.TimeRemaining(Comm.Pan.TargetPosition - PanPosition);
 				OnPropertyChanged("TimeRemaining");
 			}
 			else if (e.PropertyName == "Speed")
@@ -221,7 +231,7 @@ namespace CamSlider.ViewModels
 			if (e.PropertyName == "Position")
 			{
 				OnPropertyChanged("SlidePosition");
-				SlideTimeRemaining = Comm.Slide.TimeRemaining(Comm.Slide.GoalPosition - SlidePosition);
+				SlideTimeRemaining = Comm.Slide.TimeRemaining(Comm.Slide.TargetPosition - SlidePosition);
 				OnPropertyChanged("TimeRemaining");
 			}
 			else if (e.PropertyName == "Speed")
