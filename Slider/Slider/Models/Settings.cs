@@ -22,7 +22,7 @@ namespace CamSlider.Models
 			set => SetProperty(ref _SlideAcceleration, value, (v) => Math.Min(50, v));
 		}
 
-		public uint _SlideMoveSpeed = 30;
+		private uint _SlideMoveSpeed = 30;
 		public uint SlideMoveSpeed
 		{
 			get => _SlideMoveSpeed;
@@ -36,21 +36,21 @@ namespace CamSlider.Models
 			set => SetProperty(ref _PanAcceleration, value, (v) => Math.Min(90, v));
 		}
 
-		public uint _PanMoveSpeed = 55;
+		private uint _PanMoveSpeed = 55;
 		public uint PanMoveSpeed
 		{
 			get => _PanMoveSpeed;
 			set => SetProperty(ref _PanMoveSpeed, value, (v) => Math.Min(SliderComm.Instance.Pan.SpeedLimit, v));
 		}
 
-		public uint _FocusDelay = 150;
+		private uint _FocusDelay = 150;
 		public uint FocusDelay
 		{
 			get => _FocusDelay;
 			set => SetProperty(ref _FocusDelay, value, (v) => Math.Max(0, v));
 		}
 
-		public uint _ShutterHold = 50;
+		private uint _ShutterHold = 50;
 		public uint ShutterHold
 		{
 			get => _ShutterHold;
