@@ -115,7 +115,7 @@ namespace CamSlider.ViewModels
 					return true;
 				var slideMaxSpeed = Comm.Slide.MaxSpeedForDistanceAndTime(Comm.Sequence.SlideOut - Comm.Slide.Position, Comm.Sequence.Duration);
 				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - Comm.Pan.Position, Comm.Sequence.Duration);
-				Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
+			//	Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed);
 				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed);
 				if (Comm.Sequence.Intervalometer)

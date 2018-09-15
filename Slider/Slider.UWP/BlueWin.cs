@@ -27,7 +27,7 @@ namespace CamSlider.UWP
 				if (_State == value)
 					return;
 				_State = value;
-				Debug.WriteLine($"++> State change: {State}");
+			//	Debug.WriteLine($"++> State change: {State}");
 				StateChange(this, EventArgs.Empty);
 			}
 		}

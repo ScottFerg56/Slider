@@ -41,7 +41,7 @@ namespace CamSlider.Droid
 				if (_State == value)
 					return;
 				_State = value;
-				Debug.WriteLine($"++> State change: {State}");
+			//	Debug.WriteLine($"++> State change: {State}");
 				StateChange(this, EventArgs.Empty);
 			}
 		}
@@ -159,7 +159,7 @@ namespace CamSlider.Droid
 
 		private void GattCallback_ServicesDiscovered(object sender, EventArgs e)
 		{
-			Debug.WriteLine("++> GattCallback_ServicesDiscovered");
+		//	Debug.WriteLine("++> GattCallback_ServicesDiscovered");
 			_service = _gatt.GetService(uuidService);
 			_TX = _service.GetCharacteristic(uuidTX);
 			_RX = _service.GetCharacteristic(uuidRX);
@@ -178,7 +178,7 @@ namespace CamSlider.Droid
 
 		private void GattCallback_ConnectionStateChange(object sender, ConnectionStateChangeEventArgs e)
 		{
-			Debug.WriteLine($"++> GattCallback_ConnectionStateChange: {e.NewState}");
+		//	Debug.WriteLine($"++> GattCallback_ConnectionStateChange: {e.NewState}");
 			switch (e.NewState)
 			{
 				case ProfileState.Connected:
@@ -259,7 +259,7 @@ namespace CamSlider.Droid
 
 		public override void OnBatchScanResults(IList<ScanResult> results)
 		{
-			Debug.WriteLine("++> OnBatchScanResults");
+		//	Debug.WriteLine("++> OnBatchScanResults");
 			foreach (var result in results)
 			{
 				DeviceResult(result);
@@ -276,7 +276,7 @@ namespace CamSlider.Droid
 		{
 			if (result == null)
 				return;
-			Debug.WriteLine($"++> DeviceResult: {result.Device.Name}");
+		//	Debug.WriteLine($"++> DeviceResult: {result.Device.Name}");
 
 			if (_device == null && result.Device.Name == TargetDeviceName)
 			{

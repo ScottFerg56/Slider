@@ -110,7 +110,7 @@ namespace CamSlider
 			if (!double.TryParse(s.Substring(1), out double v))
 				return;
 
-			Debug.WriteLine($"++> Global {(Globals)s[0]} <- {v}");
+		//	Debug.WriteLine($"++> Global {(Globals)s[0]} <- {v}");
 
 			// Invoke SetProperty directly rather than set the property.
 			// Using the property setter may reflect the value back to the device
@@ -170,7 +170,7 @@ namespace CamSlider
 
 		public void Command(string cmd, bool required = true)
 		{
-			Debug.WriteLine($"++> Blue command: {cmd}");
+		//	Debug.WriteLine($"++> Blue command: {cmd}");
 			Blue.Write(cmd + ';', required);
 		}
 
@@ -277,7 +277,7 @@ namespace CamSlider
 
 			var prop = (Properties)s[0];
 
-			Debug.WriteLine($"++> {Name} {prop} <- {v}");
+		//	Debug.WriteLine($"++> {Name} {prop} <- {v}");
 			if (requestedProps.Contains(prop))
 				requestedProps.Remove(prop);
 
@@ -426,7 +426,7 @@ namespace CamSlider
 			set
 			{
 				var speed = Math.Round(value, 1);
-				Command($"v{speed:0.#}", Math.Abs(speed) < 0.01);
+				Command($"v{speed:0.#}", speed == 0);
 			}
 		}
 
@@ -754,7 +754,7 @@ namespace CamSlider
 
 			var prop = (CamProperties)s[0];
 
-			Debug.WriteLine($"++> Camera {prop} <- {v}");
+		//	Debug.WriteLine($"++> Camera {prop} <- {v}");
 			if (requestedProps.Contains(prop))
 				requestedProps.Remove(prop);
 

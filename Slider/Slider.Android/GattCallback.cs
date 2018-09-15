@@ -25,7 +25,7 @@ namespace CamSlider.Droid
 
 		public override void OnConnectionStateChange(BluetoothGatt gatt, GattStatus status, ProfileState newState)
 		{
-			Debug.WriteLine("++> OnConnectionStateChange: ");
+		//	Debug.WriteLine("++> OnConnectionStateChange: ");
 			base.OnConnectionStateChange(gatt, status, newState);
 			ConnectionStateChange(this, new ConnectionStateChangeEventArgs() { Gatt = gatt, Status = status, NewState = newState });
 		}
@@ -34,7 +34,7 @@ namespace CamSlider.Droid
 		{
 			base.OnServicesDiscovered(gatt, status);
 
-			Debug.WriteLine($"++> OnServicesDiscovered: {status}");
+		//	Debug.WriteLine($"++> OnServicesDiscovered: {status}");
 
 			ServicesDiscovered(this, EventArgs.Empty);
 		}
@@ -50,7 +50,7 @@ namespace CamSlider.Droid
 		{
 			base.OnCharacteristicRead(gatt, characteristic, status);
 
-			Debug.WriteLine("++> OnCharacteristicRead: " + characteristic.GetStringValue(0));
+		//	Debug.WriteLine("++> OnCharacteristicRead: " + characteristic.GetStringValue(0));
 
 			this.CharacteristicValueUpdated(this, new CharacteristicReadWriteEventArgs() { Characteristic = characteristic, Status = status });
 		}

@@ -55,7 +55,7 @@ namespace CamSlider.Views
 			{
 				if (Parent.Parent is TabbedPage t && t.CurrentPage is NavigationPage n && !(n.CurrentPage is SequencePage))
 				{
-					Debug.WriteLine($"++> Switching to SequencePage for Action: {Comm.Action}");
+				//	Debug.WriteLine($"++> Switching to SequencePage for Action: {Comm.Action}");
 					Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
 						{
 							t.CurrentPage = t.Children.First(c => ((NavigationPage)c).CurrentPage is SequencePage);
