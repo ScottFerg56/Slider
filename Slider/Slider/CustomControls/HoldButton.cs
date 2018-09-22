@@ -1,16 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Timers;
 using Xamarin.Forms;
 
 namespace CamSlider.CustomControls
 {
-    public class HoldButton : Button
+	/// <summary>
+	/// A subclass of the Xamarin Button to expose an event that fires periodically
+	/// while the button remains pressed.
+	/// </summary>
+	public class HoldButton : Button
     {
-		Timer timer;
-		bool IsPressed;
+		Timer timer;		// timer to repeat the Held event
+		bool IsPressed;		// tracking pressed state of button
 
+		/// <summary>
+		/// An event that fires every tenth second while the button remains pressed.
+		/// </summary>
 		public event EventHandler Held;
 
 		public HoldButton()
@@ -27,27 +32,28 @@ namespace CamSlider.CustomControls
 
 		private void HoldButton_Released(object sender, EventArgs e)
 		{
-			IsPressed = false;
+			IsPressed = false;		// note button no longer pressed
+			// let the timer disable itself
 		}
 
 		private void HoldButton_Pressed(object sender, EventArgs e)
 		{
-			Held?.Invoke(this, EventArgs.Empty);
-			IsPressed = true;
-			timer.Enabled = true;
+			IsPressed = true;						// note button is pressed
+			Held?.Invoke(this, EventArgs.Empty);	// fire the event at least once at the start
+			timer.Enabled = true;					// start timer w/initial half-second startup delay
 		}
 
 		private void Timer_Elapsed(object sender, ElapsedEventArgs e)
 		{
-			timer.Interval = 100;
 			if (IsPressed)
 			{
-				Held?.Invoke(this, EventArgs.Empty);
+				Held?.Invoke(this, EventArgs.Empty);	// fire the event
+				timer.Interval = 100;					// sebsequent events fire every tenth second
 			}
 			else
 			{
-				timer.Enabled = false;
-				timer.Interval = 500;
+				timer.Enabled = false;					// kill the timer, we're done
+				timer.Interval = 500;					// reset to startup delay
 			}
 		}
 	}

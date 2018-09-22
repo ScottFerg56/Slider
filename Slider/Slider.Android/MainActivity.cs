@@ -22,6 +22,7 @@ namespace CamSlider.Droid
 
 			if (this.CheckSelfPermission(Manifest.Permission.AccessCoarseLocation) != Permission.Granted)
 			{
+				// required for Bluetooth LE
 				RequestPermissions(new string[] { Manifest.Permission.AccessCoarseLocation }, 0);
 			}
 

@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
-using Windows.UI.Core;
 
 [assembly: Xamarin.Forms.Dependency(typeof(CamSlider.UWP.BlueWin))]
 namespace CamSlider.UWP
 {
-	/*
-		Need to check 'Bluetooth' in the Package.appxmanifest for UWP.
-	 */
-
+	/// <summary>
+	/// A Windows UWP platform-specific implementation of a Serial Bluetooth LE communications interface.
+	/// </summary>
+	/// <remarks>
+	/// Need to check 'Bluetooth' in the Package.appxmanifest for UWP.
+	/// </remarks>
 	public class BlueWin : IBlueDevice
 	{
 		public BlueState _State = BlueState.Disconnected;
+		/// <summary>
+		/// Gets the connection state.
+		/// </summary>
 		public BlueState State
 		{
 			get { return _State; }
@@ -32,8 +37,16 @@ namespace CamSlider.UWP
 			}
 		}
 
-		private string TargetDeviceName;
+		private string TargetDeviceName;    // The name of the device we're connecting to
+
+		/// <summary>
+		/// Fired when the Bluetooth connection State changes.
+		/// </summary>
 		public event EventHandler StateChange = delegate { };
+
+		/// <summary>
+		/// Fired when input is available for reading from the Bluetooth connection.
+		/// </summary>
 		public event EventHandler InputAvailable = delegate { };
 
 		private DeviceWatcher deviceWatcher;
@@ -42,18 +55,25 @@ namespace CamSlider.UWP
 		private GattDeviceService Service;
 		private GattCharacteristic _TX;
 		private GattCharacteristic _RX;
+
+		// IDs required to connect to a Bluetooth LE device for serial communications
 		private readonly Guid uuidService = Guid.Parse("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
 		private readonly Guid uuidTX = Guid.Parse("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
 		private readonly Guid uuidRX = Guid.Parse("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 		private readonly Guid uuidCharacteristicConfig = Guid.Parse("00002902-0000-1000-8000-00805f9b34fb");
 
+		// a list of byte arrays, each of which is from a separate input event
 		protected List<byte[]> BytesRead = new List<byte[]>();
+		// index into the current (first) byte array of the list for the next byte to be read
 		protected int BytesIndex = 0;
 
 		public BlueWin()
 		{
 		}
 
+		/// <summary>
+		/// True if the device is in a state where connection is possible.
+		/// </summary>
 		public bool CanConnect
 		{
 			get
@@ -76,8 +96,14 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Gets an error message associated with the last error.
+		/// </summary>
 		public string ErrorMessage { get; protected set; }
 
+		/// <summary>
+		/// Start the scan for our target Bluetooth device.
+		/// </summary>
 		private void StartBleDeviceWatcher()
 		{
 			if (deviceWatcher == null)
@@ -86,7 +112,7 @@ namespace CamSlider.UWP
 				// Property strings are documented here https://msdn.microsoft.com/en-us/library/windows/desktop/ff521659(v=vs.85).aspx
 				string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.Bluetooth.Le.IsConnectable" };
 
-				// BT_Code: Example showing paired and non-paired in a single query.
+				// requesting paired and non-paired in a single query
 				string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
 
 				deviceWatcher =
@@ -107,6 +133,9 @@ namespace CamSlider.UWP
 			deviceWatcher.Start();
 		}
 
+		/// <summary>
+		/// Stop the scan for our target Bluetooth device.
+		/// </summary>
 		private void StopBleDeviceWatcher()
 		{
 			if (deviceWatcher != null)
@@ -120,23 +149,35 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Process a device discovered during the scan.
+		/// </summary>
+		/// <param name="sender">The DeviceWatcher that found the device.</param>
+		/// <param name="deviceInfo">The DeviceInformation for the discovered device.</param>
 		private async void DeviceWatcher_Added(DeviceWatcher sender, DeviceInformation deviceInfo)
 		{
 			// Protect against race condition if the task runs after the app stopped the deviceWatcher.
 			if (sender == deviceWatcher)
 			{
 				Debug.WriteLine("Device found: {0}", deviceInfo.Name);
-				// Make sure device name isn't blank or already present in the list.
+				// check for our target device
 				if (DeviceInfo == null && deviceInfo.Name == TargetDeviceName)
 				{
+					// found the device we're looking for!
 					DeviceInfo = deviceInfo;
+					// stop the scan
 					StopBleDeviceWatcher();
+					// shout it to the world
 					State = BlueState.Found;
+					// setup the device
 					await SetupDevice();
 				}
 			}
 		}
 
+		/// <summary>
+		/// Setup and connect to services for the discovered device.
+		/// </summary>
 		async Task SetupDevice()
 		{
 			State = BlueState.Connecting;
@@ -144,7 +185,7 @@ namespace CamSlider.UWP
 			try
 			{
 			//	Debug.WriteLine("++> Getting Bluetooth LE device");
-				// BT_Code: BluetoothLEDevice.FromIdAsync must be called from a UI thread because it may prompt for consent.
+				// BluetoothLEDevice.FromIdAsync must be called from a UI thread because it may prompt for consent.
 				bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(DeviceInfo.Id);
 			}
 			catch (Exception ex) when ((uint)ex.HResult == 0x800710df)
@@ -216,9 +257,13 @@ namespace CamSlider.UWP
 			}
 			_RX.ValueChanged += Receive_ValueChanged;
 			bluetoothLeDevice.ConnectionStatusChanged += BluetoothLeDevice_ConnectionStatusChanged;
+			// now that services are connected, we're ready to go
 			State = BlueState.Connected;
 		}
 
+		/// <summary>
+		/// Process changes in the device connection State
+		/// </summary>
 		private void BluetoothLeDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
 		{
 			switch (bluetoothLeDevice.ConnectionStatus)
@@ -233,13 +278,21 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Process bytes received from the Bluetooth device.
+		/// </summary>
 		private void Receive_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
 		{
 			Windows.Security.Cryptography.CryptographicBuffer.CopyToByteArray(args.CharacteristicValue, out byte[] data);
+			// add these bytes to the input buffer (as a whole transaction)
 			BytesRead.Add(data);
+			// notify the client
 			InputAvailable(this, EventArgs.Empty);
 		}
 
+		/// <summary>
+		/// Respond to events during scan about an updated device.
+		/// </summary>
 		private void DeviceWatcher_Updated(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
 		{
 			// Protect against race condition if the task runs after the app stopped the deviceWatcher.
@@ -250,6 +303,9 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Respond to events during scan about a removed device.
+		/// </summary>
 		private void DeviceWatcher_Removed(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
 		{
 			// Protect against race condition if the task runs after the app stopped the deviceWatcher.
@@ -260,6 +316,9 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Process notification that the scan is complete.
+		/// </summary>
 		private void DeviceWatcher_EnumerationCompleted(DeviceWatcher sender, object e)
 		{
 			// Protect against race condition if the task runs after the app stopped the deviceWatcher.
@@ -267,6 +326,7 @@ namespace CamSlider.UWP
 			{
 				if (DeviceInfo == null)
 				{
+					// never found it
 					StopBleDeviceWatcher();
 					State = BlueState.NotFound;
 				}
@@ -277,6 +337,10 @@ namespace CamSlider.UWP
 			}
 		}
 
+		/// <summary>
+		/// Connect to a Bluetooth device by name.
+		/// </summary>
+		/// <param name="name">The name of the device to connect to.</param>
 		public void Connect(string name)
 		{
 			ErrorMessage = null;
@@ -284,6 +348,9 @@ namespace CamSlider.UWP
 			StartBleDeviceWatcher();
 		}
 
+		/// <summary>
+		/// Disconnect from the device.
+		/// </summary>
 		public void Disconnect()
 		{
 			if (CanConnect)
@@ -293,6 +360,9 @@ namespace CamSlider.UWP
 			Cleanup();
 		}
 
+		/// <summary>
+		/// Cleanup after disconnect.
+		/// </summary>
 		void Cleanup()
 		{
 			DeviceInfo = null;
@@ -316,19 +386,34 @@ namespace CamSlider.UWP
 			State = BlueState.Disconnected;
 		}
 
+		/// <summary>
+		/// True if there is a byte available to be read.
+		/// </summary>
 		public bool ByteAvailable => BytesRead.Count != 0;
 
+		/// <summary>
+		/// Get the next byte from the Bluetooth device.
+		/// </summary>
+		/// <returns>The next byte that has already been received.</returns>
+		/// <remarks>There must be a ByteAvailable for this to succeed.</remarks>
 		public byte GetByte()
 		{
+			// get a byte from the first array inthe list and advance the index
 			byte b = BytesRead[0][BytesIndex++];
 			if (BytesIndex >= BytesRead[0].Length)
 			{
+				// just used the last byte in the current array, remove it from the list
 				BytesRead.RemoveAt(0);
 				BytesIndex = 0;
 			}
 			return b;
 		}
 
+		/// <summary>
+		/// Write byte data to the Bluetooth device.
+		/// </summary>
+		/// <param name="data">The array of bytes to write.</param>
+		/// <returns>True if the write succeeded.</returns>
 		public bool Write(params byte[] data)
 		{
 			if (State != BlueState.Connected)
@@ -338,10 +423,11 @@ namespace CamSlider.UWP
 				Debug.WriteLine($"--> Write no TX characteristic");
 				return false;
 			}
-			var writeBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(data);
+		//	var writeBuffer = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(data);
+			var writeBuffer = data.AsBuffer();
 			try
 			{
-				// BT_Code: Writes the value from the buffer to the characteristic.
+				// Writes the value from the buffer to the characteristic.
 				var result = _TX.WriteValueAsync(writeBuffer);
 				result.AsTask().Wait();
 
@@ -372,6 +458,10 @@ namespace CamSlider.UWP
 			return true;
 		}
 
+		/// <summary>
+		/// Write a string to the Bluetooth device.
+		/// </summary>
+		/// <param name="data">The string to write.</param>
 		public bool Write(string data)
 		{
 			return Write(Encoding.UTF8.GetBytes(data));

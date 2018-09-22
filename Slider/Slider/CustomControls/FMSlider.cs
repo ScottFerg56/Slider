@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xamarin.Forms;
 
 namespace CamSlider.CustomControls
 {
+	/// <summary>
+	/// A subclass of the Xamarin Slider to expose a StoppedTracking event.
+	/// </summary>
 	public class FMSlider : Xamarin.Forms.Slider
 	{
 		public FMSlider() : base()
 		{
 		}
 
+		/// <summary>
+		/// An event fired when the slider thumb is released after tracking.
+		/// </summary>
 		public event EventHandler StoppedTracking;
+
 		public void OnStoppedTracking()
 		{
 			StoppedTracking?.Invoke(this, EventArgs.Empty);

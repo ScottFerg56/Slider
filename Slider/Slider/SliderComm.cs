@@ -4,21 +4,30 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace CamSlider
 {
+	/// <summary>
+	/// Manages communication and control state with the camera slider device.
+	/// </summary>
 	public class SliderComm : INotifyPropertyChanged
 	{
+		/// <summary>
+		/// The platform-independent Bluetooth implementation.
+		/// </summary>
 		BlueApp Blue;
 
 		private Sequence _Sequence;
+		/// <summary>
+		/// Gets the Sequence that defines the In point and Out point and other parameters for the camera slider movement.
+		/// </summary>
 		public Sequence Sequence
 		{
 			get
 			{
 				if (_Sequence == null)
 				{
+					// load from the data store
 					_Sequence = Services.DataStore.LoadDataStore<Sequence>("sequence") ?? new Sequence();
 				}
 				return _Sequence;
@@ -26,21 +35,31 @@ namespace CamSlider
 		}
 
 		private Settings _Settings;
+		/// <summary>
+		/// Gets the Settings related to the camera slider hardware and its performance characteristics.
+		/// </summary>
 		public Settings Settings
 		{
 			get
 			{
 				if (_Settings == null)
 				{
+					// load from the data store
 					_Settings = Services.DataStore.LoadDataStore<Settings>("settings") ?? new Settings();
 				}
 				return _Settings;
 			}
 		}
 
+		/// <summary>
+		/// Fired when the Bluetooth connection state changes.
+		/// </summary>
 		public event EventHandler StateChange;
 
 		private static SliderComm _Instance;
+		/// <summary>
+		/// Get the single instance of the SliderComm class.
+		/// </summary>
 		public static SliderComm Instance
 		{
 			get
@@ -53,26 +72,40 @@ namespace CamSlider
 
 		protected SliderComm()
 		{
+			// initialize Bluetooth, but don't connect yet
 			Blue = new BlueApp();
 			Blue.StateChange += Blue_StateChange;
 			Blue.InputAvailable += Blue_InputAvailable;
 		}
 
+		/// <summary>
+		/// Process an input string from the Bluetooth device.
+		/// </summary>
+		/// <param name="s">The input string.</param>
+		/// <remarks>
+		/// The Command string will be recognized with an initial character valid for related devices.
+		/// Valid first characters:
+		///		'g' - global variables
+		///		'c' - camera
+		///		's' - Slide
+		///		'p' - Pan
+		/// The second character indicates a property to be accessed or an action.
+		/// The third character will be a value for the property.
+		/// </remarks>
 		private void Input(string s)
 		{
-			// process Bluetooth input from the device
 			switch (s[0])
 			{
-				case 'g':
+				case 'g':	// Global
 					GlobalInput(s.Substring(1));
 					break;
-				case 's':
+				case 's':	// Slide
 					Slide.Input(s.Substring(1));
 					break;
-				case 'p':
+				case 'p':	// Pan
 					Pan.Input(s.Substring(1));
 					break;
-				case 'c':
+				case 'c':	// Camera
 					Camera.Input(s.Substring(1));
 					break;
 				default:
@@ -83,38 +116,48 @@ namespace CamSlider
 
 		private string Buffer = "";
 
+		/// <summary>
+		/// Process input characters from the Blutooth device.
+		/// </summary>
 		private void Blue_InputAvailable(object sender, EventArgs e)
 		{
-			// packet format: [ '=' | data length byte | section byte | data ]
-			// data part may start with a section command character
 			while (Blue.ByteAvailable)
 			{
+				// buffer characters looking for a terminator
 				char c = (char)Blue.GetByte();
 				if (c == ';')
 				{
+					// ';' terminator found, process the input
 					Input(Buffer);
+					// clear the buffer
 					Buffer = "";
 				}
 				else
 				{
+					// add to the buffer
 					Buffer += c;
 				}
 			}
 		}
 
+		/// <summary>Global properties exposed to the Command interface.</summary>
+		/// <remarks>The enum values represent the character codes used in the Command strings.</remarks>
 		enum Globals { Global_Action = 'a' };
 
+		/// <summary>
+		/// Process input for Global properties.
+		/// </summary>
+		/// <param name="s">The input string, starting with the character indicating the property involved.</param>
 		internal void GlobalInput(string s)
 		{
-			// process Bluetooth input from the device
+			// parse the value that follows the property character
 			if (!double.TryParse(s.Substring(1), out double v))
 				return;
 
 		//	Debug.WriteLine($"++> Global {(Globals)s[0]} <- {v}");
 
-			// Invoke SetProperty directly rather than set the property.
-			// Using the property setter may reflect the value back to the device
-			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
+			// Invoke SetProperty directly without the onChanged action
+			// so we don't needlessly reflect the same value back to the device.
 			switch ((Globals)s[0])
 			{
 				case Globals.Global_Action:
@@ -123,16 +166,28 @@ namespace CamSlider
 			}
 		}
 
+		/// <summary>
+		/// Send a Global property value to the device.
+		/// </summary>
+		/// <param name="prop">The property to send.</param>
+		/// <param name="v">The value to send.</param>
 		void SetDeviceGlobal(Globals prop, double v)
 		{
 			Command($"g{(char)prop}{v:0.#}");
 		}
 
+		/// <summary>
+		/// Request the value of a Global property from the device.
+		/// </summary>
+		/// <param name="prop">The property to request.</param>
 		void RequestDeviceGlobal(Globals prop)
 		{
 			Command($"g{(char)prop}?");
 		}
 
+		/// <summary>
+		/// Request the values of all Global properties from the device.
+		/// </summary>
 		public void RequestAllDeviceGlobals()
 		{
 			foreach (var prop in (Globals[])Enum.GetValues(typeof(Globals)))
@@ -141,9 +196,28 @@ namespace CamSlider
 			}
 		}
 
-		public enum Actions { None, MovingToIn, MovingToOut, Running, Unknown };
+		/// <summary>
+		/// Run Sequence Actions that are in progress.
+		/// </summary>
+		public enum Actions
+		{
+			/// <summary>no Action</summary>
+			None,
+			/// <summary>Moving to In point</summary>
+			MovingToIn,
+			/// <summary>Moving to Out point</summary>
+			MovingToOut,
+			/// <summary>Running Sequence</summary>
+			Running,
+			/// <summary>Unknown / not initialized</summary>
+			Unknown
+		};
 
-		protected Actions _Action = Actions.Unknown;
+		protected Actions _Action = Actions.Unknown;	// unknown/uninitiaized
+		/// <summary>
+		/// Get/set a Global variable saved on the device to be retrieved when recovering
+		/// from a disconnection.
+		/// </summary>
 		public Actions Action
 		{
 			get
@@ -158,22 +232,72 @@ namespace CamSlider
 			internal set => SetProperty(ref _Action, value, onChanged: () => SetDeviceGlobal(Globals.Global_Action, (int)value));
 		}
 
+		/// <summary>
+		/// Get the Slide stepper instance.
+		/// </summary>
 		public Stepper Slide { get => Stepper.Slide; }
+
+		/// <summary>
+		/// Get the Pan stepper instance.
+		/// </summary>
 		public Stepper Pan { get => Stepper.Pan; }
+
+		/// <summary>
+		/// Get the Camera object.
+		/// </summary>
 		public Camera Camera { get => Camera.Cam; }
 
+		/// <summary>
+		/// Connect to the remote device by name.
+		/// </summary>
+		/// <param name="name">The name of the device to connect to.</param>
 		public void Connect(string name) => Blue.Connect(name);
+
+		/// <summary>
+		/// Disconnect from the device.
+		/// </summary>
 		public void Disconnect() => Blue.Disconnect();
+
+		/// <summary>
+		/// Gets the connection state.
+		/// </summary>
 		public BlueState State { get => Blue.State; }
+
+		/// <summary>
+		/// True if the device is in a state where connection is possible.
+		/// </summary>
 		public bool CanConnect { get => Blue.CanConnect; }
+
+		/// <summary>
+		/// Gets an error message associated with the last error.
+		/// </summary>
 		public string ErrorMessage { get => Blue.ErrorMessage; }
 
+		/// <summary>
+		/// Send a command string to the device.
+		/// </summary>
+		/// <param name="cmd">The command string.</param>
+		/// <param name="required">False for non-essential data that can be skipped.</param>
+		/// <remarks>
+		/// The Command string begins with an initial character indicating the desired device:
+		///		'g' - global variables
+		///		'c' - camera
+		///		's' - Slide
+		///		'p' - Pan
+		/// The second character indicates a property to be accessed or an action.
+		/// The third character and beyond may be a value for the property (or action) or a '?' to retrieve the property value.
+		/// The final character is a ';' terminator.
+		/// </remarks>
 		public void Command(string cmd, bool required = true)
 		{
 		//	Debug.WriteLine($"++> Blue command: {cmd}");
+			// terminate and write the command
 			Blue.Write(cmd + ';', required);
 		}
 
+		/// <summary>
+		/// Get a string combining the connection state with any available error message.
+		/// </summary>
 		public string StateText
 		{
 			get
@@ -185,6 +309,9 @@ namespace CamSlider
 			}
 		}
 
+		/// <summary>
+		/// Respond to changes in the Bluetooth state.
+		/// </summary>
 		private void Blue_StateChange(object sender, EventArgs e)
 		{
 			if (State == BlueState.Connected)
@@ -195,9 +322,21 @@ namespace CamSlider
 				Pan.RequestAllDeviceProps();
 				Camera.RequestAllDeviceProps();
 			}
+			// propagate state change to our clients
 			StateChange?.Invoke(this, e);
 		}
 
+		/// <summary>
+		/// Process the setting of a property including setting the backing store,
+		/// notifying INotifyPropertyChanged clients and performing
+		/// other arbitrary actions when a change is detected.
+		/// </summary>
+		/// <typeparam name="T">The type of the property.</typeparam>
+		/// <param name="backingStore">A reference to the property's backing store.</param>
+		/// <param name="value">The value to be assigned.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <param name="onChanged">An Action to be invoked when a change is detected.</param>
+		/// <returns>True if the value changed.</returns>
 		protected bool SetProperty<T>(ref T backingStore, T value,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
@@ -212,7 +351,15 @@ namespace CamSlider
 		}
 
 		#region INotifyPropertyChanged
+		/// <summary>
+		/// Fired when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fire an event for a property changing.
+		/// </summary>
+		/// <param name="propertyName">The name of the changed property.</param>
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -220,9 +367,15 @@ namespace CamSlider
 		#endregion
 	}
 
+	/// <summary>
+	/// Represents a stepper used to control the Slide and Pan functions on the device.
+	/// </summary>
 	public class Stepper : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
+
+		/// <summary>Stepper properties exposed to the Command interface.</summary>
+		/// <remarks>The enum values represent the character codes used in the Command strings.</remarks>
 		enum Properties
 		{
 			Prop_Position = 'p',
@@ -234,10 +387,10 @@ namespace CamSlider
 			Prop_TargetPosition = 't'
 		};
 
-		public string Name;
-		private readonly char Prefix;
-		readonly int LimitMin;
-		readonly int LimitMax;
+		public string Name;				// friendly name for the stepper
+		private readonly char Prefix;	// character prefix used in interface command strings
+		readonly int LimitMin;			// lower limit for movement
+		readonly int LimitMax;			// upper limit for movement
 
 		protected Stepper(string name, int limitMin, int limitMax)
 		{
@@ -248,6 +401,9 @@ namespace CamSlider
 		}
 
 		private static Stepper _Slide;
+		/// <summary>
+		/// Get the Slide stepper instance.
+		/// </summary>
 		internal static Stepper Slide
 		{
 			get
@@ -259,6 +415,9 @@ namespace CamSlider
 		}
 
 		private static Stepper _Pan;
+		/// <summary>
+		/// Get the Pan stepper instance.
+		/// </summary>
 		internal static Stepper Pan
 		{
 			get
@@ -269,21 +428,29 @@ namespace CamSlider
 			}
 		}
 
+		/// <summary>
+		/// Process an input string from the Bluetooth device.
+		/// </summary>
+		/// <param name="s">The input string.</param>
+		/// <remarks>
+		/// The first character of the string indicates a property to be accessed or an action.
+		/// The remainder of the string will be a value for the property.
+		/// </remarks>
 		internal void Input(string s)
 		{
-			// process Bluetooth input from the device
+			// parse the value from the remainder of the string
 			if (!double.TryParse(s.Substring(1), out double v))
 				return;
 
 			var prop = (Properties)s[0];
 
 		//	Debug.WriteLine($"++> {Name} {prop} <- {v}");
+			// keeping track of properties we've requested values for, to avoid redundant requests
 			if (requestedProps.Contains(prop))
 				requestedProps.Remove(prop);
 
-			// Invoke SetProperty directly rather than set the property.
-			// Using the property setter may reflect the value back to the device
-			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
+			// Invoke SetProperty directly without the onChanged action
+			// so we don't needlessly reflect the same value back to the device.
 			switch (prop)
 			{
 				case Properties.Prop_Position:
@@ -312,29 +479,51 @@ namespace CamSlider
 			}
 		}
 
-		void Command(string s, bool required = true)
+		/// <summary>
+		/// Send a command string to the device.
+		/// </summary>
+		/// <param name="cmd">The command string.</param>
+		/// <param name="required">False for non-essential data that can be skipped.</param>
+		void Command(string cmd, bool required = true)
 		{
-			Comm.Command($"{Prefix}{s}", required);
+			Comm.Command($"{Prefix}{cmd}", required);
 		}
 
+		/// <summary>
+		/// Send a property value to the device.
+		/// </summary>
+		/// <param name="prop">The property to be set.</param>
+		/// <param name="v">The value to be set.</param>
 		void SetDeviceProp(Properties prop, double v)
 		{
 			Command($"{(char)prop}{v:0.#}");
 		}
 
+		/// <summary>
+		/// A list to track requested property values to avoid redundant requests
+		/// that would burden the Bluetooth bandwidth.
+		/// </summary>
 		List<Properties> requestedProps = new List<Properties>();
 
+		/// <summary>
+		/// Request a property value from the device.
+		/// </summary>
+		/// <param name="prop">The property to request.</param>
 		void RequestDeviceProp(Properties prop)
 		{
-			if (requestedProps.Contains(prop))
+			if (requestedProps.Contains(prop))	// skip a redundant request
 				return;
-			requestedProps.Add(prop);
+			requestedProps.Add(prop);			// note the request has been made
+			// the '?' following the property code requests the value rather than set it
 			Command($"{(char)prop}?");
 		}
 
+		/// <summary>
+		/// Request all properties from the device.
+		/// </summary>
 		public void RequestAllDeviceProps()
 		{
-			requestedProps.Clear();
+			requestedProps.Clear();		// force requests for all
 			foreach (var prop in (Properties[])Enum.GetValues(typeof(Properties)))
 			{
 				RequestDeviceProp(prop);
@@ -342,6 +531,9 @@ namespace CamSlider
 		}
 
 		protected int? _Position;
+		/// <summary>
+		/// Gets the Position of the stepper.
+		/// </summary>
 		public int Position
 		{
 			get
@@ -357,6 +549,9 @@ namespace CamSlider
 		}
 
 		protected int? _TargetPosition;
+		/// <summary>
+		/// Gets the Target Position the stepper is moving toward.
+		/// </summary>
 		public int TargetPosition
 		{
 			get
@@ -372,6 +567,9 @@ namespace CamSlider
 		}
 
 		protected double? _Acceleration;
+		/// <summary>
+		/// Get/set the Acceleration used by the stepper.
+		/// </summary>
 		public double Acceleration
 		{
 			get
@@ -390,6 +588,9 @@ namespace CamSlider
 		}
 
 		protected double? _MaxSpeed;
+		/// <summary>
+		/// Get/set the Max Speed the stepper will accelerate to for movements.
+		/// </summary>
 		public double MaxSpeed
 		{
 			get
@@ -408,6 +609,9 @@ namespace CamSlider
 		}
 
 		protected uint? _SpeedLimit;
+		/// <summary>
+		/// Get the upper limit for MaxSpeed.
+		/// </summary>
 		public uint SpeedLimit
 		{
 			get
@@ -421,7 +625,11 @@ namespace CamSlider
 			}
 		}
 
-		public double Vector
+		/// <summary>
+		/// Set the Velocity vector, a signed speed to move the stepper in a given direction,
+		/// specified as a percentage of the SpeedLimit.
+		/// </summary>
+		public double Velocity
 		{
 			set
 			{
@@ -431,6 +639,9 @@ namespace CamSlider
 		}
 
 		protected double? _Speed;
+		/// <summary>
+		/// Get the current Speed of the stepper.
+		/// </summary>
 		public double Speed
 		{
 			get
@@ -445,10 +656,16 @@ namespace CamSlider
 			internal set => SetProperty(ref _Speed, value);
 		}
 
+		/// <summary>
+		/// Move the stepper to a position, accelerating to a desired speed.
+		/// </summary>
+		/// <param name="position">The desired target position.</param>
+		/// <param name="speed">An optional desired speed, defaulting to the stepper's MoveSpeed from Settings.</param>
 		public void Move(int position, double? speed = null)
 		{
 			if (!speed.HasValue)
 				speed = Prefix == 's' ? Comm.Settings.SlideMoveSpeed : Comm.Settings.PanMoveSpeed;
+			// make sure the Acceleration is what's specified in the settings
 			Acceleration = Prefix == 's' ? Comm.Settings.SlideAcceleration : Comm.Settings.PanAcceleration;
 			MaxSpeed = speed.Value;
 			TargetPosition = position;
@@ -456,6 +673,9 @@ namespace CamSlider
 		}
 
 		protected bool? _Homed = null;
+		/// <summary>
+		/// Get Homed status, true if stepper has been calibrated with a move to it's limit switch.
+		/// </summary>
 		public bool Homed
 		{
 			get
@@ -471,12 +691,18 @@ namespace CamSlider
 			set { SetProperty(ref _Homed, value); }
 		}
 
+		/// <summary>
+		/// Set the current stepper position as the 'zero' position.
+		/// </summary>
 		public void Zero()
 		{
 			Debug.Assert(Prefix == 'p', "--> Zero only valid for Pan");
 			Command("z1");
 		}
 
+		/// <summary>
+		/// Calibrate the stepper with a move to it's Home limit switch.
+		/// </summary>
 		public void Home()
 		{
 			Debug.Assert(Prefix == 's', "--> Home only valid for Slider");
@@ -484,14 +710,19 @@ namespace CamSlider
 			TargetPosition = 0;
 		}
 
+		/// <summary>
+		/// Calculate the speed required to move a specified distance over a specified time
+		/// with the acceleration already specified.
+		/// </summary>
+		/// <param name="distance">The signed distance to move, in logical units.</param>
+		/// <param name="seconds">The duration, in seconds, desired for the move.</param>
+		/// <returns>The target cruising speed for the move, for use with SetMaxSpeed.</returns>
+		/// <remarks>
+		/// Initial and final velocities are assumed equal to zero and acceleration and deceleration
+		/// values are assumed equal (using the value from SetAcceleration).
+		/// </remarks>
 		public double MaxSpeedForDistanceAndTime(double distance, double seconds)
 		{
-			//
-			// Calculate the speed required to move a specified distance over a specified time
-			// with the acceleration already specified.
-			//
-			// Initial and final velocities are assumed equal to zero and acceleration and deceleration
-			// values are assumed equal, though this should be easy to generalize for other cases.
 			//
 			// The area under a graph of velocity versus time is the distance traveled.
 			//
@@ -574,6 +805,13 @@ namespace CamSlider
 			return speed;
 		}
 
+		/// <summary>
+		/// Given the current state of the stepper, calculate the time required to move to the
+		/// specified distance, arriving with the desired speed.
+		/// </summary>
+		/// <param name="distance">The signed distance to move.</param>
+		/// <param name="speed2">The desired arrival speed, defaulting to 0.</param>
+		/// <returns>The number of seconds required to move.</returns>
 		public double TimeRemaining(double distance, double speed2 = 0)
 		{
 			if (Speed != 0 && distance != 0 && Math.Sign(distance) != Math.Sign(Speed))
@@ -699,6 +937,17 @@ namespace CamSlider
 			return t;
 		}
 
+		/// <summary>
+		/// Process the setting of a property including setting the backing store,
+		/// notifying INotifyPropertyChanged clients and performing
+		/// other arbitrary actions when a change is detected.
+		/// </summary>
+		/// <typeparam name="T">The type of the property.</typeparam>
+		/// <param name="backingStore">A reference to the property's backing store.</param>
+		/// <param name="value">The value to be assigned.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <param name="onChanged">An Action to be invoked when a change is detected.</param>
+		/// <returns>True if the value changed.</returns>
 		protected bool SetProperty<T>(ref T backingStore, T value,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
@@ -712,13 +961,26 @@ namespace CamSlider
 			return true;
 		}
 
+		/// <summary>
+		/// Limit a Position value to within the valid range for the stepper.
+		/// </summary>
+		/// <param name="v">The Position value.</param>
+		/// <returns>The Position value after limiting to the valid range.</returns>
 		public int LimitValue(int v)
 		{
 			return Math.Max(Math.Min(v, LimitMax), LimitMin);
 		}
 
 		#region INotifyPropertyChanged
+		/// <summary>
+		/// Fired when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fire an event for a property changing.
+		/// </summary>
+		/// <param name="propertyName">The name of the changed property.</param>
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -726,16 +988,31 @@ namespace CamSlider
 		#endregion
 	}
 
+	/// <summary>
+	/// Represents the Camera and its intervalometer functions.
+	/// </summary>
 	public class Camera : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
-		enum CamProperties { Cam_FocusDelay = 'd', Cam_ShutterHold = 's', Cam_Interval = 'i', Cam_Frames = 'f' };
+
+		/// <summary>Camera properties exposed to the Command interface.</summary>
+		/// <remarks>The enum values represent the character codes used in the Command strings.</remarks>
+		enum CamProperties
+		{
+			Cam_FocusDelay = 'd',
+			Cam_ShutterHold = 's',
+			Cam_Interval = 'i',
+			Cam_Frames = 'f'
+		};
 
 		protected Camera()
 		{
 		}
 
 		private static Camera _Cam;
+		/// <summary>
+		/// Get the Camera instance.
+		/// </summary>
 		internal static Camera Cam
 		{
 			get
@@ -746,21 +1023,29 @@ namespace CamSlider
 			}
 		}
 
+		/// <summary>
+		/// Process an input string from the Bluetooth device.
+		/// </summary>
+		/// <param name="s">The input string.</param>
+		/// <remarks>
+		/// The first character of the string indicates a property to be accessed or an action.
+		/// The remainder of the string will be a value for the property.
+		/// </remarks>
 		internal void Input(string s)
 		{
-			// process Bluetooth input from the device
+			// parse the value from the remainder of the string
 			if (!uint.TryParse(s.Substring(1), out uint v))
 				return;
 
 			var prop = (CamProperties)s[0];
 
 		//	Debug.WriteLine($"++> Camera {prop} <- {v}");
+			// keeping track of properties we've requested values for, to avoid redundant requests
 			if (requestedProps.Contains(prop))
 				requestedProps.Remove(prop);
 
-			// Invoke SetProperty directly rather than set the property.
-			// Using the property setter may reflect the value back to the device
-			// which would be unnecessarily redundant and a burden on Bluetooth bandwidth.
+			// Invoke SetProperty directly without the onChanged action
+			// so we don't needlessly reflect the same value back to the device.
 			switch (prop)
 			{
 				case CamProperties.Cam_FocusDelay:
@@ -780,29 +1065,51 @@ namespace CamSlider
 			}
 		}
 
-		void Command(string s, bool required = true)
+		/// <summary>
+		/// Send a command string to the device.
+		/// </summary>
+		/// <param name="cmd">The command string.</param>
+		/// <param name="required">False for non-essential data that can be skipped.</param>
+		void Command(string cmd, bool required = true)
 		{
-			Comm.Command($"c{s}", required);
+			Comm.Command($"c{cmd}", required);
 		}
 
+		/// <summary>
+		/// Send a property value to the device.
+		/// </summary>
+		/// <param name="prop">The property to be set.</param>
+		/// <param name="v">The value to be set.</param>
 		void SetDeviceProp(CamProperties prop, uint v)
 		{
 			Command($"{(char)prop}{v}");
 		}
 
+		/// <summary>
+		/// A list to track requested property values to avoid redundant requests
+		/// that would burden the Bluetooth bandwidth.
+		/// </summary>
 		List<CamProperties> requestedProps = new List<CamProperties>();
 
+		/// <summary>
+		/// Request a property value from the device.
+		/// </summary>
+		/// <param name="prop">The property to request.</param>
 		void RequestDeviceProp(CamProperties prop)
 		{
 			if (requestedProps.Contains(prop))
 				return;
 			requestedProps.Add(prop);
+			// the '?' following the property code requests the value rather than set it
 			Command($"{(char)prop}?");
 		}
 
+		/// <summary>
+		/// Request all properties from the device.
+		/// </summary>
 		public void RequestAllDeviceProps()
 		{
-			requestedProps.Clear();
+			requestedProps.Clear();     // force requests for all
 			foreach (var prop in (CamProperties[])Enum.GetValues(typeof(CamProperties)))
 			{
 				RequestDeviceProp(prop);
@@ -810,6 +1117,9 @@ namespace CamSlider
 		}
 
 		protected uint? _FocusDelay;
+		/// <summary>
+		/// Get/set the delay required between triggering camera focus and tripping the shutter.
+		/// </summary>
 		public uint FocusDelay
 		{
 			get
@@ -821,13 +1131,16 @@ namespace CamSlider
 				}
 				return _FocusDelay.Value;
 			}
-			internal set
+			set
 			{
 				SetProperty(ref _FocusDelay, value, onChanged: () => SetDeviceProp(CamProperties.Cam_FocusDelay, _FocusDelay.Value));
 			}
 		}
 
 		protected uint? _ShutterHold;
+		/// <summary>
+		/// Get/set the hold time required for the signal tripping the shutter.
+		/// </summary>
 		public uint ShutterHold
 		{
 			get
@@ -839,13 +1152,16 @@ namespace CamSlider
 				}
 				return _ShutterHold.Value;
 			}
-			internal set
+			set
 			{
 				SetProperty(ref _ShutterHold, value, onChanged: () => SetDeviceProp(CamProperties.Cam_ShutterHold, _ShutterHold.Value));
 			}
 		}
 
 		protected uint? _Interval;
+		/// <summary>
+		/// Get/set the interval time between frames, in milliseconds.
+		/// </summary>
 		public uint Interval
 		{
 			get
@@ -857,13 +1173,17 @@ namespace CamSlider
 				}
 				return _Interval.Value;
 			}
-			internal set
+			set
 			{
 				SetProperty(ref _Interval, value, onChanged: () => SetDeviceProp(CamProperties.Cam_Interval, _Interval.Value));
 			}
 		}
 
 		protected uint? _Frames;
+		/// <summary>
+		/// Get/set the number of frames to be captured for the intervalometer operation.
+		/// </summary>
+		/// <remarks>Setting Frames to a non-zero value will start the intrvalometer operation on the device.</remarks>
 		public uint Frames
 		{
 			get
@@ -875,12 +1195,23 @@ namespace CamSlider
 				}
 				return _Frames.Value;
 			}
-			internal set
+			set
 			{
 				SetProperty(ref _Frames, value, onChanged: () => SetDeviceProp(CamProperties.Cam_Frames, _Frames.Value));
 			}
 		}
 
+		/// <summary>
+		/// Process the setting of a property including setting the backing store,
+		/// notifying INotifyPropertyChanged clients and performing
+		/// other arbitrary actions when a change is detected.
+		/// </summary>
+		/// <typeparam name="T">The type of the property.</typeparam>
+		/// <param name="backingStore">A reference to the property's backing store.</param>
+		/// <param name="value">The value to be assigned.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <param name="onChanged">An Action to be invoked when a change is detected.</param>
+		/// <returns>True if the value changed.</returns>
 		protected bool SetProperty<T>(ref T backingStore, T value,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
@@ -895,7 +1226,15 @@ namespace CamSlider
 		}
 
 		#region INotifyPropertyChanged
+		/// <summary>
+		/// Fired when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fire an event for a property changing.
+		/// </summary>
+		/// <param name="propertyName">The name of the changed property.</param>
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

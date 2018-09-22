@@ -3,14 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using Xamarin.Forms;
 
 namespace CamSlider.Models
 {
-    public class Sequence : INotifyPropertyChanged
+	/// <summary>
+	/// Represents a sequence moving the Slide and Pan from an In point to an Out point
+	/// with accompanying camera shutter intervalometer action.
+	/// </summary>
+	public class Sequence : INotifyPropertyChanged
     {
 		protected int _SlideIn = 100;
+		/// <summary>
+		/// Get/set the Slide In point, in millimeters, 0 at the motor location.
+		/// </summary>
 		public int SlideIn
 		{
 			get => _SlideIn;
@@ -18,6 +23,9 @@ namespace CamSlider.Models
 		}
 
 		protected int _SlideOut = 400;
+		/// <summary>
+		/// Get/set the Slide Out point, in millimeters, 0 at the motor location.
+		/// </summary>
 		public int SlideOut
 		{
 			get => _SlideOut;
@@ -25,6 +33,9 @@ namespace CamSlider.Models
 		}
 
 		protected int _PanIn = 30;
+		/// <summary>
+		/// Get/set the Pan In point, in degrees, positive is CCW.
+		/// </summary>
 		public int PanIn
 		{
 			get => _PanIn;
@@ -32,6 +43,9 @@ namespace CamSlider.Models
 		}
 
 		protected int _PanOut = -30;
+		/// <summary>
+		/// Get/set the Pan Out point, in degrees, positive is CCW.
+		/// </summary>
 		public int PanOut
 		{
 			get => _PanOut;
@@ -39,6 +53,9 @@ namespace CamSlider.Models
 		}
 
 		protected uint _Duration = 60;
+		/// <summary>
+		/// Get/set the Duration of the move, in seconds.
+		/// </summary>
 		public uint Duration
 		{
 			get => _Duration;
@@ -46,6 +63,9 @@ namespace CamSlider.Models
 		}
 
 		protected uint _Playback = 10;
+		/// <summary>
+		/// Get/set the timelapse Playback time, in seconds.
+		/// </summary>
 		public uint Playback
 		{
 			get => _Playback;
@@ -53,6 +73,9 @@ namespace CamSlider.Models
 		}
 
 		protected uint _FramesPerSecond = 30;
+		/// <summary>
+		/// Get/set the timelapse FramesPerSecond.
+		/// </summary>
 		public uint FramesPerSecond
 		{
 			get => _FramesPerSecond;
@@ -61,6 +84,9 @@ namespace CamSlider.Models
 
 		// Playback x FPS -> #Frames
 		protected uint _Frames = 0;
+		/// <summary>
+		/// Gets the calculated number of frames required for the timelapse parameters.
+		/// </summary>
 		[JsonIgnore]
 		public uint Frames
 		{
@@ -70,6 +96,9 @@ namespace CamSlider.Models
 
 		// Duration / #Frames -> Interval
 		protected double _Interval = 0;
+		/// <summary>
+		/// Gets the calculated interval between frames for the timelapse parameters.
+		/// </summary>
 		[JsonIgnore]
 		public double Interval
 		{
@@ -78,12 +107,27 @@ namespace CamSlider.Models
 		}
 
 		protected bool _Intervalometer = false;
+		/// <summary>
+		/// Get/set whether intervalometer shutter control should be enabled for the sequence.
+		/// </summary>
 		public bool Intervalometer
 		{
 			get => _Intervalometer;
 			set => SetProperty(ref _Intervalometer, value);
 		}
 
+		/// <summary>
+		/// Process the setting of a property including setting the backing store,
+		/// filtering values, notifying INotifyPropertyChanged clients and performing
+		/// other arbitrary actions when a change is detected.
+		/// </summary>
+		/// <typeparam name="T">The type of the property.</typeparam>
+		/// <param name="backingStore">A reference to the property's backing store.</param>
+		/// <param name="value">The value to be assigned.</param>
+		/// <param name="filter">An optional filter to process the value before assignment.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		/// <param name="onChanged">An Action to be invoked when a change is detected.</param>
+		/// <returns>True if the value changed.</returns>
 		protected bool SetProperty<T>(ref T backingStore, T value, Func<T, T> filter = null,
 			[CallerMemberName]string propertyName = "",
 			Action onChanged = null)
@@ -104,7 +148,15 @@ namespace CamSlider.Models
 		}
 
 		#region INotifyPropertyChanged
+		/// <summary>
+		/// Fired when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fire an event for a property changing.
+		/// </summary>
+		/// <param name="propertyName">The name of the changed property.</param>
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

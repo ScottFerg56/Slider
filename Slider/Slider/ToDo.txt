@@ -1,8 +1,16 @@
-﻿* fix settings persistence lost with major change to Android
-
-Run page (modal)
-	* robustness during loss of connection
-	* TimeRemaining: consider single-phase solution of accelerating / decelerating only
+﻿* consider base class for Stepper & Camera classes
+	change properties from enum to list/array/IEnumuerable of some struct type
+* remove 'get' from camera properties we never get
+	avoid them in RequestDeviceProp
+* consider base class for all INotifyPropertyChange implementations
+* consider Stepper as a generalized class
+	with settings integrated
+* consider replacing Homed with 'ready' status from device
+	could incorporate multiple limit switches
+* consider generalized Stepper Applets on device
+* fix settings persistence lost with major change to Android
+* TimeRemaining: consider single-phase solution of accelerating / decelerating only
+* robustness during loss of connection
 
 // ANDROID BUG:
 // On Android centered labels become left-aligned when the page disappears and reappears.

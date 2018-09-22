@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using Xamarin.Forms;
 
 namespace CamSlider.ViewModels
 {
-    public class ManualViewModel : INotifyPropertyChanged
+	/// <summary>
+	/// ViewModel for the ManualPage.
+	/// </summary>
+	public class ManualViewModel : INotifyPropertyChanged
 	{
 		protected SliderComm Comm { get => SliderComm.Instance; }
 
@@ -18,17 +18,26 @@ namespace CamSlider.ViewModels
 			Comm.StateChange += Comm_StateChange;
 		}
 
+		/// <summary>
+		/// Propagate the communications state change as an Enabled change.
+		/// </summary>
 		private void Comm_StateChange(object sender, EventArgs e)
 		{
 			OnPropertyChanged("Enabled");
 		}
 
+		/// <summary>
+		/// Propagate the Pan Position change.
+		/// </summary>
 		private void Pan_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("PanPosition");
 		}
 
+		/// <summary>
+		/// Propagate the Slide Position change and the Slide Homed change as an Enabled change.
+		/// </summary>
 		private void Slide_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Position")
@@ -37,18 +46,41 @@ namespace CamSlider.ViewModels
 				OnPropertyChanged("Enabled");
 		}
 
+		/// <summary>
+		/// Get the Slide Position.
+		/// </summary>
 		public int SlidePosition { get => Comm.Slide.Position; }
 
-		public double SlideVector { set => Comm.Slide.Vector = Comm.Settings.MotorLocation ? -value : value; }
+		/// <summary>
+		/// Pass Velocity through to Slide, changing direction based on Motor Location setting.
+		/// </summary>
+		public double SlideVelocity { set => Comm.Slide.Velocity = Comm.Settings.MotorLocation ? -value : value; }
 
+		/// <summary>
+		/// Get the Pan Position.
+		/// </summary>
 		public int PanPosition { get => Comm.Pan.Position; }
 
-		public double PanVector { set => Comm.Pan.Vector = -value; }
+		/// <summary>
+		/// Pass Velocity through to Pan, changing direction so CCW is positive.
+		/// </summary>
+		public double PanVelocity { set => Comm.Pan.Velocity = -value; }
 
+		/// <summary>
+		/// Enable some UI elements only if Connected and Homed
+		/// </summary>
 		public bool Enabled { get => Comm.Slide.Homed && Comm.State == BlueState.Connected; }
 
 		#region INotifyPropertyChanged
+		/// <summary>
+		/// Fired when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fire an event for a property changing.
+		/// </summary>
+		/// <param name="propertyName">The name of the changed property.</param>
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
