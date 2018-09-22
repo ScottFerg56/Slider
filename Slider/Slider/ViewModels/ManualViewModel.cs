@@ -36,13 +36,13 @@ namespace CamSlider.ViewModels
 		}
 
 		/// <summary>
-		/// Propagate the Slide Position change and the Slide Homed change as an Enabled change.
+		/// Propagate the Slide Position change and the Slide Calibrated change as an Enabled change.
 		/// </summary>
 		private void Slide_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Position")
 				OnPropertyChanged("SlidePosition");
-			else if (e.PropertyName == "Homed")
+			else if (e.PropertyName == "Calibrated")
 				OnPropertyChanged("Enabled");
 		}
 
@@ -67,9 +67,9 @@ namespace CamSlider.ViewModels
 		public double PanVelocity { set => Comm.Pan.Velocity = -value; }
 
 		/// <summary>
-		/// Enable some UI elements only if Connected and Homed
+		/// Enable some UI elements only if Connected and Calibrated
 		/// </summary>
-		public bool Enabled { get => Comm.Slide.Homed && Comm.State == BlueState.Connected; }
+		public bool Enabled { get => Comm.Slide.Calibrated && Comm.State == BlueState.Connected; }
 
 		#region INotifyPropertyChanged
 		/// <summary>

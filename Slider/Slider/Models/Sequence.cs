@@ -8,7 +8,7 @@ namespace CamSlider.Models
 {
 	/// <summary>
 	/// Represents a sequence moving the Slide and Pan from an In point to an Out point
-	/// with accompanying camera shutter intervalometer action.
+	/// with accompanying intervalometer action.
 	/// </summary>
 	public class Sequence : INotifyPropertyChanged
     {

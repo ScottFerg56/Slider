@@ -1,13 +1,13 @@
-﻿* consider base class for Stepper & Camera classes
-	change properties from enum to list/array/IEnumuerable of some struct type
-* remove 'get' from camera properties we never get
-	avoid them in RequestDeviceProp
+﻿* Homed -> Calibrated
+* Camera -> Intervalometer
+* consider generalized Stepper/Global/Intervalometer Applets on device
+* make property access consistent with TargetPosition and Position
+* make int vs float values consistent between app and device
+
+TODO: Save application state and stop any background activity
+TODO: Load state from previously suspended application
+
 * consider base class for all INotifyPropertyChange implementations
-* consider Stepper as a generalized class
-	with settings integrated
-* consider replacing Homed with 'ready' status from device
-	could incorporate multiple limit switches
-* consider generalized Stepper Applets on device
 * fix settings persistence lost with major change to Android
 * TimeRemaining: consider single-phase solution of accelerating / decelerating only
 * robustness during loss of connection

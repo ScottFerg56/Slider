@@ -32,18 +32,18 @@ namespace CamSlider.ViewModels
 		}
 
 		/// <summary>
-		/// Propagate the Slide Homed change as an Enabled change.
+		/// Propagate the Slide Calibrated change as an Enabled change.
 		/// </summary>
 		private void Slide_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Homed")
+			if (e.PropertyName == "Calibrated")
 				OnPropertyChanged("Enabled");
 		}
 
 		/// <summary>
-		/// Enable some UI elements only if Connected and Homed
+		/// Enable some UI elements only if Connected and Calibrated
 		/// </summary>
-		public bool Enabled { get => Comm.Slide.Homed && Comm.State == BlueState.Connected; }
+		public bool Enabled { get => Comm.Slide.Calibrated && Comm.State == BlueState.Connected; }
 
 		/// <summary>
 		/// Get/set the Slide In point, in millimeters, 0 at the motor location.

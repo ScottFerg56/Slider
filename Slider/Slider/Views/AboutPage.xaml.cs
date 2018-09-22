@@ -15,7 +15,7 @@ namespace CamSlider.Views
 			InitializeComponent ();
 
 			Comm.StateChange += Blue_StateChange;
-			Comm.PropertyChanged += Comm_PropertyChanged;
+			Comm.Global.PropertyChanged += Global_PropertyChanged;
 			BlueAction.Clicked += BlueAction_Clicked;
 			// try connecting as we start up
 			Comm.Connect("SLIDER");
@@ -25,7 +25,7 @@ namespace CamSlider.Views
 		/// Look for changes in the Action property from the device to possibly resume
 		/// from a problem after being disconnected during a sequence movement in the RunPage.
 		/// </summary>
-		private void Comm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		private void Global_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Action")
 				CheckAction();
@@ -61,7 +61,7 @@ namespace CamSlider.Views
 		/// </summary>
 		void CheckAction()
 		{
-			if (Comm.Action != SliderComm.Actions.None && Comm.Action != SliderComm.Actions.Unknown)
+			if (Comm.Global.Action != GlobalElement.Actions.None && Comm.Global.Action != GlobalElement.Actions.Unknown)
 			{
 				if (Parent.Parent is TabbedPage t && t.CurrentPage is NavigationPage n && !(n.CurrentPage is SequencePage))
 				{

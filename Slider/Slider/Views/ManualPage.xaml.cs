@@ -37,7 +37,7 @@ namespace CamSlider.Views
 		/// </summary>
 		private void Calibrate(object sender, EventArgs e)
 		{
-			Comm.Slide.Home();
+			Comm.Slide.Calibrated = false;
 		}
 	}
 }

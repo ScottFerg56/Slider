@@ -49,7 +49,7 @@ namespace CamSlider.ViewModels
 		{
 			Comm.Slide.PropertyChanged += Slide_PropertyChanged;
 			Comm.Pan.PropertyChanged += Pan_PropertyChanged;
-			Comm.Camera.PropertyChanged += Camera_PropertyChanged;
+			Comm.Intervalometer.PropertyChanged += Intervalometer_PropertyChanged;
 			Comm.StateChange += Comm_StateChange;
 		}
 
@@ -99,28 +99,28 @@ namespace CamSlider.ViewModels
 				case RunCommand.Resume:
 					// try to figure out what we were doing when the connection was lost
 					// and get back to it
-					switch (Comm.Action)
+					switch (Comm.Global.Action)
 					{
-						case SliderComm.Actions.MovingToIn:
+						case GlobalElement.Actions.MovingToIn:
 							if (!SetupMoveToIn(true))
 							{
 								Stop();
 							}
 							break;
-						case SliderComm.Actions.MovingToOut:
+						case GlobalElement.Actions.MovingToOut:
 							if (!SetupMoveToOut(true))
 							{
 								Stop();
 							}
 							break;
-						case SliderComm.Actions.Running:
+						case GlobalElement.Actions.Running:
 							if (!SetupRun(true))
 							{
 								Stop();
 							}
 							break;
 						default:
-							Debug.WriteLine($"Invalid resume action: {Comm.Action}");
+							Debug.WriteLine($"Invalid resume action: {Comm.Global.Action}");
 							break;
 					}
 					break;
@@ -137,7 +137,7 @@ namespace CamSlider.ViewModels
 		bool SetupRun(bool resume = false)
 		{
 			// send our current action to the device so we can recover it later after any kind of disconnect
-			Comm.Action = SliderComm.Actions.Running;
+			Comm.Global.Action = GlobalElement.Actions.Running;
 			CanPlay = false;
 			StatusMsg = (resume ? "Resume " : "") + "Running";
 			// remember which parts need moving
@@ -153,21 +153,21 @@ namespace CamSlider.ViewModels
 				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - Comm.Pan.Position, Comm.Sequence.Duration);
 			//	Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				// initiate Slide and Pan movement
-				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed);
-				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed);
+				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed, Comm.Settings.SlideAcceleration);
+				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed, Comm.Settings.PanAcceleration);
 				if (Comm.Sequence.Intervalometer)
 				{
 					// start the intervalometer sequence
-					Comm.Camera.FocusDelay = Comm.Settings.FocusDelay;
-					Comm.Camera.ShutterHold = Comm.Settings.ShutterHold;
-					Comm.Camera.Interval = (uint)Math.Round(Comm.Sequence.Interval * 1000);
-					// setting Frames will trigger the device to begin the camera shutter sequence
-					Comm.Camera.Frames = Comm.Sequence.Frames;
+					Comm.Intervalometer.FocusDelay = Comm.Settings.FocusDelay;
+					Comm.Intervalometer.ShutterHold = Comm.Settings.ShutterHold;
+					Comm.Intervalometer.Interval = (uint)Math.Round(Comm.Sequence.Interval * 1000);
+					// setting Frames will trigger the device to begin the intervalometer shutter sequence
+					Comm.Intervalometer.Frames = Comm.Sequence.Frames;
 				}
 				else
 				{
 					// no intervalometer action, make sure the device knows
-					Comm.Camera.Frames = 0;
+					Comm.Intervalometer.Frames = 0;
 				}
 				return true;
 			}
@@ -183,7 +183,7 @@ namespace CamSlider.ViewModels
 		bool SetupMoveToIn(bool resume = false)
 		{
 			// send our current action to the device so we can recover it later after any kind of disconnect
-			Comm.Action = SliderComm.Actions.MovingToIn;
+			Comm.Global.Action = GlobalElement.Actions.MovingToIn;
 			StatusMsg = (resume ? "Resume " : "") + "Moving to IN";
 			// remember which parts need moving
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideIn;
@@ -194,8 +194,8 @@ namespace CamSlider.ViewModels
 				if (resume)         // if resuming, just run with it
 					return true;
 				// initiate Slide and Pan movement
-				Comm.Slide.Move(Comm.Sequence.SlideIn);
-				Comm.Pan.Move(Comm.Sequence.PanIn);
+				Comm.Slide.Move(Comm.Sequence.SlideIn, Comm.Settings.SlideMoveSpeed, Comm.Settings.SlideMoveSpeed);
+				Comm.Pan.Move(Comm.Sequence.PanIn, Comm.Settings.PanMoveSpeed, Comm.Settings.PanAcceleration);
 				return true;
 			}
 			// nothing to do!
@@ -210,7 +210,7 @@ namespace CamSlider.ViewModels
 		bool SetupMoveToOut(bool resume = false)
 		{
 			// send our current action to the device so we can recover it later after any kind of disconnect
-			Comm.Action = SliderComm.Actions.MovingToOut;
+			Comm.Global.Action = GlobalElement.Actions.MovingToOut;
 			StatusMsg = (resume ? "Resume " : "") + "Moving to OUT";
 			// remember which parts need moving
 			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
@@ -221,8 +221,8 @@ namespace CamSlider.ViewModels
 				if (resume)         // if resuming, just run with it
 					return true;
 				// initiate Slide and Pan movement
-				Comm.Slide.Move(Comm.Sequence.SlideOut);
-				Comm.Pan.Move(Comm.Sequence.PanOut);
+				Comm.Slide.Move(Comm.Sequence.SlideOut, Comm.Settings.SlideMoveSpeed, Comm.Settings.SlideMoveSpeed);
+				Comm.Pan.Move(Comm.Sequence.PanOut, Comm.Settings.PanMoveSpeed, Comm.Settings.PanAcceleration);
 				return true;
 			}
 			// nothing to do!
@@ -245,12 +245,12 @@ namespace CamSlider.ViewModels
 		/// </summary>
 		public void Stop()
 		{
-			Comm.Action = SliderComm.Actions.None;
+			Comm.Global.Action = GlobalElement.Actions.None;
 			Command = RunCommand.Stopped;
 			StatusMsg = "Stopped";
 			Comm.Slide.Velocity = 0;
 			Comm.Pan.Velocity = 0;
-			Comm.Camera.Frames = 0;
+			Comm.Intervalometer.Frames = 0;
 			Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
 			{
 				Stopped?.Invoke(this, EventArgs.Empty);
@@ -332,9 +332,9 @@ namespace CamSlider.ViewModels
 		}
 
 		/// <summary>
-		/// Propagate changes for Camera-related properties.
+		/// Propagate changes for Intervalometer-related properties.
 		/// </summary>
-		private void Camera_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void Intervalometer_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Frames")
 			{
@@ -349,7 +349,7 @@ namespace CamSlider.ViewModels
 		/// </summary>
 		void CheckStopped()
 		{
-			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff && (!Comm.Sequence.Intervalometer || Comm.Camera.Frames == 0))
+			if (Command != RunCommand.Stopped && !SlideDiff && !PanDiff && (!Comm.Sequence.Intervalometer || Comm.Intervalometer.Frames == 0))
 			{
 				if (!PreMoveToIn)
 				{
@@ -361,7 +361,7 @@ namespace CamSlider.ViewModels
 				{
 					// prelude move complete
 					PreMoveToIn = false;
-					Comm.Action = SliderComm.Actions.None;
+					Comm.Global.Action = GlobalElement.Actions.None;
 					// waiting for user to ready the camera and the scene and then press the 'Play' button
 					CanPlay = true;
 					StatusMsg = "Ready to run";
@@ -392,7 +392,7 @@ namespace CamSlider.ViewModels
 		/// <summary>
 		/// Get the Frames count.
 		/// </summary>
-		public uint FramesRemaining { get => Comm.Camera.Frames; }
+		public uint FramesRemaining { get => Comm.Intervalometer.Frames; }
 
 		double PanTimeRemaining;		// time remaining for Pan movement
 		double SlideTimeRemaining;      // time remaining for Slide movement
@@ -407,7 +407,7 @@ namespace CamSlider.ViewModels
 				// all component activities were initially calculated to end at the same time
 				// though some may not be active at all, those that are should have nearly the same time remaining
 				// just take the max of the three components
-				double time = Comm.Sequence.Intervalometer ? FramesRemaining * Comm.Sequence.Interval : 0;
+				double time = Comm.Sequence.Intervalometer ? FramesRemaining * Comm.Intervalometer.Interval / 1000.0 : 0;
 			//	Debug.WriteLine($"++> Slide Time: {SlideTimeRemaining}  Pan Time: {PanTimeRemaining}  Interval Time: {time}");
 				return Math.Max(Math.Max(time, SlideTimeRemaining), PanTimeRemaining);
 			}
