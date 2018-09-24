@@ -94,7 +94,7 @@ namespace CamSlider
 			Elements.Add(Global = new GlobalElement(this, "Global", 'g'));
 			Elements.Add(Slide = new StepperElement(this, "Slide", 's', 0, 640));
 			Elements.Add(Pan = new StepperElement(this, "Pan", 'p', -360, 360));
-			Elements.Add(Intervalometer = new IntervalometerElement(this, "Intervalometer", 'c'));   // UNDONE: change to 'i'
+			Elements.Add(Intervalometer = new IntervalometerElement(this, "Intervalometer", 'i'));
 		}
 
 		/// <summary>
@@ -108,6 +108,9 @@ namespace CamSlider
 		/// </remarks>
 		private void Input(string s)
 		{
+			if (string.IsNullOrEmpty(s))
+				return;
+			Debug.WriteLine($"Input string: {s}");
 			var element = Elements.FirstOrDefault(e => e.Prefix == s[0]);
 			if (element == null)
 			{

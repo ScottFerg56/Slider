@@ -28,7 +28,7 @@ namespace CamSlider.Views
 		/// </summary>
 		private void PanZero(object sender, EventArgs e)
 		{
-			Comm.Pan.Zero();
+			Comm.Pan.Position = 0;
 		}
 
 		/// <summary>

@@ -1,4 +1,12 @@
-﻿* Homed -> Calibrated
+﻿* PropertyApplet derived class
+	first char code:
+		'=' to set
+		'?' to request, followed by one or more property prefixes
+		others pass to a command method
+	GetProp
+	SetProp
+* in the app: handle Velocity is a percentage of the SpeedLimit
+* Homed -> Calibrated
 * Camera -> Intervalometer
 * consider generalized Stepper/Global/Intervalometer Applets on device
 * make property access consistent with TargetPosition and Position

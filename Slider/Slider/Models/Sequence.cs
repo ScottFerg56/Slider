@@ -19,7 +19,7 @@ namespace CamSlider.Models
 		public int SlideIn
 		{
 			get => _SlideIn;
-			set => SetProperty(ref _SlideIn, value, SliderComm.Instance.Slide.LimitValue);
+			set => SetProperty(ref _SlideIn, value, (v) => (int)Math.Round(SliderComm.Instance.Slide.LimitValue(v)));
 		}
 
 		protected int _SlideOut = 400;
@@ -29,7 +29,7 @@ namespace CamSlider.Models
 		public int SlideOut
 		{
 			get => _SlideOut;
-			set => SetProperty(ref _SlideOut, value, SliderComm.Instance.Slide.LimitValue);
+			set => SetProperty(ref _SlideOut, value, (v) => (int)Math.Round(SliderComm.Instance.Slide.LimitValue(v)));
 		}
 
 		protected int _PanIn = 30;
@@ -39,7 +39,7 @@ namespace CamSlider.Models
 		public int PanIn
 		{
 			get => _PanIn;
-			set => SetProperty(ref _PanIn, value, SliderComm.Instance.Pan.LimitValue);
+			set => SetProperty(ref _PanIn, value, (v) => (int)Math.Round(SliderComm.Instance.Pan.LimitValue(v)));
 		}
 
 		protected int _PanOut = -30;
@@ -49,7 +49,7 @@ namespace CamSlider.Models
 		public int PanOut
 		{
 			get => _PanOut;
-			set => SetProperty(ref _PanOut, value, SliderComm.Instance.Pan.LimitValue);
+			set => SetProperty(ref _PanOut, value, (v) => (int)Math.Round(SliderComm.Instance.Pan.LimitValue(v)));
 		}
 
 		protected uint _Duration = 60;

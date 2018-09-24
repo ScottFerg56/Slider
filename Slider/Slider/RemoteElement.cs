@@ -220,13 +220,21 @@ namespace CamSlider
 			if (s.Length < 2)
 				return;
 
-			var prop = Properties.FirstOrDefault(p => p.Prefix == s[0]);
-			if (prop == null)
+			if (s[0] != '=')
+			{
+				Debug.WriteLine($"Unrecognized input command: {s}");
 				return;
+			}
+			var prop = Properties.FirstOrDefault(p => p.Prefix == s[1]);
+			if (prop == null)
+			{
+				Debug.WriteLine($"Unrecognized property: {s}");
+				return;
+			}
 
 			// keeping track of properties we've requested values for, to avoid redundant requests
 			prop.Requested = false;
-			prop.SetStringValue(s.Substring(1));
+			prop.SetStringValue(s.Substring(2));
 
 			Debug.WriteLine($"++> {Name} {prop.Name} <- {prop.GetStringValue()}");
 			OnPropertyChanged(prop.Name);
@@ -250,7 +258,8 @@ namespace CamSlider
 		protected void SetDeviceProp(PropertyDef prop, bool required = true)
 		{
 			Debug.WriteLine($"++> {Name} {prop.Name} -> {prop.GetStringValue()}");
-			Output($"{prop.Prefix}{prop.GetStringValue()}", required);
+			// the '=' preceding the property code assigns the property value
+			Output($"={prop.Prefix}{prop.GetStringValue()}", required);
 		}
 
 		/// <summary>
@@ -264,7 +273,8 @@ namespace CamSlider
 			if (prop.Requested)			// skip a redundant request
 				return;
 			prop.Requested = true;		// note the request has been made
-			Output($"{prop.Prefix}?");	// the '?' following the property code requests
+			// the '?' preceding the property code requests the property value
+			Output($"?{prop.Prefix}");
 		}
 
 		/// <summary>
@@ -272,11 +282,17 @@ namespace CamSlider
 		/// </summary>
 		public void RequestAllDeviceProps()
 		{
+			// build a single request packet for all applicable properties at once
+			string p = "?";
 			foreach (var prop in Properties)
 			{
-				prop.Requested = false;     // force requests for all
-				RequestDeviceProp(prop);
+				if (!prop.NoRequest)
+				{
+					prop.Requested = true;     // force request
+					p += prop.Prefix;
+				}
 			}
+			Output(p);
 		}
 
 		/// <summary>

@@ -49,22 +49,24 @@ namespace CamSlider.ViewModels
 		/// <summary>
 		/// Get the Slide Position.
 		/// </summary>
-		public int SlidePosition { get => Comm.Slide.Position; }
+		public int SlidePosition { get => (int)Math.Round(Comm.Slide.Position); }
 
 		/// <summary>
 		/// Pass Velocity through to Slide, changing direction based on Motor Location setting.
 		/// </summary>
-		public double SlideVelocity { set => Comm.Slide.Velocity = Comm.Settings.MotorLocation ? -value : value; }
+		/// <remarks>We're using the slider control values as a percentage of the stepper's Speed Limit.</remarks>
+		public double SlideVelocity { set => Comm.Slide.Velocity = (Comm.Settings.MotorLocation ? -value : value) / 100.0 * Comm.Slide.SpeedLimit; }
 
 		/// <summary>
 		/// Get the Pan Position.
 		/// </summary>
-		public int PanPosition { get => Comm.Pan.Position; }
+		public int PanPosition { get => (int)Math.Round(Comm.Pan.Position); }
 
 		/// <summary>
 		/// Pass Velocity through to Pan, changing direction so CCW is positive.
 		/// </summary>
-		public double PanVelocity { set => Comm.Pan.Velocity = -value; }
+		/// <remarks>We're using the slider control values as a percentage of the stepper's Speed Limit.</remarks>
+		public double PanVelocity { set => Comm.Pan.Velocity = -value / 100.0 * Comm.Slide.SpeedLimit; }
 
 		/// <summary>
 		/// Enable some UI elements only if Connected and Calibrated

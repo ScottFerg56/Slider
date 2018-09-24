@@ -141,16 +141,16 @@ namespace CamSlider.ViewModels
 			CanPlay = false;
 			StatusMsg = (resume ? "Resume " : "") + "Running";
 			// remember which parts need moving
-			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
-			PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
+			SlideDiff = (int)Math.Round(Comm.Slide.Position) != Comm.Sequence.SlideOut;
+			PanDiff = (int)Math.Round(Comm.Pan.Position) != Comm.Sequence.PanOut;
 			// see if something needs doing
 			if (SlideDiff || PanDiff || Comm.Sequence.Intervalometer && Comm.Sequence.Frames != 0)
 			{
 				if (resume)			// if resuming, just run with it
 					return true;
 				// calculate the proper max speeds to achieve the desired durations for the moves
-				var slideMaxSpeed = Comm.Slide.MaxSpeedForDistanceAndTime(Comm.Sequence.SlideOut - Comm.Slide.Position, Comm.Sequence.Duration);
-				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - Comm.Pan.Position, Comm.Sequence.Duration);
+				var slideMaxSpeed = Comm.Slide.MaxSpeedForDistanceAndTime(Comm.Sequence.SlideOut - (int)Math.Round(Comm.Slide.Position), Comm.Sequence.Duration);
+				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - (int)Math.Round(Comm.Pan.Position), Comm.Sequence.Duration);
 			//	Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				// initiate Slide and Pan movement
 				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed, Comm.Settings.SlideAcceleration);
@@ -186,8 +186,8 @@ namespace CamSlider.ViewModels
 			Comm.Global.Action = GlobalElement.Actions.MovingToIn;
 			StatusMsg = (resume ? "Resume " : "") + "Moving to IN";
 			// remember which parts need moving
-			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideIn;
-			PanDiff = Comm.Pan.Position != Comm.Sequence.PanIn;
+			SlideDiff = (int)Math.Round(Comm.Slide.Position) != Comm.Sequence.SlideIn;
+			PanDiff = (int)Math.Round(Comm.Pan.Position) != Comm.Sequence.PanIn;
 			// see if something needs doing (no intervalometer action here)
 			if (SlideDiff || PanDiff)
 			{
@@ -213,8 +213,8 @@ namespace CamSlider.ViewModels
 			Comm.Global.Action = GlobalElement.Actions.MovingToOut;
 			StatusMsg = (resume ? "Resume " : "") + "Moving to OUT";
 			// remember which parts need moving
-			SlideDiff = Comm.Slide.Position != Comm.Sequence.SlideOut;
-			PanDiff = Comm.Pan.Position != Comm.Sequence.PanOut;
+			SlideDiff = (int)Math.Round(Comm.Slide.Position) != Comm.Sequence.SlideOut;
+			PanDiff = (int)Math.Round(Comm.Pan.Position) != Comm.Sequence.PanOut;
 			// see if something needs doing (no intervalometer action here)
 			if (SlideDiff || PanDiff)
 			{
@@ -286,7 +286,7 @@ namespace CamSlider.ViewModels
 			{
 				OnPropertyChanged("PanPosition");
 				// update time remaining and notify
-				PanTimeRemaining = Comm.Pan.TimeRemaining(Comm.Pan.TargetPosition - PanPosition);
+				PanTimeRemaining = Comm.Pan.TimeRemaining((int)Math.Round(Comm.Pan.TargetPosition) - PanPosition);
 				OnPropertyChanged("TimeRemaining");
 			}
 			else if (e.PropertyName == "Speed")
@@ -313,7 +313,7 @@ namespace CamSlider.ViewModels
 			{
 				OnPropertyChanged("SlidePosition");
 				// update time remaining and notify
-				SlideTimeRemaining = Comm.Slide.TimeRemaining(Comm.Slide.TargetPosition - SlidePosition);
+				SlideTimeRemaining = Comm.Slide.TimeRemaining((int)Math.Round(Comm.Slide.TargetPosition) - SlidePosition);
 				OnPropertyChanged("TimeRemaining");
 			}
 			else if (e.PropertyName == "Speed")
@@ -372,22 +372,22 @@ namespace CamSlider.ViewModels
 		/// <summary>
 		/// Get the Slide Position.
 		/// </summary>
-		public int SlidePosition { get => Comm.Slide.Position; }
+		public int SlidePosition { get => (int)Math.Round(Comm.Slide.Position); }
 
 		/// <summary>
 		/// Get the Slide Speed.
 		/// </summary>
-		public double SlideSpeed { get => Comm.Slide.Speed; }
+		public int SlideSpeed { get => (int)Math.Round(Comm.Slide.Speed); }
 
 		/// <summary>
 		/// Get the Pan Position.
 		/// </summary>
-		public int PanPosition { get => Comm.Pan.Position; }
+		public int PanPosition { get => (int)Math.Round(Comm.Pan.Position); }
 
 		/// <summary>
 		/// Get the Pan Speed.
 		/// </summary>
-		public double PanSpeed { get => Comm.Pan.Speed; }
+		public int PanSpeed { get => (int)Math.Round(Comm.Pan.Speed); }
 
 		/// <summary>
 		/// Get the Frames count.

@@ -89,8 +89,8 @@ namespace CamSlider.Views
 		/// </summary>
 		private void SetInFromCurrent(object sender, EventArgs e)
 		{
-			ViewModel.SlideIn = Comm.Slide.Position;
-			ViewModel.PanIn = Comm.Pan.Position;
+			ViewModel.SlideIn = (int)Math.Round(Comm.Slide.Position);
+			ViewModel.PanIn = (int)Math.Round(Comm.Pan.Position);
 		}
 
 		/// <summary>
@@ -98,8 +98,8 @@ namespace CamSlider.Views
 		/// </summary>
 		private void SetOutFromCurrent(object sender, EventArgs e)
 		{
-			ViewModel.SlideOut = Comm.Slide.Position;
-			ViewModel.PanOut = Comm.Pan.Position;
+			ViewModel.SlideOut = (int)Math.Round(Comm.Slide.Position);
+			ViewModel.PanOut = (int)Math.Round(Comm.Pan.Position);
 		}
 	}
 }

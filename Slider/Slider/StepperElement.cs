@@ -21,11 +21,11 @@ namespace CamSlider
 
 		/// <summary>Gets the Position of the stepper.</summary>
 		[ElementProperty('p', readOnly: false)]
-		public int Position { get => GetProperty<int>(); set => SetProperty(value); }
+		public double Position { get => GetProperty<double>(); set => SetProperty(value); }
 
 		/// <summary>Gets the Target Position the stepper is moving toward.</summary>
-		[ElementProperty('t', readOnly: true)]
-		public int TargetPosition { get => GetProperty<int>(); set => SetProperty(value); }
+		[ElementProperty('t', readOnly: false, forceWrite: true)]
+		public double TargetPosition { get => GetProperty<double>(); set => SetProperty(value); }
 
 		/// <summary>Get/set the Acceleration used by the stepper.</summary>
 		[ElementProperty('a', readOnly: false)]
@@ -37,14 +37,14 @@ namespace CamSlider
 
 		/// <summary>Get the upper limit for MaxSpeed.</summary>
 		[ElementProperty('l', readOnly: true, initialValue: 9999)]
-		public uint SpeedLimit { get => GetProperty<uint>(); set => SetProperty(value); }
+		public double SpeedLimit { get => GetProperty<double>(); set => SetProperty(value); }
 
 		/// <summary>
 		/// Set the Velocity vector, a signed speed to move the stepper in a given direction,
 		/// specified as a percentage of the SpeedLimit.
 		/// </summary>
 		[ElementProperty('v', readOnly: false, noRequest: true, forceWrite: true)]
-		public double Velocity { get => GetProperty<double>(); set => SetProperty(Math.Round(value, 1), setCondition: (v) => (double)v == 0); }
+		public double Velocity { get => GetProperty<double>(); set => SetProperty(value, setCondition: (v) => (double)v == 0); }
 
 		/// <summary>
 		/// Get the current Speed of the stepper.
@@ -57,28 +57,19 @@ namespace CamSlider
 		/// </summary>
 		/// <param name="position">The desired target position.</param>
 		/// <param name="speed">An optional desired speed, defaulting to the stepper's MoveSpeed from Settings.</param>
-		public void Move(int position, double speed, double accel)
+		public void Move(double position, double speed, double accel)
 		{
 			Acceleration = accel;
 			MaxSpeed = speed;
 			TargetPosition = position;
-			Position = position;		// UNDONE: inconsistent property usage... change so setting Target does this?!
 		}
 
 		/// <summary>
 		/// Get/set the calibration status, true if stepper has been calibrated with a move to it's limit switch(es).
 		/// </summary>
 		/// <remarks>Setting to false will cause calibration to occur.</remarks>
-		[ElementProperty('h', readOnly: false)]		// UNDONE: change to 'c'?!
-		public bool Calibrated { get => GetProperty<bool>(); set => SetProperty(value, onChanged: () => TargetPosition = 0); }
-
-		/// <summary>
-		/// Set the current stepper position as the 'zero' position.
-		/// </summary>
-		public void Zero()	// UNDONE: change to setting Position
-		{
-			Output("z1");
-		}
+		[ElementProperty('c', readOnly: false)]
+		public bool Calibrated { get => GetProperty<bool>(); set => SetProperty(value); }
 
 		/// <summary>
 		/// Calculate the speed required to move a specified distance over a specified time
@@ -312,7 +303,7 @@ namespace CamSlider
 		/// </summary>
 		/// <param name="v">The Position value.</param>
 		/// <returns>The Position value after limiting to the valid range.</returns>
-		public int LimitValue(int v)
+		public double LimitValue(double v)
 		{
 			return Math.Max(Math.Min(v, LimitMax), LimitMin);
 		}
