@@ -1,15 +1,4 @@
-﻿* rethink Strings in mSlider
-	'const' on String& params??
-	concat in
-		FMBlue
-		FMDebug
-		Debug::TraceString
-		Applet::SendProp
-		Applet::Input multi request
-		FMDateTime::DigitsStr
-		FMDateTime::ToString
-* print magic for FMDebug??
-
+﻿
 TODO: Save application state and stop any background activity
 TODO: Load state from previously suspended application
 
