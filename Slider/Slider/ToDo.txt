@@ -1,16 +1,14 @@
-﻿* PropertyApplet derived class
-	first char code:
-		'=' to set
-		'?' to request, followed by one or more property prefixes
-		others pass to a command method
-	GetProp
-	SetProp
-* in the app: handle Velocity is a percentage of the SpeedLimit
-* Homed -> Calibrated
-* Camera -> Intervalometer
-* consider generalized Stepper/Global/Intervalometer Applets on device
-* make property access consistent with TargetPosition and Position
-* make int vs float values consistent between app and device
+﻿* rethink Strings in mSlider
+	'const' on String& params??
+	concat in
+		FMBlue
+		FMDebug
+		Debug::TraceString
+		Applet::SendProp
+		Applet::Input multi request
+		FMDateTime::DigitsStr
+		FMDateTime::ToString
+* print magic for FMDebug??
 
 TODO: Save application state and stop any background activity
 TODO: Load state from previously suspended application
