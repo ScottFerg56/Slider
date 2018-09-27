@@ -1,4 +1,7 @@
-﻿using CamSlider.Models;
+﻿//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+
+using CamSlider.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

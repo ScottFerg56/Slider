@@ -1,4 +1,7 @@
-﻿using Android.Content;
+﻿//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+
+using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Graphics.Drawables.Shapes;
 using Android.Widget;

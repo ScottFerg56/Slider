@@ -1,11 +1,16 @@
-﻿
+﻿==== mSlider: ====
+readme file
+	links to other projects
+
+==== Slider: ====
 TODO: Save application state and stop any background activity
 TODO: Load state from previously suspended application
 
-* consider base class for all INotifyPropertyChange implementations
-* fix settings persistence lost with major change to Android
-* TimeRemaining: consider single-phase solution of accelerating / decelerating only
-* robustness during loss of connection
+consider base class for all INotifyPropertyChange implementations
+fix settings persistence lost with major change to Android during development
+TimeRemaining: consider single-phase solution of accelerating / decelerating only
+more (?) robustness during loss of connection
 
 // ANDROID BUG:
 // On Android centered labels become left-aligned when the page disappears and reappears.
+// They re-center properly with a change to their contents.

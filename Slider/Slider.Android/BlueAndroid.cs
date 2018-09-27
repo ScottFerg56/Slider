@@ -1,4 +1,7 @@
-﻿using Android.Bluetooth;
+﻿//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+
+using Android.Bluetooth;
 using Android.Bluetooth.LE;
 using Android.Runtime;
 using System;

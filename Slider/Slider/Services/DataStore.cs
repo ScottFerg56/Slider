@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 

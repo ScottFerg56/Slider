@@ -1,4 +1,7 @@
-﻿using CamSlider.ViewModels;
+﻿//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+
+using CamSlider.ViewModels;
 using System;
 
 using Xamarin.Forms;
