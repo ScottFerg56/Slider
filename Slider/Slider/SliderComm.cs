@@ -95,8 +95,8 @@ namespace CamSlider
 			Blue.StateChange += Blue_StateChange;
 			Blue.InputAvailable += Blue_InputAvailable;
 			Elements.Add(Global = new GlobalElement(this, "Global", 'g'));
-			Elements.Add(Slide = new StepperElement(this, "Slide", 's', 0, 640));
-			Elements.Add(Pan = new StepperElement(this, "Pan", 'p', -360, 360));
+			Elements.Add(Slide = new StepperElement(this, "Slide", 's'));
+			Elements.Add(Pan = new StepperElement(this, "Pan", 'p'));
 			Elements.Add(Intervalometer = new IntervalometerElement(this, "Intervalometer", 'i'));
 		}
 

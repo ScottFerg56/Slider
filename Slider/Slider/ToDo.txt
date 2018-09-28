@@ -3,6 +3,8 @@ readme file
 	links to other projects
 
 ==== Slider: ====
+split Element files out to libraries
+publish (ignore ToDo.txt)
 TODO: Save application state and stop any background activity
 TODO: Load state from previously suspended application
 

@@ -13,22 +13,25 @@ namespace CamSlider
 	/// </summary>
 	public class StepperElement : RemoteElement
 	{
-		readonly int LimitMin;          // lower limit for movement
-		readonly int LimitMax;          // upper limit for movement
-
-		public StepperElement(IRemoteMaster master, string name, char prefix, int limitMin, int limitMax) : base(master, name, prefix)
+		public StepperElement(IRemoteMaster master, string name, char prefix) : base(master, name, prefix)
 		{
-			LimitMin = limitMin;
-			LimitMax = limitMax;
 		}
 
 		/// <summary>Gets the Position of the stepper.</summary>
 		[ElementProperty('p', readOnly: false)]
 		public double Position { get => GetProperty<double>(); set => SetProperty(value); }
 
-		/// <summary>Gets the Target Position the stepper is moving toward.</summary>
+		/// <summary>Get/set the Target Position the stepper is moving toward.</summary>
 		[ElementProperty('t', readOnly: false, forceWrite: true)]
 		public double TargetPosition { get => GetProperty<double>(); set => SetProperty(value); }
+
+		/// <summary>Get/set the Max Limit of the range for Position values.</summary>
+		[ElementProperty('x', readOnly: false, initialValue: double.MaxValue)]
+		public double MaxLimit { get => GetProperty<double>(); set => SetProperty(value); }
+
+		/// <summary>Get/set the Min Limit of the range for Position values.</summary>
+		[ElementProperty('n', readOnly: false, initialValue: double.MaxValue)]
+		public double MinLimit { get => GetProperty<double>(); set => SetProperty(value); }
 
 		/// <summary>Get/set the Acceleration used by the stepper.</summary>
 		[ElementProperty('a', readOnly: false)]
@@ -308,7 +311,7 @@ namespace CamSlider
 		/// <returns>The Position value after limiting to the valid range.</returns>
 		public double LimitValue(double v)
 		{
-			return Math.Max(Math.Min(v, LimitMax), LimitMin);
+			return Math.Max(Math.Min(v, MaxLimit), MinLimit);
 		}
 	}
 }
