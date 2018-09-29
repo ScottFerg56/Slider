@@ -4,8 +4,6 @@ readme file
 	links to other projects
 
 ==== Slider: ====
-add Libs to VS git
-split Bluetooth and Elements code out to reusable libraries
 publish (ignore ToDo.txt)
 TODO: Save application state and stop any background activity
 TODO: Load state from previously suspended application
