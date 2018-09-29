@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOO              O             OOOOO     O
+ OO OO            OO            OO   OO   OO
+ OO  OO           OO            OO   OO   OO
+ OO  OO  OOOO   OOOOOO   OOOO    OO     OOOOOO   OOOOO  OO OOO   OOOOO
+ OO  OO     OO    OO        OO    OOO     OO    OO   OO  OO  OO OO   OO
+ OO  OO  OOOOO    OO     OOOOO      OO    OO    OO   OO  OO  OO OOOOOOO
+ OO  OO OO  OO    OO    OO  OO  OO   OO   OO    OO   OO  OO     OO
+ OO OO  OO  OO    OO OO OO  OO  OO   OO   OO OO OO   OO  OO     OO   OO
+OOOOO    OOO OO    OOO   OOO OO  OOOOO     OOO   OOOOO  OOOO     OOOOO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using Newtonsoft.Json;
 using System;
@@ -44,8 +56,9 @@ namespace CamSlider.Services
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine(ex);
+					Debug.WriteLine($"--> {ex.Message}");
 					// deserialization failed, return the default value
+					// not fatal - this can happen after a simple change in the related type
 					return default(T);
 				}
 			}

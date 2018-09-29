@@ -66,8 +66,6 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlueAndroid.cs" />
-    <Compile Include="GattCallback.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\FMSliderRenderer.cs" />
     <Compile Include="Renderers\FMSwitchRenderer.cs" />
@@ -104,6 +102,10 @@
     <Folder Include="Resources\drawable-xxxhdpi\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libs\Platforms\Portable\Portable.csproj">
+      <Project>{4f5b21e0-47e0-4fcf-9d79-cc9de47e0d0e}</Project>
+      <Name>Portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Slider\Slider.csproj">
       <Project>{C1B74E2A-20FA-4D66-8F4F-2862F34485D2}</Project>
       <Name>Slider</Name>
@@ -134,5 +136,6 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
   </ItemGroup>
+  <Import Project="..\..\..\Libs\Platforms\Android\Android.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

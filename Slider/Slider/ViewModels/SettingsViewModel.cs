@@ -1,5 +1,18 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+ OOOOO             O       O       OO                           OO   OO    OO                   OO   OO            OOO            OOO
+OO   OO           OO      OO       OO                           OO   OO    OO                   OOO OOO             OO             OO
+OO   OO           OO      OO                                    OO   OO                         OOOOOOO             OO             OO
+ OO      OOOOO  OOOOOO  OOOOOO    OOO   OO OOO   OOO OO  OOOOO  OO   OO   OOO    OOOOO  OO   OO OOOOOOO  OOOOO    OOOO   OOOOO     OO
+  OOO   OO   OO   OO      OO       OO    OOOOOO OO  OO  OO   OO OO   OO    OO   OO   OO OO   OO OO O OO OO   OO  OO OO  OO   OO    OO
+    OO  OOOOOOO   OO      OO       OO    OO  OO OO  OO   OOO    OO   OO    OO   OOOOOOO OO O OO OO   OO OO   OO OO  OO  OOOOOOO    OO
+OO   OO OO        OO      OO       OO    OO  OO OO  OO     OOO   OO OO     OO   OO      OO O OO OO   OO OO   OO OO  OO  OO         OO
+OO   OO OO   OO   OO OO   OO OO    OO    OO  OO  OOOOO  OO   OO   OOO      OO   OO   OO  OOOOO  OO   OO OO   OO OO  OO  OO   OO    OO
+ OOOOO   OOOOO     OOO     OOO    OOOO   OO  OO     OO   OOOOO     O      OOOO   OOOOO    O O   OO   OO  OOOOO   OOO OO  OOOOO    OOOO
+                                                OO  OO
+                                                 OOOO
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System;
 using System.Collections.Generic;

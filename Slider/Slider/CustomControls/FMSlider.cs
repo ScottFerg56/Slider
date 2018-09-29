@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOOOO OO   OO  OOOOO    OOO      OO      OOO
+ OO  OO OOO OOO OO   OO    OO      OO       OO
+ OO   O OOOOOOO OO   OO    OO               OO
+ OO O   OOOOOOO  OO        OO     OOO     OOOO   OOOOO  OO OOO
+ OOOO   OO O OO   OOO      OO      OO    OO OO  OO   OO  OO  OO
+ OO O   OO   OO     OO     OO      OO   OO  OO  OOOOOOO  OO  OO
+ OO     OO   OO OO   OO    OO      OO   OO  OO  OO       OO
+ OO     OO   OO OO   OO    OO      OO   OO  OO  OO   OO  OO
+OOOO    OO   OO  OOOOO    OOOO    OOOO   OOO OO  OOOOO  OOOO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System;
 

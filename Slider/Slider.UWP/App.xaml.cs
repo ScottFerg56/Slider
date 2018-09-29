@@ -1,5 +1,19 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+   O
+  OOO
+ OO OO
+OO   OO OO OOO  OO OOO
+OO   OO  OO  OO  OO  OO
+OOOOOOO  OO  OO  OO  OO
+OO   OO  OO  OO  OO  OO
+OO   OO  OOOOO   OOOOO
+OO   OO  OO      OO
+         OO      OO
+        OOOO    OOOO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System;
 using System.Collections.Generic;
@@ -42,31 +56,27 @@ namespace CamSlider.UWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+			// Do not repeat app initialization when the Window already has content,
+			// just ensure that the window is active
+			if (!(Window.Current.Content is Frame rootFrame))
+			{
+				// Create a Frame to act as the navigation context and navigate to the first page
+				rootFrame = new Frame();
 
+				rootFrame.NavigationFailed += OnNavigationFailed;
 
-            Frame rootFrame = Window.Current.Content as Frame;
+				Xamarin.Forms.Forms.Init(e);
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (rootFrame == null)
-            {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
+				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+				{
+					//TODO: Load state from previously suspended application
+				}
 
-                rootFrame.NavigationFailed += OnNavigationFailed;
+				// Place the frame in the current Window
+				Window.Current.Content = rootFrame;
+			}
 
-                Xamarin.Forms.Forms.Init(e);
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-            }
-
-            if (rootFrame.Content == null)
+			if (rootFrame.Content == null)
             {
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation

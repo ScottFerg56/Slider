@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+ OOOOO    OOO      OO      OOO                    OOOO
+OO   OO    OO      OO       OO                   OO  OO
+OO   OO    OO               OO                  OO    O
+ OO        OO     OOO     OOOO   OOOOO  OO OOO  OO       OOOOO  OOO OO  OOO OO
+  OOO      OO      OO    OO OO  OO   OO  OO  OO OO      OO   OO OOOOOOO OOOOOOO
+    OO     OO      OO   OO  OO  OOOOOOO  OO  OO OO      OO   OO OO O OO OO O OO
+OO   OO    OO      OO   OO  OO  OO       OO     OO    O OO   OO OO O OO OO O OO
+OO   OO    OO      OO   OO  OO  OO   OO  OO      OO  OO OO   OO OO O OO OO O OO
+ OOOOO    OOOO    OOOO   OOO OO  OOOOO  OOOO      OOOO   OOOOO  OO   OO OO   OO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using CamSlider.Models;
 using System;
@@ -8,6 +20,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Elements;
+using Platforms.BluePortable;
 
 namespace CamSlider
 {
@@ -91,7 +105,7 @@ namespace CamSlider
 		protected SliderComm()
 		{
 			// initialize Bluetooth, but don't connect yet
-			Blue = new BlueApp();
+			Blue = new BlueApp(Xamarin.Forms.DependencyService.Get<IBlueDevice>());
 			Blue.StateChange += Blue_StateChange;
 			Blue.InputAvailable += Blue_InputAvailable;
 			Elements.Add(Global = new GlobalElement(this, "Global", 'g'));
@@ -113,7 +127,7 @@ namespace CamSlider
 		{
 			if (string.IsNullOrEmpty(s))
 				return;
-			Debug.WriteLine($"Input string: {s}");
+		//	Debug.WriteLine($"++> Input string: {s}");
 			var element = Elements.FirstOrDefault(e => e.Prefix == s[0]);
 			if (element == null)
 			{

@@ -27,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libs\Platforms\Portable\Portable.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Views\ManualPage.xaml.cs">
       <DependentUpon>ManualPage.xaml</DependentUpon>
     </Compile>
@@ -49,4 +53,7 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Import Project="..\..\..\Libs\Elements\Elements.projitems" Label="Shared" />
+
 </Project>

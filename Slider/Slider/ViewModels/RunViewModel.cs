@@ -1,6 +1,19 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOOO                  OO   OO    OO                   OO   OO            OOO            OOO
+ OO  OO                 OO   OO    OO                   OOO OOO             OO             OO
+ OO  OO                 OO   OO                         OOOOOOO             OO             OO
+ OO  OO OO  OO  OO OOO  OO   OO   OOO    OOOOO  OO   OO OOOOOOO  OOOOO    OOOO   OOOOO     OO
+ OOOOO  OO  OO   OOOOOO OO   OO    OO   OO   OO OO   OO OO O OO OO   OO  OO OO  OO   OO    OO
+ OO OO  OO  OO   OO  OO OO   OO    OO   OOOOOOO OO O OO OO   OO OO   OO OO  OO  OOOOOOO    OO
+ OO  OO OO  OO   OO  OO  OO OO     OO   OO      OO O OO OO   OO OO   OO OO  OO  OO         OO
+ OO  OO OO  OO   OO  OO   OOO      OO   OO   OO  OOOOO  OO   OO OO   OO OO  OO  OO   OO    OO
+OOO  OO  OOO OO  OO  OO    O      OOOO   OOOOO    O O   OO   OO  OOOOO   OOO OO  OOOOO    OOOO
 
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
+
+using Platforms.BluePortable;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -123,7 +136,7 @@ namespace CamSlider.ViewModels
 							}
 							break;
 						default:
-							Debug.WriteLine($"Invalid resume action: {Comm.Global.Action}");
+							Debug.WriteLine($"--> Invalid resume action: {Comm.Global.Action}");
 							break;
 					}
 					break;
@@ -154,7 +167,6 @@ namespace CamSlider.ViewModels
 				// calculate the proper max speeds to achieve the desired durations for the moves
 				var slideMaxSpeed = Comm.Slide.MaxSpeedForDistanceAndTime(Comm.Sequence.SlideOut - (int)Math.Round(Comm.Slide.Position), Comm.Sequence.Duration);
 				var panMaxSpeed = Comm.Pan.MaxSpeedForDistanceAndTime(Comm.Sequence.PanOut - (int)Math.Round(Comm.Pan.Position), Comm.Sequence.Duration);
-			//	Debug.WriteLine($"Run slide: {slideMaxSpeed} pan: {panMaxSpeed}");
 				// initiate Slide and Pan movement
 				Comm.Slide.Move(Comm.Sequence.SlideOut, slideMaxSpeed, Comm.Settings.SlideAcceleration);
 				Comm.Pan.Move(Comm.Sequence.PanOut, panMaxSpeed, Comm.Settings.PanAcceleration);
@@ -411,7 +423,6 @@ namespace CamSlider.ViewModels
 				// though some may not be active at all, those that are should have nearly the same time remaining
 				// just take the max of the three components
 				double time = Comm.Sequence.Intervalometer ? FramesRemaining * Comm.Intervalometer.Interval / 1000.0 : 0;
-			//	Debug.WriteLine($"++> Slide Time: {SlideTimeRemaining}  Pan Time: {PanTimeRemaining}  Interval Time: {time}");
 				return Math.Max(Math.Max(time, SlideTimeRemaining), PanTimeRemaining);
 			}
 		}

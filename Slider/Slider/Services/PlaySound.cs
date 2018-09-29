@@ -1,5 +1,19 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOOO    OOO                    OOOOO                             OOO
+ OO  OO    OO                   OO   OO                             OO
+ OO  OO    OO                   OO   OO                             OO
+ OO  OO    OO    OOOO   OO   OO  OO      OOOOO  OO  OO  OO OOO    OOOO
+ OOOOO     OO       OO  OO   OO   OOO   OO   OO OO  OO   OOOOOO  OO OO
+ OO        OO    OOOOO  OO   OO     OO  OO   OO OO  OO   OO  OO OO  OO
+ OO        OO   OO  OO  OO   OO OO   OO OO   OO OO  OO   OO  OO OO  OO
+ OO        OO   OO  OO   OOOOOO OO   OO OO   OO OO  OO   OO  OO OO  OO
+OOOO      OOOO   OOO OO      OO  OOOOO   OOOOO   OOO OO  OO  OO  OOO OO
+                            OO
+                        OOOOO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System;
 using System.Diagnostics;
@@ -38,7 +52,7 @@ namespace CamSlider.Services
 			{
 				// getting the occasional/flaky exception here with very little information to investigate
 				// not critical, so just ignoring for now
-				Debug.WriteLine($"Play exception: {ex}");
+				Debug.WriteLine($"--> Play exception: {ex.Message}");
 			}
 		}
 	}

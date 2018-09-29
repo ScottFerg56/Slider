@@ -1,6 +1,19 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OO   OO                                   OOO   OO   OO    OO                   OO   OO            OOO            OOO
+OOO OOO                                    OO   OO   OO    OO                   OOO OOO             OO             OO
+OOOOOOO                                    OO   OO   OO                         OOOOOOO             OO             OO
+OOOOOOO  OOOO   OO OOO  OO  OO   OOOO      OO   OO   OO   OOO    OOOOO  OO   OO OOOOOOO  OOOOO    OOOO   OOOOO     OO
+OO O OO     OO   OOOOOO OO  OO      OO     OO   OO   OO    OO   OO   OO OO   OO OO O OO OO   OO  OO OO  OO   OO    OO
+OO   OO  OOOOO   OO  OO OO  OO   OOOOO     OO   OO   OO    OO   OOOOOOO OO O OO OO   OO OO   OO OO  OO  OOOOOOO    OO
+OO   OO OO  OO   OO  OO OO  OO  OO  OO     OO    OO OO     OO   OO      OO O OO OO   OO OO   OO OO  OO  OO         OO
+OO   OO OO  OO   OO  OO OO  OO  OO  OO     OO     OOO      OO   OO   OO  OOOOO  OO   OO OO   OO OO  OO  OO   OO    OO
+OO   OO  OOO OO  OO  OO  OOO OO  OOO OO   OOOO     O      OOOO   OOOOO    O O   OO   OO  OOOOO   OOO OO  OOOOO    OOOO
 
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
+
+using Platforms.BluePortable;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OO   OO           OOO      OOO  OOOOOO             O       O
+OO   OO            OO       OO   OO  OO           OO      OO
+OO   OO            OO       OO   OO  OO           OO      OO
+OO   OO  OOOOO     OO     OOOO   OO  OO OO  OO  OOOOOO  OOOOOO   OOOOO  OO OOO
+OOOOOOO OO   OO    OO    OO OO   OOOOO  OO  OO    OO      OO    OO   OO  OOOOOO
+OO   OO OO   OO    OO   OO  OO   OO  OO OO  OO    OO      OO    OO   OO  OO  OO
+OO   OO OO   OO    OO   OO  OO   OO  OO OO  OO    OO      OO    OO   OO  OO  OO
+OO   OO OO   OO    OO   OO  OO   OO  OO OO  OO    OO OO   OO OO OO   OO  OO  OO
+OO   OO  OOOOO    OOOO   OOO OO OOOOOO   OOO OO    OOO     OOO   OOOOO   OO  OO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System;
 using System.Timers;

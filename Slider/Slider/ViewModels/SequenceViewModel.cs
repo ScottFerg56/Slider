@@ -1,6 +1,21 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+ OOOOO                                                          OO   OO    OO                   OO   OO            OOO            OOO
+OO   OO                                                         OO   OO    OO                   OOO OOO             OO             OO
+OO   OO                                                         OO   OO                         OOOOOOO             OO             OO
+ OO      OOOOO   OOO OO OO  OO   OOOOO  OO OOO   OOOOO   OOOOO  OO   OO   OOO    OOOOO  OO   OO OOOOOOO  OOOOO    OOOO   OOOOO     OO
+  OOO   OO   OO OO  OO  OO  OO  OO   OO  OOOOOO OO   OO OO   OO OO   OO    OO   OO   OO OO   OO OO O OO OO   OO  OO OO  OO   OO    OO
+    OO  OOOOOOO OO  OO  OO  OO  OOOOOOO  OO  OO OO      OOOOOOO OO   OO    OO   OOOOOOO OO O OO OO   OO OO   OO OO  OO  OOOOOOO    OO
+OO   OO OO      OO  OO  OO  OO  OO       OO  OO OO      OO       OO OO     OO   OO      OO O OO OO   OO OO   OO OO  OO  OO         OO
+OO   OO OO   OO  OOOOO  OO  OO  OO   OO  OO  OO OO   OO OO   OO   OOO      OO   OO   OO  OOOOO  OO   OO OO   OO OO  OO  OO   OO    OO
+ OOOOO   OOOOO      OO   OOO OO  OOOOO   OO  OO  OOOOO   OOOOO     O      OOOO   OOOOO    O O   OO   OO  OOOOO   OOO OO  OOOOO    OOOO
+                    OO
+                   OOOO
 
+//	(c) 2018 Scott Ferguson
+//	This code is licensed under MIT license(see LICENSE file for details)
+*/
+
+using Platforms.BluePortable;
 using CamSlider.Models;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,20 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+   O    OOO                        O    OOOOOO
+  OOO    OO                       OO     OO  OO
+ OO OO   OO                       OO     OO  OO
+OO   OO  OOOO    OOOOO  OO  OO  OOOOOO   OO  OO  OOOO    OOO OO  OOOOO
+OO   OO  OO OO  OO   OO OO  OO    OO     OOOOO      OO  OO  OO  OO   OO
+OOOOOOO  OO  OO OO   OO OO  OO    OO     OO      OOOOO  OO  OO  OOOOOOO
+OO   OO  OO  OO OO   OO OO  OO    OO     OO     OO  OO  OO  OO  OO
+OO   OO  OO  OO OO   OO OO  OO    OO OO  OO     OO  OO   OOOOO  OO   OO
+OO   OO  OOOOO   OOOOO   OOO OO    OOO  OOOO     OOO OO     OO   OOOOO
+                                                        OO  OO
+                                                         OOOO
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
+using Platforms.BluePortable;
 using System;
 using System.Linq;
 using Xamarin.Forms;

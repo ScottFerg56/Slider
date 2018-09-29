@@ -100,7 +100,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BlueWin.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -172,6 +171,10 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Libs\Platforms\Portable\Portable.csproj">
+      <Project>{4f5b21e0-47e0-4fcf-9d79-cc9de47e0d0e}</Project>
+      <Name>Portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Slider\Slider.csproj">
       <Project>{C1B74E2A-20FA-4D66-8F4F-2862F34485D2}</Project>
       <Name>Slider</Name>
@@ -180,6 +183,7 @@
   <ItemGroup>
     <None Include="Slider.UWP_TemporaryKey.pfx" />
   </ItemGroup>
+  <Import Project="..\..\..\Libs\Platforms\UWP\UWP.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

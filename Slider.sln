@@ -7,9 +7,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slider.Android", "Slider\Sl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slider.UWP", "Slider\Slider.UWP\Slider.UWP.csproj", "{E73F1F9F-9856-42BD-89D1-0392CFAC3691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slider", "Slider\Slider\Slider.csproj", "{E8D0970F-73E8-4E28-BD77-FDA6F157F11F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Slider", "Slider\Slider\Slider.csproj", "{E8D0970F-73E8-4E28-BD77-FDA6F157F11F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Elements", "..\Libs\Elements\Elements.shproj", "{669226B8-0D08-49FB-8EC4-82D43E6E8BFA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Android", "..\Libs\Platforms\Android\Android.shproj", "{AFFAFC92-2E2C-4F03-8314-560560761D13}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UWP", "..\Libs\Platforms\UWP\UWP.shproj", "{C8F0306C-F06C-409D-A1AB-FC0A376B47F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portable", "..\Libs\Platforms\Portable\Portable.csproj", "{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Libs\Elements\Elements.projitems*{669226b8-0d08-49fb-8ec4-82d43e6e8bfa}*SharedItemsImports = 13
+		..\Libs\Platforms\Android\Android.projitems*{670294ff-aa2a-4c49-8310-10a26eb91ff8}*SharedItemsImports = 4
+		..\Libs\Platforms\Android\Android.projitems*{affafc92-2e2c-4f03-8314-560560761d13}*SharedItemsImports = 13
+		..\Libs\Platforms\UWP\UWP.projitems*{c8f0306c-f06c-409d-a1ab-fc0a376b47f5}*SharedItemsImports = 13
+		..\Libs\Platforms\UWP\UWP.projitems*{e73f1f9f-9856-42bd-89d1-0392cfac3691}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -93,6 +108,22 @@ Global
 		{E8D0970F-73E8-4E28-BD77-FDA6F157F11F}.Release|x86.ActiveCfg = Release|Any CPU
 		{E8D0970F-73E8-4E28-BD77-FDA6F157F11F}.Release|x86.Build.0 = Release|Any CPU
 		{E8D0970F-73E8-4E28-BD77-FDA6F157F11F}.Release|x86.Deploy.0 = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Debug|x86.Build.0 = Debug|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|ARM.Build.0 = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|x64.Build.0 = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|x86.ActiveCfg = Release|Any CPU
+		{4F5B21E0-47E0-4FCF-9D79-CC9DE47E0D0E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

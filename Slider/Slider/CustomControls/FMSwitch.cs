@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOOOO OO   OO  OOOOO             OO      O            OOO
+ OO  OO OOO OOO OO   OO            OO     OO             OO
+ OO   O OOOOOOO OO   OO                   OO             OO
+ OO O   OOOOOOO  OO     OO   OO   OOO   OOOOOO   OOOOO   OO OO
+ OOOO   OO O OO   OOO   OO   OO    OO     OO    OO   OO  OOO OO
+ OO O   OO   OO     OO  OO O OO    OO     OO    OO       OO  OO
+ OO     OO   OO OO   OO OO O OO    OO     OO    OO       OO  OO
+ OO     OO   OO OO   OO  OOOOO     OO     OO OO OO   OO  OO  OO
+OOOO    OO   OO  OOOOO    O O     OOOO     OOO   OOOOO  OOO  OO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 namespace CamSlider.CustomControls
 {

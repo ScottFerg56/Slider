@@ -1,5 +1,17 @@
-﻿//	(c) 2018 Scott Ferguson
-//	This code is licensed under MIT license(see LICENSE file for details)
+﻿/*
+OOOOOO          OOO                        OO
+ OO  OO          OO                        OO
+ OO  OO          OO
+ OO  OO  OOOOO   OO OO   OOOO    OO  OO   OOO    OOOOO  OO OOO   OOOOO
+ OOOOO  OO   OO  OOO OO     OO   OO  OO    OO   OO   OO  OO  OO OO   OO
+ OO  OO OOOOOOO  OO  OO  OOOOO   OO  OO    OO   OO   OO  OO  OO  OOO
+ OO  OO OO       OO  OO OO  OO   OO  OO    OO   OO   OO  OO        OOO
+ OO  OO OO   OO  OO  OO OO  OO    OOOO     OO   OO   OO  OO     OO   OO
+OOOOOO   OOOOO  OOO  OO  OOO OO    OO     OOOO   OOOOO  OOOO     OOOOO
+
+	(c) 2018 Scott Ferguson
+	This code is licensed under MIT license(see LICENSE file for details)
+*/
 
 using System.Linq;
 using Xamarin.Forms;
